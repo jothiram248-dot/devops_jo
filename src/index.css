@@ -1,0 +1,140 @@
+@import url("https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --dark-100: #1a1b26;
+    --dark-200: #24283b;
+    --dark-300: #414868;
+    --accent-100: #7aa2f7;
+    --accent-200: #bb9af7;
+    --glow-color: rgba(122, 162, 247, 0.15);
+  }
+
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    width: 100%;
+    overflow-x: hidden; /* Prevent unwanted horizontal scroll */
+  }
+
+  body {
+    @apply bg-dark-100 text-white font-sans;
+  }
+
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+.container {
+  @apply mx-auto max-w-screen-xl;
+  width: 100%; /* Ensures container spans the full width */
+  padding-left: 1rem; /* Adjust as needed */
+  padding-right: 1rem;
+}
+
+/* Enhanced Title Glow Effect */
+@keyframes titleGlow {
+  0%,
+  100% {
+    text-shadow: 0 0 20px rgba(122, 162, 247, 0.5),
+      0 0 40px rgba(122, 162, 247, 0.3), 0 0 60px rgba(122, 162, 247, 0.1);
+    transform: scale(1);
+  }
+  50% {
+    text-shadow: 0 0 40px rgba(187, 154, 247, 0.5),
+      0 0 60px rgba(187, 154, 247, 0.3), 0 0 80px rgba(187, 154, 247, 0.1);
+    transform: scale(1.02);
+  }
+}
+
+/* .title-glow {
+  animation: titleGlow 3s ease-in-out infinite;
+} */
+
+/* Enhanced Box Glow Effect */
+.glow-box {
+  @apply relative rounded-xl overflow-hidden bg-dark-200 transition-all duration-200;
+  box-shadow: 0 0 30px var(--glow-color),
+    inset 0 0 15px rgba(122, 162, 247, 0.1);
+}
+
+.glow-box:hover {
+  box-shadow: 0 0 50px var(--glow-color),
+    inset 0 0 20px rgba(122, 162, 247, 0.15);
+  transform: translateY(-5px);
+}
+
+/* Button Styles */
+.btn-primary {
+  @apply px-6 py-3 rounded-lg bg-gradient-to-r from-accent-100 to-accent-200 text-dark-100 font-semibold 
+         hover:opacity-90 transition-opacity;
+}
+
+.btn-secondary {
+  @apply px-6 py-3 rounded-lg border-2 border-accent-100 text-accent-100 font-semibold 
+         hover:bg-accent-100/10 transition-colors;
+}
+
+/* Input Styles */
+.input-primary {
+  @apply w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white 
+         focus:outline-none focus:border-accent-100;
+}
+
+.toast-container {
+  @apply p-4 bg-dark-200 rounded-xl shadow-lg border border-accent-100;
+}
+
+.toast-title {
+  @apply text-lg font-bold text-accent-100;
+}
+
+.toast-message {
+  @apply text-sm text-gray-400;
+}
+
+.toast-dismiss-btn {
+  @apply mt-2 px-4 py-2 bg-accent-200 text-dark-100 rounded-md hover:bg-accent-100 transition-all;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  @apply bg-dark-200;
+}
+
+::-webkit-scrollbar-thumb {
+  @apply bg-accent-100/50 rounded-full;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-accent-100;
+}
+
+@layer utilities {
+  .perspective {
+    perspective: 1000px;
+  }
+
+  .preserve-3d {
+    transform-style: preserve-3d;
+  }
+
+  .backface-hidden {
+    backface-visibility: hidden;
+  }
+
+  .rotate-x-180 {
+    transform: rotateX(180deg);
+  }
+}
