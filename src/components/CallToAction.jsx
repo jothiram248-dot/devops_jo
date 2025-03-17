@@ -57,8 +57,6 @@
 
 // export default CallToAction;
 
-
-
 import React from "react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -90,26 +88,26 @@ const CallToAction = () => {
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-r from-gray-950/95 via-indigo-950/90 to-gray-950/95" />
-            
+
             {/* Subtle pattern overlay */}
             <div className="absolute inset-0 opacity-10 bg-[linear-gradient(rgba(99,102,241,0.05)_1px,transparent_1px),linear-gradient(to_right,rgba(99,102,241,0.05)_1px,transparent_1px)] bg-[size:20px_20px]"></div>
-            
-            {/* Premium accent glow */}
+
+            {/* accent glow */}
             <div className="absolute -top-20 right-1/4 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
             <div className="absolute -bottom-20 left-1/4 w-64 h-64 bg-indigo-500/10 rounded-full blur-3xl"></div>
           </div>
 
           <div className="relative py-20 px-8 md:px-16 text-center">
             <div className="w-20 h-px mx-auto mb-8 bg-gradient-to-r from-transparent via-indigo-500 to-transparent"></div>
-            
+
             <h2 className="text-4xl md:text-6xl font-bold mb-10 bg-gradient-to-r from-indigo-300 via-accent-100 to-indigo-300 bg-clip-text text-transparent leading-tight">
               Ready to Start Your Journey With SacredSecret?
             </h2>
-            
+
             <motion.button
-              whileHover={{ 
+              whileHover={{
                 scale: 1.03,
-                boxShadow: "0 0 20px rgba(99, 102, 241, 0.3)"
+                boxShadow: "0 0 20px rgba(99, 102, 241, 0.3)",
               }}
               whileTap={{ scale: 0.97 }}
               onClick={() => navigate("/signup")}

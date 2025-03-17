@@ -1,111 +1,3 @@
-// import React, { useEffect } from "react";
-// import { useNavigate } from "react-router-dom";
-// import { Shield, Bell, Users } from "lucide-react";
-// import useScrollReveal from "../hooks/useScrollReveal";
-
-// const features = [
-//   {
-//     title: "Manage Your Credentials",
-//     description:
-//       "Securely store and manage all your digital credentials in one place.",
-//     icon: Shield,
-//     image:
-//       "https://images.unsplash.com/photo-1633265486064-086b219458ec?auto=format&fit=crop&q=80&w=800",
-//     hoverEffect: "hover-float",
-//     path: "/manage-credentials",
-//   },
-//   {
-//     title: "Smart Notifications",
-//     description: "Stay informed with intelligent alerts and timely updates.",
-//     icon: Bell,
-//     image:
-//       "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80&w=800",
-//     hoverEffect: "hover-scale",
-//     path: "/smart-notifications",
-//   },
-//   {
-//     title: "Choose Your Nominee",
-//     description: "Select and manage trusted nominees for your digital legacy.",
-//     icon: Users,
-//     image:
-//       "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800",
-//     hoverEffect: "hover-tilt",
-//     path: "/choose-nominee",
-//   },
-// ];
-
-// const FeatureCard = ({ feature, index }) => {
-//   const ref = useScrollReveal({
-//     threshold: 0.2,
-//     rootMargin: "-50px",
-//   });
-//   const navigate = useNavigate();
-
-//   const handleFeatureClick = () => {
-//     navigate(feature.path);
-//     window.scrollTo({ top: 0, behavior: "smooth" });
-//   };
-
-//   return (
-//     <div
-//       ref={ref}
-//       onClick={handleFeatureClick}
-//       className={`scroll-reveal glow-box ${feature.hoverEffect} overflow-hidden cursor-pointer group`}
-//     >
-//       <div className="aspect-video relative overflow-hidden">
-//         <img
-//           src={feature.image}
-//           alt={feature.title}
-//           className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-//           loading={index === 0 ? "eager" : "lazy"}
-//         />
-//         <div className="absolute inset-0 bg-gradient-to-t from-dark-100/90 via-dark-100/50 to-transparent" />
-//       </div>
-
-//       <div className="p-6 relative">
-//         <feature.icon className="w-8 h-8 text-accent-100 mb-4" />
-//         <h3 className="text-xl font-semibold mb-2 text-white">
-//           {feature.title}
-//         </h3>
-//         <p className="text-gray-300">{feature.description}</p>
-//       </div>
-//     </div>
-//   );
-// };
-
-// const FeaturesSection = () => {
-//   const headerRef = useScrollReveal({
-//     threshold: 0.5,
-//   });
-
-//   return (
-//     <section
-//       className="py-20 bg-gradient-to-b from-dark-100 via-dark-200 to-dark-100"
-//       id="features"
-//     >
-//       <div className="container mx-auto px-6">
-//         <div ref={headerRef} className="scroll-reveal text-center mb-16">
-//           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-white">
-//             Features & Services
-//           </h2>
-//           <p className="text-lg text-gray-300 max-w-3xl mx-auto">
-//             Discover how SacredSecret empowers you to manage and protect your
-//             digital legacy
-//           </p>
-//         </div>
-
-//         <div className="grid md:grid-cols-3 gap-8">
-//           {features.map((feature, index) => (
-//             <FeatureCard key={feature.title} feature={feature} index={index} />
-//           ))}
-//         </div>
-//       </div>
-//     </section>
-//   );
-// };
-
-// export default FeaturesSection;
-
 // new UI
 import React from "react";
 import { motion } from "framer-motion";
@@ -161,7 +53,7 @@ const FeatureCard = ({ feature, index }) => {
     >
       {/* Feature Glass Effect */}
       <div className="absolute inset-0 bg-gradient-to-tr from-indigo-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-      
+
       {/* Feature Card Top Accent */}
       <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
@@ -192,8 +84,10 @@ const FeatureCard = ({ feature, index }) => {
           </h3>
           <div className="absolute -bottom-1 left-0 w-12 h-0.5 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-full transform origin-left scale-0 group-hover:scale-100 transition-transform duration-300 delay-100"></div>
         </div>
-        
-        <p className="text-sm text-gray-300 font-light">{feature.description}</p>
+
+        <p className="text-sm text-gray-300 font-light">
+          {feature.description}
+        </p>
 
         {/* Feature Call to Action */}
         <div className="mt-6 flex justify-start overflow-hidden">
@@ -244,30 +138,27 @@ const FeaturesSection = () => {
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400 to-transparent animate-pulse"></div>
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-300 to-transparent opacity-30 blur-sm"></div>
       </div>
-      
-      <section
-        className="relative py-16 overflow-hidden"
-        id="features"
-      >
-        {/* Enhanced light background with more pronounced gradients */}
+
+      <section className="relative py-16 overflow-hidden" id="features">
+        {/* light background with more pronounced gradients */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/90 via-white/95 to-gray-100/90 z-0"></div>
-        
+
         {/* More vibrant ambient gradient overlays */}
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-200/30 to-transparent opacity-60 z-0"></div>
         <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-tr from-purple-200/30 to-transparent opacity-50 z-0"></div>
-        
-        {/* Enhanced floating gradient spheres */}
+
+        {/* floating gradient spheres */}
         <div className="absolute top-40 right-20 w-80 h-80 bg-indigo-300 rounded-full filter blur-3xl opacity-30 animate-float-slow"></div>
         <div className="absolute bottom-20 left-10 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl opacity-30 animate-float-slow-reverse"></div>
         <div className="absolute top-10 left-1/4 w-64 h-64 bg-blue-300 rounded-full filter blur-3xl opacity-30 animate-float-medium"></div>
         <div className="absolute bottom-40 right-1/4 w-72 h-72 bg-violet-300 rounded-full filter blur-3xl opacity-30 animate-float-medium-reverse"></div>
-        
-        {/* Enhanced mesh gradient overlay */}
+
+        {/* mesh gradient overlay */}
         <div className="absolute inset-0 opacity-40 z-0 bg-[radial-gradient(circle_at_top_right,_rgba(129,140,248,0.3),_transparent_70%),radial-gradient(circle_at_bottom_left,_rgba(167,139,250,0.3),_transparent_70%)]"></div>
-        
+
         {/* Additional diagonal gradient for more depth */}
         <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/20 via-transparent to-purple-100/20 z-0"></div>
-        
+
         {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iLjAyIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTRtMC0xN2MwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNG0tMTcgMGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNG0wIDE3YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00Ii8+PC9nPjwvZz48L3N2Zz4=')] z-0"></div>
 
@@ -284,11 +175,11 @@ const FeaturesSection = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full blur-sm opacity-70"></div>
             </div>
-            
+
             <h2 className="text-5xl md:text-6xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 tracking-tight">
               Features & Services
             </h2>
-            
+
             {/* Features accent diamond */}
             {/* <div className="flex justify-center mb-8">
               <motion.div 
@@ -298,9 +189,14 @@ const FeaturesSection = () => {
                 className="w-3 h-3 bg-gradient-to-br from-indigo-400 to-purple-400 shadow-lg shadow-indigo-500/30"
               ></motion.div>
             </div> */}
-            
+
             <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light">
-              Experience how SacredSecret safeguards and manages your digital legacy with our <span className="text-indigo-600 font-medium">comprehensive services</span> designed for complete digital asset protection.
+              Experience how SacredSecret safeguards and manages your digital
+              legacy with our{" "}
+              <span className="text-indigo-600 font-medium">
+                comprehensive services
+              </span>{" "}
+              designed for complete digital asset protection.
             </p>
           </motion.div>
 
@@ -339,8 +235,6 @@ const FeaturesSection = () => {
               </motion.div>
             ))}
           </motion.div>
-          
-          
         </div>
       </section>
     </>
