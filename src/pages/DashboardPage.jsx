@@ -1,3 +1,1029 @@
+// import React, { useEffect, useMemo, useState } from "react";
+// import { motion, AnimatePresence } from "framer-motion";
+// import { useLocation, useNavigate } from "react-router-dom";
+// import {
+//   Shield,
+//   Bell,
+//   Users,
+//   Activity,
+//   TrendingUp,
+//   Clock,
+//   Settings,
+//   CreditCard,
+//   History,
+//   FileText,
+//   HelpCircle,
+//   X,
+//   CheckCircle,
+//   ArrowLeft,
+//   Plus,
+//   Trash2,
+//   Key,
+//   CalendarDays,
+// } from "lucide-react";
+// import useAuthStore from "../store/authStore";
+// import Footer from "../components/Footer";
+// import DashboardCredentials from "../components/dashboard/DashboardCredentials";
+// import DashboardNotifications from "../components/dashboard/DashboardNotifications";
+// import DashboardNominee from "../components/dashboard/DashboardNominee";
+// import { useSelector } from "react-redux";
+// import {
+//   useAddEmergencyContactMutation,
+//   useAdhaarKycMutation,
+// } from "@/features/api/userNomineeApiSlice";
+// import {
+//   useGetMatricsDataQuery,
+//   useMeQuery,
+// } from "@/features/api/userApiSlice";
+
+// const features = [
+//   {
+//     id: "credentials",
+//     title: "Manage Credentials",
+//     icon: Shield,
+//     status: "Active",
+//     nextBilling: "2024-03-15",
+//     // price: "₹0.00/month",
+//     description:
+//       "Securely Store and Manage all your Digital Credentials in One Place",
+//     color: "from-blue-600 to-indigo-600",
+//     bgImage:
+//       "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80&w=800",
+//     component: DashboardCredentials,
+//   },
+//   {
+//     id: "notifications",
+//     title: "Smart Notifications",
+//     icon: Bell,
+//     status: "Trial",
+//     nextBilling: "2024-03-10",
+//     // price: "₹0.00/month",
+//     description: "Stay informed with intelligent alerts and updates",
+//     color: "from-purple-600 to-pink-600",
+//     bgImage:
+//       "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80&w=800",
+//     component: DashboardNotifications,
+//   },
+//   {
+//     id: "nominee",
+//     title: "Choose Nominee",
+//     icon: Users,
+//     status: "Inactive",
+//     // price: "₹0.00/month",
+//     description: "Select and manage trusted nominees",
+//     color: "from-green-600 to-teal-600",
+//     bgImage:
+//       "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800",
+//     // component: DashboardNominee,
+//     component: ({ isAadhaarVerified, setAadhaarVerified }) => (
+//       <DashboardNominee
+//         isAadhaarVerified={isAadhaarVerified}
+//         setAadhaarVerified={setAadhaarVerified}
+//       />
+//     ),
+//   },
+// ];
+
+// const SettingsModal = ({ isOpen, onClose }) => (
+//   <AnimatePresence>
+//     {isOpen && (
+//       <motion.div
+//         initial={{ opacity: 0 }}
+//         animate={{ opacity: 1 }}
+//         exit={{ opacity: 0 }}
+//         className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
+//       >
+//         <motion.div
+//           initial={{ scale: 0.95, opacity: 0 }}
+//           animate={{ scale: 1, opacity: 1 }}
+//           exit={{ scale: 0.95, opacity: 0 }}
+//           className="bg-dark-200 rounded-xl w-full max-w-md p-6"
+//         >
+//           <div className="flex justify-between items-center mb-6">
+//             <h3 className="text-2xl font-bold text-white">Settings</h3>
+//             <button
+//               onClick={onClose}
+//               className="p-2 hover:bg-dark-300 rounded-full transition-colors"
+//             >
+//               <X className="w-6 h-6 text-gray-400" />
+//             </button>
+//           </div>
+
+//           <div className="space-y-4">
+//             <button className="w-full flex items-center space-x-3 p-4 rounded-lg bg-dark-300 hover:bg-dark-400 transition-colors">
+//               <CreditCard className="w-5 h-5 text-accent-100" />
+//               <span className="text-white">Purchase History</span>
+//             </button>
+
+//             <button className="w-full flex items-center space-x-3 p-4 rounded-lg bg-dark-300 hover:bg-dark-400 transition-colors">
+//               <History className="w-5 h-5 text-accent-100" />
+//               <span className="text-white">Subscription Management</span>
+//             </button>
+
+//             <button className="w-full flex items-center space-x-3 p-4 rounded-lg bg-dark-300 hover:bg-dark-400 transition-colors">
+//               <FileText className="w-5 h-5 text-accent-100" />
+//               <span className="text-white">Account Settings</span>
+//             </button>
+
+//             <button className="w-full flex items-center space-x-3 p-4 rounded-lg bg-dark-300 hover:bg-dark-400 transition-colors">
+//               <HelpCircle className="w-5 h-5 text-accent-100" />
+//               <span className="text-white">Help & Support</span>
+//             </button>
+//           </div>
+//         </motion.div>
+//       </motion.div>
+//     )}
+//   </AnimatePresence>
+// );
+
+// const SkeletonCard = () => (
+//   <div className="relative p-6 rounded-xl bg-dark-300 animate-pulse shadow-md h-[140px] flex items-center space-x-4 border border-dark-400 backdrop-blur-xl">
+//     <div className="p-4 rounded-xl bg-gray-700 shadow-lg w-12 h-12"></div>
+//     <div className="flex-1">
+//       <div className="h-4 bg-gray-600 w-1/2 rounded-md mb-2"></div>
+//       <div className="h-6 bg-gray-700 w-3/4 rounded-md"></div>
+//     </div>
+//   </div>
+// );
+
+// const SlidingStats = ({ counts, isLoading }) => {
+//   const rotatingStats = [
+//     { title: "Stored Credentials", key: "creds", icon: Key },
+//     { title: "Notifications", key: "notifications", icon: Bell },
+//     { title: "Nominee Entries", key: "nomineeEntries", icon: Users },
+//   ];
+
+//   const [index, setIndex] = useState(0);
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setIndex((prev) => (prev + 1) % rotatingStats.length);
+//     }, 4000);
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   const { title, key, icon: Icon } = rotatingStats[index];
+
+//   return isLoading ? (
+//     <SkeletonCard />
+//   ) : (
+//     <div className="relative w-full max-w-md h-[140px] rounded-xl bg-dark-200 shadow-md p-6 border border-dark-300 flex items-center space-x-4">
+//       <div className="p-4 rounded-xl bg-gradient-to-r from-blue-500 to-blue-700 shadow-lg">
+//         <Icon className="w-8 h-8 text-white" />
+//       </div>
+//       <div className="flex-1">
+//         <h4 className="text-sm font-semibold text-gray-400">{title}</h4>
+//         <motion.p
+//           key={counts[key] || 0}
+//           initial={{ opacity: 0, y: 20 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           exit={{ opacity: 0, y: -20 }}
+//           transition={{ duration: 0.6, ease: "easeInOut" }}
+//           className="text-2xl font-extrabold text-white mt-1"
+//         >
+//           {counts[key] || 0}
+//         </motion.p>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const StatCard = ({ icon: Icon, title, value, bgColor, isLoading }) =>
+//   isLoading ? (
+//     <SkeletonCard />
+//   ) : (
+//     <motion.div
+//       whileHover={{ scale: 1.02 }}
+//       className="relative p-6 rounded-xl bg-dark-200 shadow-md hover:shadow-xl transition-all duration-300 h-[140px] flex items-center space-x-4 border border-dark-300 backdrop-blur-xl"
+//     >
+//       <div className={`p-4 rounded-xl ${bgColor} shadow-lg`}>
+//         <Icon className="w-7 h-7 text-white" />
+//       </div>
+//       <div className="flex-1">
+//         <h4 className="text-sm font-semibold text-gray-400">{title}</h4>
+//         <p className="text-2xl font-extrabold text-white mt-1">{value}</p>
+//       </div>
+//     </motion.div>
+//   );
+
+// const LastLoginStat = ({ lastLogin, isLoading }) => {
+//   const [showDate, setShowDate] = useState(true);
+
+//   useEffect(() => {
+//     const interval = setInterval(() => {
+//       setShowDate((prev) => !prev);
+//     }, 4000);
+//     return () => clearInterval(interval);
+//   }, []);
+
+//   return isLoading ? (
+//     <SkeletonCard />
+//   ) : (
+//     <div className="relative w-full max-w-md h-[140px] rounded-xl bg-dark-200 shadow-md p-6 border border-dark-300 flex items-center space-x-4">
+//       <div className="p-4 rounded-xl bg-gradient-to-r from-orange-500 to-amber-600 shadow-lg">
+//         {showDate ? (
+//           <CalendarDays className="w-8 h-8 text-white" />
+//         ) : (
+//           <Clock className="w-8 h-8 text-white" />
+//         )}
+//       </div>
+//       <div className="flex-1">
+//         <h4 className="text-sm font-semibold text-gray-400">Last Login</h4>
+//         <motion.p
+//           key={showDate ? "date" : "time"}
+//           initial={{ opacity: 0, y: 20 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           exit={{ opacity: 0, y: -20 }}
+//           transition={{ duration: 0.6, ease: "easeInOut" }}
+//           className="text-2xl font-extrabold text-white mt-1"
+//         >
+//           {showDate ? lastLogin.date : lastLogin.time}
+//         </motion.p>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const ActiveServicesStat = ({ features, isLoading }) => {
+//   const [index, setIndex] = useState(0);
+
+//   useEffect(() => {
+//     if (features.length > 1) {
+//       const interval = setInterval(() => {
+//         setIndex((prevIndex) => (prevIndex + 1) % features.length);
+//       }, 4000); // Rotate every 4 seconds if multiple features exist
+//       return () => clearInterval(interval);
+//     }
+//   }, [features]);
+
+//   return isLoading ? (
+//     <SkeletonCard />
+//   ) : (
+//     <motion.div
+//       whileHover={{ scale: 1.02 }}
+//       className="relative p-6 rounded-xl bg-dark-200 shadow-md hover:shadow-xl transition-all duration-300 h-[140px] flex items-center space-x-4 border border-dark-300 backdrop-blur-xl"
+//     >
+//       {/* Static Icon Container */}
+//       <div className="p-4 rounded-xl bg-gradient-to-r from-green-500 to-teal-500 shadow-lg">
+//         <Activity className="w-7 h-7 text-white" />
+//       </div>
+
+//       {/* Static Text Content */}
+//       <div className="flex-1">
+//         <h4 className="text-sm font-semibold text-gray-400">Active Service</h4>
+
+//         {/* Sliding Active Service Value */}
+//         <div className="relative h-10 overflow-hidden">
+//           <AnimatePresence mode="wait">
+//             <motion.p
+//               key={features.length > 0 ? features[index] : "No Active Services"}
+//               initial={{ opacity: 0, y: 20 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               exit={{ opacity: 0, y: -20 }}
+//               transition={{ duration: 0.6, ease: "easeInOut" }}
+//               className="absolute inset-0 text-2xl font-extrabold text-white mt-1"
+//             >
+//               {features.length > 0
+//                 ? features[index].charAt(0).toUpperCase() +
+//                   features[index].slice(1).toLowerCase()
+//                 : "NO ACTIVE SERVICES"}
+//             </motion.p>
+//           </AnimatePresence>
+//         </div>
+//       </div>
+//     </motion.div>
+//   );
+// };
+
+// // 🔥 Glow Effect for Icons
+// const glowEffect = `
+//   .glow-effect {
+//     box-shadow: 0 0 10px rgba(122, 162, 247, 0.7), 0 0 20px rgba(122, 162, 247, 0.4);
+//   }
+// `;
+
+// const FeatureCard = ({
+//   feature,
+//   isActive,
+//   isAadhaarVerified,
+//   setShowAadhaarModal,
+//   onClick,
+// }) => (
+//   <motion.div
+//     onClick={() => {
+//       if (feature.id === "nominee") {
+//         if (!isAadhaarVerified) {
+//           setShowAadhaarModal(true); // Show Aadhaar modal if not verified
+//         } else {
+//           onClick(); // Directly activate the nominee feature
+//         }
+//       } else {
+//         onClick(); // Activate other features
+//       }
+//     }}
+//     className={`relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 group ${
+//       isActive ? "ring-2 ring-accent-100" : ""
+//     }`}
+//     whileHover={{ scale: 1.02 }}
+//     whileTap={{ scale: 0.98 }}
+//   >
+//     <div className="absolute inset-0">
+//       <img
+//         src={feature.bgImage}
+//         alt={feature.title}
+//         className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+//       />
+//       <div
+//         className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-90`}
+//       />
+//     </div>
+
+//     <div className="relative p-6">
+//       <div className="flex justify-between items-start mb-6">
+//         <div className="p-3 rounded-lg bg-white/10 backdrop-blur-sm">
+//           <feature.icon className="w-6 h-6 text-white" />
+//         </div>
+//         <span
+//           className={`px-3 py-1 rounded-full text-sm backdrop-blur-sm ${
+//             feature.status === "Active"
+//               ? "bg-green-500/20 text-green-100"
+//               : feature.status === "Trial"
+//               ? "bg-yellow-500/20 text-yellow-100"
+//               : "bg-red-500/20 text-red-100"
+//           }`}
+//         >
+//           {feature.status}
+//         </span>
+//       </div>
+
+//       <h3 className="text-xl font-semibold mb-2 text-white">{feature.title}</h3>
+//       <p className="text-sm mb-4 text-white/80">{feature.description}</p>
+//       <p className="text-lg font-bold text-white">{feature.price}</p>
+//     </div>
+//   </motion.div>
+// );
+
+// const EmergencyContactModal = ({ isOpen, onClose, onSave }) => {
+//   const [contacts, setContacts] = useState([
+//     { name: "", phone: "", email: "" },
+//   ]);
+//   const [addEmergencyContact, { isLoading }] = useAddEmergencyContactMutation();
+
+//   const handleInputChange = (index, field, value) => {
+//     const updatedContacts = [...contacts];
+//     updatedContacts[index][field] = value;
+//     setContacts(updatedContacts);
+//   };
+
+//   const addNewContact = () => {
+//     if (contacts.length < 2) {
+//       setContacts([...contacts, { name: "", phone: "", email: "" }]);
+//     }
+//   };
+
+//   const removeContact = (index) => {
+//     const updatedContacts = contacts.filter((_, i) => i !== index);
+//     setContacts(updatedContacts);
+//   };
+
+//   const handleSave = async () => {
+//     const isValid = contacts.every(
+//       (contact) => contact.name && contact.phone && contact.email
+//     );
+
+//     if (isValid) {
+//       try {
+//         const payload = { contacts };
+//         await addEmergencyContact(payload).unwrap();
+//         onSave(contacts); // Optional callback for parent component
+//         onClose();
+//       } catch (error) {
+//         console.error("Failed to add emergency contacts:", error);
+//         alert("An error occurred while saving contacts. Please try again.");
+//       }
+//     } else {
+//       alert("All fields are required for each contact.");
+//     }
+//   };
+
+//   if (!isOpen) return null;
+
+//   return (
+//     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm">
+//       <div className="bg-gradient-to-br from-dark-200 to-dark-300 p-8 rounded-xl shadow-lg w-full max-w-lg">
+//         {/* Header */}
+//         <div className="flex justify-between items-center mb-6">
+//           <h2 className="text-2xl font-bold text-accent-100">
+//             Emergency Contacts
+//           </h2>
+//           <button
+//             onClick={onClose}
+//             className="p-2 hover:bg-dark-400 rounded-full transition"
+//             aria-label="Close"
+//           >
+//             <X className="w-6 h-6 text-gray-400" />
+//           </button>
+//         </div>
+
+//         {/* Contact Fields with Scroll */}
+//         <div className="space-y-6 max-h-[400px] overflow-y-auto scrollbar-thin scrollbar-thumb-accent-100 scrollbar-track-dark-300 pr-2">
+//           {contacts.map((contact, index) => (
+//             <div
+//               key={index}
+//               className="bg-dark-300 p-4 rounded-lg shadow-md glow-box"
+//             >
+//               <div className="flex justify-between items-center mb-4">
+//                 <h3 className="text-lg font-semibold text-white">
+//                   Contact {index + 1}
+//                 </h3>
+//                 {contacts.length > 1 && (
+//                   <button
+//                     onClick={() => removeContact(index)}
+//                     className="text-red-500 hover:text-red-600"
+//                     aria-label="Remove Contact"
+//                   >
+//                     <Trash2 className="w-5 h-5" />
+//                   </button>
+//                 )}
+//               </div>
+//               <div className="space-y-4">
+//                 <div>
+//                   <label className="block text-sm text-gray-400">Name</label>
+//                   <input
+//                     type="text"
+//                     value={contact.name}
+//                     onChange={(e) =>
+//                       handleInputChange(index, "name", e.target.value)
+//                     }
+//                     className="input-primary"
+//                     placeholder="Enter name"
+//                   />
+//                 </div>
+//                 <div>
+//                   <label className="block text-sm text-gray-400">Phone</label>
+//                   <input
+//                     type="text"
+//                     value={contact.phone}
+//                     onChange={(e) => {
+//                       // Restrict non-numeric input and limit to 10 digits
+//                       const numericValue = e.target.value
+//                         .replace(/[^0-9]/g, "")
+//                         .slice(0, 10);
+//                       handleInputChange(index, "phone", numericValue);
+//                     }}
+//                     className="input-primary"
+//                     placeholder="Enter phone number"
+//                     maxLength="10" // Prevents input beyond 10 digits
+//                   />
+//                 </div>
+
+//                 <div>
+//                   <label className="block text-sm text-gray-400">Email</label>
+//                   <input
+//                     type="email"
+//                     value={contact.email}
+//                     onChange={(e) =>
+//                       handleInputChange(index, "email", e.target.value)
+//                     }
+//                     className="input-primary"
+//                     placeholder="Enter email"
+//                   />
+//                 </div>
+//               </div>
+//             </div>
+//           ))}
+//         </div>
+
+//         {/* Buttons Section */}
+//         <div className="flex justify-between items-center mt-6">
+//           {/* Add Contact Button */}
+//           {contacts.length < 2 && (
+//             <button
+//               onClick={addNewContact}
+//               className="flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-blue-500 to-indigo-500 text-white rounded-lg shadow-lg hover:shadow-xl transition-transform hover:scale-105"
+//               aria-label="Add Another Contact"
+//             >
+//               Add Another Contact
+//             </button>
+//           )}
+
+//           {/* Save Button */}
+//           <button
+//             onClick={handleSave}
+//             disabled={
+//               isLoading ||
+//               !contacts.every(
+//                 (contact) => contact.name && contact.phone && contact.email
+//               )
+//             }
+//             className={`px-6 py-2 rounded-lg shadow-md transition ${
+//               contacts.every(
+//                 (contact) => contact.name && contact.phone && contact.email
+//               )
+//                 ? "bg-gradient-to-r from-green-500 to-teal-500 text-white hover:shadow-lg hover:opacity-90"
+//                 : "bg-gray-600 text-gray-400 cursor-not-allowed"
+//             } ${isLoading && "cursor-wait"}`}
+//           >
+//             {isLoading ? "Saving..." : "Save"}
+//           </button>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
+
+// const DashboardPage = () => {
+//   // const { user } = useAuthStore();
+//   const [activeFeature, setActiveFeature] = useState(null);
+//   const [showSettings, setShowSettings] = useState(false);
+//   // const [isAadhaarVerified, setIsAadhaarVerified] = useState(true); // Initial Aadhaar verification state
+//   const [showAadhaarModal, setShowAadhaarModal] = useState(false); // Aadhaar modal state
+//   const [aadhaarNumber, setAadhaarNumber] = useState("");
+//   const [otp, setOtp] = useState("");
+//   const [isOtpStage, setIsOtpStage] = useState(false);
+//   const [showConsentForm, setShowConsentForm] = useState(false); // Consent form state
+//   const { user } = useSelector((state) => state.auth); // Access user from Redux store
+//   // const isAadhaarVerified = user?.aadhaarVerified || false;
+//   const [consentProcessing, setConsentProcessing] = useState(false);
+//   const [showEmergencyContactModal, setShowEmergencyContactModal] =
+//     useState(false);
+//   const [emergencyContacts, setEmergencyContacts] = useState([]);
+
+//   // Use the me API query
+//   const { data: meData, isError, refetch } = useMeQuery();
+//   const [adhaarKyc, { isLoading: kycLoading }] = useAdhaarKycMutation();
+//   const { data: metricsData, isLoading } = useGetMatricsDataQuery();
+//   const [rotatingIndex, setRotatingIndex] = useState(0);
+//   // const [userLastLogin, setUserLastLogin] = useState("");
+//   // Derive isAadhaarVerified from the API response
+//   const isAadhaarVerified = meData?.me?.aadhaarVerified || false;
+//   const contactCount = meData?.me?.contacts || 0;
+//   const navigate = useNavigate();
+//   const location = useLocation();
+//   const { id } = location.state || {};
+
+//   useEffect(() => {
+//     if (id) {
+//       const featureExists = features.some((feature) => feature.id === id);
+//       if (featureExists) setActiveFeature(id);
+//     }
+//   }, [id]);
+
+//   const [showDate, setShowDate] = useState(true);
+
+//   // ✅ Rotate 1st Card (Stored Credentials) every 4 sec
+//   // useEffect(() => {
+//   //   const interval = setInterval(() => {
+//   //     setRotatingIndex((prev) => (prev + 1) % rotatingStats.length);
+//   //   }, 4000);
+//   //   return () => clearInterval(interval);
+//   // }, []);
+
+//   // ✅ Format Last Login & Rotate between Date/Time every 4 sec
+//   const lastLogin = useMemo(() => {
+//     if (!metricsData?.lastLogin) return { date: "No Login", time: "" };
+//     const parsedDate = new Date(metricsData.lastLogin);
+//     if (isNaN(parsedDate.getTime())) return { date: "Invalid Date", time: "" };
+
+//     return {
+//       date: parsedDate.toLocaleDateString("en-US", {
+//         month: "short",
+//         day: "2-digit",
+//         year: "numeric",
+//       }),
+//       time: parsedDate.toLocaleTimeString("en-US", {
+//         hour: "2-digit",
+//         minute: "2-digit",
+//         hour12: true,
+//       }),
+//     };
+//   }, [metricsData?.lastLogin]);
+
+//   // useEffect(() => {
+//   //   if (!lastLogin.date || !lastLogin.time) return;
+//   //   const interval = setInterval(() => {
+//   //     setShowDate((prev) => !prev);
+//   //   }, 4000);
+//   //   return () => clearInterval(interval);
+//   // }, [lastLogin]);
+
+//   const counts = metricsData?.counts || {
+//     creds: 0,
+//     notifications: 0,
+//     nomineeEntries: 0,
+//   };
+
+//   const ActiveFeatureComponent = activeFeature
+//     ? features.find((f) => f.id === activeFeature)?.component
+//     : null;
+
+//   const handleBackToDashboard = () => {
+//     setActiveFeature(null); // Reset the active feature
+//   };
+
+//   const handleAadhaarVerificationCheck = () => {
+//     if (!isAadhaarVerified) {
+//       setShowAadhaarModal(true);
+//     }
+//   };
+
+//   const handleConsentAccept = async (aadhaarNumber) => {
+//     try {
+//       const response = await adhaarKyc({ aadhaar: aadhaarNumber }).unwrap();
+
+//       if (response?.message === "Aadhaar number updated successfully.") {
+//         setShowConsentForm(false); // Close consent form
+//         setShowEmergencyContactModal(true); // Show emergency contact modal
+//         await refetch(); // Update data
+//       }
+//     } catch (error) {
+//       console.error("Aadhaar KYC failed:", error);
+//     }
+//   };
+
+//   const handleNomineeFeatureClick = () => {
+//     if (!isAadhaarVerified) {
+//       // If Aadhaar is not verified, show the Aadhaar modal
+//       setShowAadhaarModal(true);
+//     } else if (contactCount === 0) {
+//       // If no contacts exist, show the Emergency Contact Modal
+//       setShowEmergencyContactModal(true);
+//     } else {
+//       // If Aadhaar is verified and contacts exist, navigate to the Nominee feature
+//       setActiveFeature("nominee");
+//     }
+//   };
+
+//   const handleEmergencyContactSave = async (contacts) => {
+//     try {
+//       setEmergencyContacts(contacts);
+//       setShowEmergencyContactModal(false);
+
+//       // Simulate saving the new contact count
+//       await refetch(); // Refetch to update contact count from backend
+
+//       // After successfully saving, navigate to the nominee feature
+//       setActiveFeature("nominee");
+//     } catch (error) {
+//       console.error("Error saving emergency contacts:", error);
+//     }
+//   };
+
+//   const AadhaarModal = () => {
+//     const [localAadhaarNumber, setLocalAadhaarNumber] = useState(aadhaarNumber);
+//     const [isOtpStage, setIsOtpStage] = useState(false);
+//     const [otp, setOtp] = useState(Array(6).fill(""));
+//     const [isLoading, setIsLoading] = useState(false);
+//     const [errorMessage, setErrorMessage] = useState("");
+
+//     const inputRefs = Array(6)
+//       .fill(0)
+//       .map(() => React.createRef());
+
+//     const [adhaarKyc, { isLoading: kycLoading }] = useAdhaarKycMutation();
+
+//     const handleAadhaarChange = (e) => {
+//       const value = e.target.value.replace(/\D/g, "");
+//       if (value.length <= 12) {
+//         setLocalAadhaarNumber(value);
+//         setErrorMessage("");
+//       }
+//     };
+
+//     const handleOtpChange = (value, index) => {
+//       const newOtp = [...otp];
+//       newOtp[index] = value;
+
+//       if (value && /^[0-9]$/.test(value) && index < 5) {
+//         inputRefs[index + 1].current.focus();
+//       }
+//       setOtp(newOtp);
+//     };
+
+//     const handleOtpKeyDown = (e, index) => {
+//       if (e.key === "Backspace" && !otp[index] && index > 0) {
+//         inputRefs[index - 1].current.focus();
+//       }
+//     };
+
+//     const handleSubmit = async () => {
+//       // setIsLoading(true);
+//       setShowAadhaarModal(false);
+//       setAadhaarNumber(localAadhaarNumber);
+//       setShowConsentForm(true);
+//       const otpValue = otp.join("");
+//       // try {
+//       //   const response = await adhaarKyc({
+//       //     aadhaar: localAadhaarNumber,
+
+//       //   }).unwrap();
+
+//       //   if (response?.message === "aadhaar number updated successfully.") {
+//       //     setShowAadhaarModal(false);
+//       //     setShowConsentForm(true);
+//       //   } else {
+//       //     setErrorMessage(response?.message || "Aadhaar verification failed.");
+//       //   }
+//       // } catch (error) {
+//       //   setErrorMessage(error?.data?.message || "Aadhaar verification failed.");
+//       // } finally {
+//       //   setIsLoading(false);
+//       // }
+//     };
+
+//     const clearOtp = () => {
+//       setOtp(Array(6).fill(""));
+//       inputRefs[0].current.focus();
+//     };
+
+//     return (
+//       <AnimatePresence>
+//         {showAadhaarModal && (
+//           <motion.div
+//             initial={{ opacity: 0 }}
+//             animate={{ opacity: 1 }}
+//             exit={{ opacity: 0 }}
+//             className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+//           >
+//             <motion.div
+//               initial={{ scale: 0.95, opacity: 0 }}
+//               animate={{ scale: 1, opacity: 1 }}
+//               exit={{ scale: 0.95, opacity: 0 }}
+//               className="bg-gradient-to-br from-dark-200 to-dark-300 p-8 rounded-xl shadow-xl w-full max-w-lg"
+//             >
+//               <div className="flex justify-between items-center mb-6">
+//                 <div className="flex items-center gap-2">
+//                   <Shield className="w-6 h-6 text-accent-100" />
+//                   <h2 className="text-2xl font-bold text-accent-100">
+//                     Aadhaar Verification
+//                   </h2>
+//                 </div>
+//                 <button
+//                   onClick={() => setShowAadhaarModal(false)}
+//                   className="p-2 hover:bg-dark-400 rounded-full transition-colors"
+//                   aria-label="Close modal"
+//                 >
+//                   <X className="w-6 h-6 text-gray-400" />
+//                 </button>
+//               </div>
+
+//               <div className="space-y-6">
+//                 <div>
+//                   <label className="block text-sm text-gray-400 mb-2">
+//                     Aadhaar Number
+//                   </label>
+//                   <div className="relative">
+//                     <input
+//                       type="text"
+//                       value={localAadhaarNumber}
+//                       onChange={handleAadhaarChange}
+//                       placeholder="Enter 12-digit Aadhaar Number"
+//                       className="w-full px-4 py-3 rounded-lg bg-dark-300 text-white focus:outline-none focus:ring-2 focus:ring-accent-100 pr-28"
+//                       maxLength="12"
+//                       disabled={isOtpStage}
+//                     />
+//                     {!isOtpStage && localAadhaarNumber.length === 12 && (
+//                       <button
+//                         onClick={() => setIsOtpStage(true)}
+//                         className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium hover:opacity-90 focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-all duration-300"
+//                       >
+//                         <span className="flex items-center gap-2">Verify</span>
+//                       </button>
+//                     )}
+//                   </div>
+//                   {localAadhaarNumber.length > 0 &&
+//                     localAadhaarNumber.length !== 12 && (
+//                       <p className="text-sm text-red-500 mt-1">
+//                         Aadhaar number must be exactly 12 digits.
+//                       </p>
+//                     )}
+//                 </div>
+
+//                 {isOtpStage && (
+//                   <motion.div
+//                     initial={{ opacity: 0, y: 10 }}
+//                     animate={{ opacity: 1, y: 0 }}
+//                     className="space-y-4"
+//                   >
+//                     <div className="flex justify-between items-center">
+//                       <label className="block text-sm text-gray-400">
+//                         Enter OTP
+//                       </label>
+//                       <button
+//                         onClick={clearOtp}
+//                         className="text-sm text-accent-100 hover:text-accent-200 transition-colors"
+//                       >
+//                         Clear
+//                       </button>
+//                     </div>
+//                     <div className="flex gap-2 justify-center">
+//                       {otp.map((digit, index) => (
+//                         <input
+//                           key={index}
+//                           ref={inputRefs[index]}
+//                           type="text"
+//                           maxLength="1"
+//                           value={digit}
+//                           onChange={(e) =>
+//                             handleOtpChange(e.target.value, index)
+//                           }
+//                           onKeyDown={(e) => handleOtpKeyDown(e, index)}
+//                           className="w-12 h-12 text-center text-white bg-dark-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-100 text-lg"
+//                         />
+//                       ))}
+//                     </div>
+//                     <button
+//                       onClick={handleSubmit}
+//                       className="w-full py-3 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold shadow-md hover:opacity-90 transition-all duration-300"
+//                       disabled={kycLoading}
+//                     >
+//                       {kycLoading ? "Processing..." : "Submit OTP"}
+//                     </button>
+//                   </motion.div>
+//                 )}
+//               </div>
+//             </motion.div>
+//           </motion.div>
+//         )}
+//       </AnimatePresence>
+//     );
+//   };
+
+//   const ConsentForm = React.memo(() => (
+//     <AnimatePresence initial={false}>
+//       {showConsentForm && (
+//         <motion.div
+//           initial={{ opacity: 0 }}
+//           animate={{ opacity: 1 }}
+//           exit={{ opacity: 0 }}
+//           className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+//         >
+//           <motion.div
+//             initial={{ scale: 0.95, opacity: 0 }}
+//             animate={{ scale: 1, opacity: 1 }}
+//             exit={{ scale: 0.95, opacity: 0 }}
+//             className="bg-gradient-to-br from-dark-200 to-dark-300 p-8 rounded-xl shadow-lg w-full max-w-lg"
+//           >
+//             <div className="flex justify-between items-center mb-6">
+//               <h2 className="text-2xl font-bold text-accent-100">
+//                 Consent Form
+//               </h2>
+//               <button
+//                 onClick={() => setShowConsentForm(false)}
+//                 className="p-2 hover:bg-dark-400 rounded-full transition"
+//                 aria-label="Close"
+//               >
+//                 <X className="w-6 h-6 text-gray-400" />
+//               </button>
+//             </div>
+
+//             <p className="text-gray-400 mb-6">
+//               By proceeding, you consent to sharing your Aadhaar details for
+//               verification purposes. Your data will be handled securely and in
+//               compliance with privacy standards.
+//             </p>
+
+//             <div className="flex justify-end gap-4">
+//               <button
+//                 onClick={() => setShowConsentForm(false)}
+//                 className="px-6 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg shadow-md hover:shadow-lg hover:opacity-90 transition"
+//               >
+//                 Decline
+//               </button>
+//               <button
+//                 onClick={async () => {
+//                   setConsentProcessing(true);
+//                   await handleConsentAccept(aadhaarNumber);
+//                   setConsentProcessing(false);
+//                 }}
+//                 className="px-6 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg shadow-md hover:shadow-lg hover:opacity-90 transition"
+//                 disabled={consentProcessing}
+//               >
+//                 {consentProcessing ? "Processing..." : "Accept"}
+//               </button>
+//             </div>
+//           </motion.div>
+//         </motion.div>
+//       )}
+//     </AnimatePresence>
+//   ));
+
+//   return (
+//     <div className="pt-24 min-h-screen bg-gradient-to-b from-dark-100 via-dark-200 to-dark-300">
+//       <div className="container mx-auto px-6 py-12">
+//         <motion.div
+//           initial={{ opacity: 0, y: 20 }}
+//           animate={{ opacity: 1, y: 0 }}
+//           transition={{ duration: 0.6 }}
+//         >
+//           {/* Welcome Section */}
+//           <div className="flex justify-between items-center mb-12">
+//             <div>
+//               <h1 className="text-4xl font-bold text-white mb-2">
+//                 Welcome Back,{" "}
+//                 <span className="text-accent-100">{user?.firstName}</span>
+//               </h1>
+//               <p className="text-gray-400 text-base">
+//                 Manage your digital assets with ease.
+//               </p>
+//             </div>
+
+//             <motion.button
+//               whileHover={{ scale: 1.1 }}
+//               whileTap={{ scale: 0.95 }}
+//               onClick={() => setShowSettings(true)}
+//               className="p-3 rounded-lg bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 shadow-md hover:shadow-xl transition-all"
+//             >
+//               <Settings className="w-6 h-6 text-white" />
+//             </motion.button>
+//           </div>
+//           <style>{glowEffect}</style>
+//           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
+//             <SlidingStats counts={counts} isLoading={isLoading} />
+//             <ActiveServicesStat
+//               features={metricsData?.features || []}
+//               isLoading={isLoading}
+//             />
+//             <LastLoginStat lastLogin={lastLogin} isLoading={isLoading} />
+//             <StatCard
+//               icon={CheckCircle}
+//               title="Active Plan"
+//               value="Full Premium"
+//               bgColor="bg-gradient-to-r from-indigo-500 to-purple-600"
+//               isLoading={isLoading}
+//             />
+//           </div>
+
+//           {!activeFeature ? (
+//             /* Main Features Grid */
+//             <div className="grid md:grid-cols-3 gap-8">
+//               {features.map((feature) => (
+//                 <FeatureCard
+//                   key={feature.id}
+//                   feature={feature}
+//                   isActive={activeFeature === feature.id}
+//                   isAadhaarVerified={isAadhaarVerified}
+//                   setShowAadhaarModal={() => {
+//                     if (!isAadhaarVerified) {
+//                       setShowAadhaarModal(true);
+//                     }
+//                   }}
+//                   onClick={() => {
+//                     if (feature.id === "nominee") {
+//                       handleNomineeFeatureClick();
+//                     } else {
+//                       setActiveFeature(feature.id);
+//                     }
+//                   }}
+//                 />
+//               ))}
+//             </div>
+//           ) : (
+//             /* Active Feature Component */
+//             <div className="mb-12">
+//               <motion.button
+//                 whileHover={{ scale: 1.02 }}
+//                 whileTap={{ scale: 0.98 }}
+//                 onClick={handleBackToDashboard}
+//                 className="flex items-center text-accent-100 hover:text-accent-200 transition-colors mb-8"
+//               >
+//                 <ArrowLeft className="w-5 h-5 mr-2" />
+//                 Back to Dashboard
+//               </motion.button>
+//               {ActiveFeatureComponent && <ActiveFeatureComponent />}
+//             </div>
+//           )}
+//         </motion.div>
+//       </div>
+
+//       {/* Settings Modal */}
+//       <SettingsModal
+//         isOpen={showSettings}
+//         onClose={() => setShowSettings(false)}
+//       />
+//       {/* <AadhaarModal /> */}
+//       <ConsentForm />
+
+//       {/* Aadhaar Modal */}
+//       <AadhaarModal
+//         isOpen={showAadhaarModal}
+//         onClose={() => setShowAadhaarModal(false)}
+//       />
+
+//       {/* Emergency Contact Modal */}
+//       <EmergencyContactModal
+//         isOpen={showEmergencyContactModal}
+//         onClose={() => setShowEmergencyContactModal(false)}
+//         onSave={handleEmergencyContactSave}
+//       />
+
+//       <Footer />
+//     </div>
+//   );
+// };
+
+// export default DashboardPage;
+
 import React, { useEffect, useMemo, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLocation, useNavigate } from "react-router-dom";
@@ -20,6 +1046,17 @@ import {
   Trash2,
   Key,
   CalendarDays,
+  Lock,
+  Unlock,
+  ArrowRight,
+  ChevronRight,
+  CreditCard as Payment,
+  AlertTriangle,
+  Send,
+  RefreshCw,
+  AlertCircle,
+  Loader2,
+  Info,
 } from "lucide-react";
 import useAuthStore from "../store/authStore";
 import Footer from "../components/Footer";
@@ -36,29 +1073,28 @@ import {
   useMeQuery,
 } from "@/features/api/userApiSlice";
 
+// Updated features configuration with isFree flag and consistent descriptive lengths
 const features = [
   {
     id: "credentials",
     title: "Manage Credentials",
     icon: Shield,
-    status: "Active",
-    nextBilling: "2024-03-15",
-    // price: "₹0.00/month",
+    isFree: true, // This feature is free
+    status: "Active", // Default status for free feature
     description:
-      "Securely Store and Manage all your Digital Credentials in One Place",
+      "Securely store and manage all your digital credentials in one place.",
     color: "from-blue-600 to-indigo-600",
     bgImage:
       "https://images.unsplash.com/photo-1639322537228-f710d846310a?auto=format&fit=crop&q=80&w=800",
     component: DashboardCredentials,
   },
   {
-    id: "notifications",
+    id: "smartNotifications",
     title: "Smart Notifications",
     icon: Bell,
-    status: "Trial",
-    nextBilling: "2024-03-10",
-    // price: "₹0.00/month",
-    description: "Stay informed with intelligent alerts and updates",
+    isFree: false,
+    status: "Inactive", // Will be updated based on API response
+    description: "Stay informed with intelligent alerts and important updates.",
     color: "from-purple-600 to-pink-600",
     bgImage:
       "https://images.unsplash.com/photo-1614064641938-3bbee52942c7?auto=format&fit=crop&q=80&w=800",
@@ -68,13 +1104,12 @@ const features = [
     id: "nominee",
     title: "Choose Nominee",
     icon: Users,
-    status: "Inactive",
-    // price: "₹0.00/month",
-    description: "Select and manage trusted nominees",
+    isFree: false,
+    status: "Inactive", // Will be updated based on API response
+    description: "Select and manage trusted nominees for your digital assets.",
     color: "from-green-600 to-teal-600",
     bgImage:
       "https://images.unsplash.com/photo-1521791136064-7986c2920216?auto=format&fit=crop&q=80&w=800",
-    // component: DashboardNominee,
     component: ({ isAadhaarVerified, setAadhaarVerified }) => (
       <DashboardNominee
         isAadhaarVerified={isAadhaarVerified}
@@ -295,12 +1330,119 @@ const ActiveServicesStat = ({ features, isLoading }) => {
   );
 };
 
-// 🔥 Glow Effect for Icons
+// Enhanced CSS effects for cards - with professional styling
 const glowEffect = `
   .glow-effect {
     box-shadow: 0 0 10px rgba(122, 162, 247, 0.7), 0 0 20px rgba(122, 162, 247, 0.4);
   }
+  
+  .feature-card {
+    transition: all 0.3s ease-in-out;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+    height: 220px; /* Fixed height for all cards */
+    overflow: hidden;
+    position: relative;
+    border-radius: 0.75rem;
+  }
+  
+  .feature-card:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.3);
+  }
+  
+  .card-content {
+    transition: all 0.3s ease-in-out;
+    height: 100%;
+    width: 100%;
+  }
+  
+  /* Ensure all feature cards have consistent heights */
+  .feature-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+  }
+  
+  .feature-grid > div {
+    height: 100%;
+  }
+  
+  /* Access overlay styling */
+  .lock-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 50;
+    border-radius: 0.75rem;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.85);
+    backdrop-filter: blur(5px);
+  }
+  
+  /* Feature name */
+  .locked-feature-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: white;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    max-width: 80%;
+  }
+  
+  /* Lock icon styling */
+  .lock-icon {
+    margin-bottom: 1.5rem;
+    background: rgba(30, 30, 40, 0.6);
+    border-radius: 50%;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  /* Attractive, professional upgrade button */
+  .upgrade-button {
+    background: linear-gradient(to right, #2C3E50, #4C566A);
+    color: white;
+    font-weight: 500;
+    font-size: 0.875rem;
+    padding: 0.7rem 1.75rem;
+    border-radius: 0.375rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: none;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  }
+  
+  .upgrade-button:hover {
+    background: linear-gradient(to right, #34495E, #596C7E);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+  }
+  
+  .upgrade-button:active {
+    transform: translateY(0);
+  }
 `;
+
+// Feature access overlay
+const AccessOverlay = ({ feature, onClick }) => (
+  <div className="lock-overlay">
+    <h3 className="locked-feature-name">{feature.title}</h3>
+    <div className="lock-icon">
+      <Lock className="w-5 h-5 text-white" />
+    </div>
+    <button className="upgrade-button" onClick={onClick}>
+      Upgrade Now
+    </button>
+  </div>
+);
 
 const FeatureCard = ({
   feature,
@@ -308,60 +1450,114 @@ const FeatureCard = ({
   isAadhaarVerified,
   setShowAadhaarModal,
   onClick,
-}) => (
-  <motion.div
-    onClick={() => {
-      if (feature.id === "nominee") {
-        if (!isAadhaarVerified) {
-          setShowAadhaarModal(true); // Show Aadhaar modal if not verified
-        } else {
-          onClick(); // Directly activate the nominee feature
-        }
-      } else {
-        onClick(); // Activate other features
-      }
-    }}
-    className={`relative overflow-hidden rounded-xl cursor-pointer transition-all duration-300 group ${
-      isActive ? "ring-2 ring-accent-100" : ""
-    }`}
-    whileHover={{ scale: 1.02 }}
-    whileTap={{ scale: 0.98 }}
-  >
-    <div className="absolute inset-0">
-      <img
-        src={feature.bgImage}
-        alt={feature.title}
-        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-      />
-      <div
-        className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-90`}
-      />
-    </div>
+  isLocked,
+  navigate,
+}) => {
+  // Handle redirect to specific pricing sections with proper scrolling
+  const handlePricingRedirect = (e) => {
+    // Stop propagation to prevent card click handler from firing
+    e.stopPropagation();
 
-    <div className="relative p-6">
-      <div className="flex justify-between items-start mb-6">
-        <div className="p-3 rounded-lg bg-white/10 backdrop-blur-sm">
-          <feature.icon className="w-6 h-6 text-white" />
-        </div>
-        <span
-          className={`px-3 py-1 rounded-full text-sm backdrop-blur-sm ${
-            feature.status === "Active"
-              ? "bg-green-500/20 text-green-100"
-              : feature.status === "Trial"
-              ? "bg-yellow-500/20 text-yellow-100"
-              : "bg-red-500/20 text-red-100"
-          }`}
-        >
-          {feature.status}
-        </span>
+    if (feature.id === "smartNotifications") {
+      // Navigate to the page first
+      navigate("/smart-notifications");
+
+      // Then scroll to the specific element after a short delay
+      setTimeout(() => {
+        const element = document.getElementById("sm");
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 500); // Small delay to ensure the page has loaded
+    } else if (feature.id === "nominee") {
+      navigate("/choose-nominee");
+
+      setTimeout(() => {
+        const element = document.getElementById("cyn");
+        if (element) {
+          element.scrollIntoView({ behavior: "smooth", block: "start" });
+        }
+      }, 500);
+    }
+  };
+
+  // Handle card click - but only for unlocked cards
+  const handleCardClick = () => {
+    // Don't do anything if the card is locked
+    if (isLocked) {
+      return;
+    }
+
+    // Handle normal card click for unlocked cards
+    if (feature.id === "nominee") {
+      if (!isAadhaarVerified) {
+        setShowAadhaarModal(true);
+      } else {
+        onClick();
+      }
+    } else {
+      onClick();
+    }
+  };
+
+  return (
+    <motion.div
+      className={`feature-card group ${
+        isActive ? "ring-2 ring-accent-100" : ""
+      }`}
+      whileHover={{ scale: 1.03, y: -5 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{
+        type: "spring",
+        stiffness: 300,
+        damping: 15,
+        duration: 0.3,
+      }}
+      onClick={handleCardClick}
+    >
+      {/* Card Background and Content */}
+      <div className="absolute inset-0 overflow-hidden rounded-xl">
+        <img
+          src={feature.bgImage}
+          alt={feature.title}
+          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        />
+        <div
+          className={`absolute inset-0 bg-gradient-to-br ${feature.color} opacity-90 transition-opacity duration-300`}
+        />
       </div>
 
-      <h3 className="text-xl font-semibold mb-2 text-white">{feature.title}</h3>
-      <p className="text-sm mb-4 text-white/80">{feature.description}</p>
-      <p className="text-lg font-bold text-white">{feature.price}</p>
-    </div>
-  </motion.div>
-);
+      <div className="relative p-6 h-full z-10">
+        <div className="flex justify-between items-start mb-6">
+          <div className="p-3 rounded-lg bg-white/10 backdrop-blur-sm">
+            <feature.icon className="w-6 h-6 text-white" />
+          </div>
+          <span
+            className={`px-3 py-1 rounded-full text-sm backdrop-blur-sm ${
+              feature.status === "Active"
+                ? "bg-green-500/20 text-green-100"
+                : feature.status === "Trial"
+                ? "bg-yellow-500/20 text-yellow-100"
+                : "bg-red-500/20 text-red-100"
+            }`}
+          >
+            {feature.status}
+          </span>
+        </div>
+
+        <h3 className="text-xl font-semibold mb-2 text-white">
+          {feature.title}
+        </h3>
+        <p className="text-sm mb-4 text-white/80">{feature.description}</p>
+      </div>
+
+      {/* Access Overlay for locked features */}
+      {isLocked && (
+        <AccessOverlay feature={feature} onClick={handlePricingRedirect} />
+      )}
+    </motion.div>
+  );
+};
 
 const EmergencyContactModal = ({ isOpen, onClose, onSave }) => {
   const [contacts, setContacts] = useState([
@@ -460,21 +1656,22 @@ const EmergencyContactModal = ({ isOpen, onClose, onSave }) => {
                   />
                 </div>
                 <div>
-  <label className="block text-sm text-gray-400">Phone</label>
-  <input
-    type="text"
-    value={contact.phone}
-    onChange={(e) => {
-      // Restrict non-numeric input and limit to 10 digits
-      const numericValue = e.target.value.replace(/[^0-9]/g, "").slice(0, 10);
-      handleInputChange(index, "phone", numericValue);
-    }}
-    className="input-primary"
-    placeholder="Enter phone number"
-    maxLength="10" // Prevents input beyond 10 digits
-  />
-</div>
-
+                  <label className="block text-sm text-gray-400">Phone</label>
+                  <input
+                    type="text"
+                    value={contact.phone}
+                    onChange={(e) => {
+                      // Restrict non-numeric input and limit to 10 digits
+                      const numericValue = e.target.value
+                        .replace(/[^0-9]/g, "")
+                        .slice(0, 10);
+                      handleInputChange(index, "phone", numericValue);
+                    }}
+                    className="input-primary"
+                    placeholder="Enter phone number"
+                    maxLength="10" // Prevents input beyond 10 digits
+                  />
+                </div>
 
                 <div>
                   <label className="block text-sm text-gray-400">Email</label>
@@ -532,34 +1729,54 @@ const EmergencyContactModal = ({ isOpen, onClose, onSave }) => {
 };
 
 const DashboardPage = () => {
-  // const { user } = useAuthStore();
   const [activeFeature, setActiveFeature] = useState(null);
   const [showSettings, setShowSettings] = useState(false);
-  // const [isAadhaarVerified, setIsAadhaarVerified] = useState(true); // Initial Aadhaar verification state
-  const [showAadhaarModal, setShowAadhaarModal] = useState(false); // Aadhaar modal state
+  const [showAadhaarModal, setShowAadhaarModal] = useState(false);
   const [aadhaarNumber, setAadhaarNumber] = useState("");
-  const [otp, setOtp] = useState("");
-  const [isOtpStage, setIsOtpStage] = useState(false);
-  const [showConsentForm, setShowConsentForm] = useState(false); // Consent form state
-  const { user } = useSelector((state) => state.auth); // Access user from Redux store
-  // const isAadhaarVerified = user?.aadhaarVerified || false;
+  const [showConsentForm, setShowConsentForm] = useState(false);
+  const { user } = useSelector((state) => state.auth);
   const [consentProcessing, setConsentProcessing] = useState(false);
   const [showEmergencyContactModal, setShowEmergencyContactModal] =
     useState(false);
   const [emergencyContacts, setEmergencyContacts] = useState([]);
 
   // Use the me API query
-  const { data: meData, isError, refetch } = useMeQuery();
+  const {
+    data: meData,
+    isError,
+    refetch,
+  } = useMeQuery(undefined, {
+    // Force refetch on mount
+    refetchOnMountOrArgChange: true,
+  });
   const [adhaarKyc, { isLoading: kycLoading }] = useAdhaarKycMutation();
   const { data: metricsData, isLoading } = useGetMatricsDataQuery();
   const [rotatingIndex, setRotatingIndex] = useState(0);
-  // const [userLastLogin, setUserLastLogin] = useState("");
+
   // Derive isAadhaarVerified from the API response
   const isAadhaarVerified = meData?.me?.aadhaarVerified || false;
   const contactCount = meData?.me?.contacts || 0;
   const navigate = useNavigate();
   const location = useLocation();
   const { id } = location.state || {};
+
+  // Get user active features from API response
+  const userFeatures = meData?.me?.features || {};
+
+  // Update features status based on API response
+  const updatedFeatures = features.map((feature) => {
+    // Credentials is always Active (free)
+    if (feature.isFree) {
+      return { ...feature, status: "Active" };
+    }
+
+    // For premium features, check if user has active subscription
+    const isActive = userFeatures[feature.id] === true;
+    return {
+      ...feature,
+      status: isActive ? "Active" : "Inactive",
+    };
+  });
 
   useEffect(() => {
     if (id) {
@@ -570,15 +1787,6 @@ const DashboardPage = () => {
 
   const [showDate, setShowDate] = useState(true);
 
-  // ✅ Rotate 1st Card (Stored Credentials) every 4 sec
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setRotatingIndex((prev) => (prev + 1) % rotatingStats.length);
-  //   }, 4000);
-  //   return () => clearInterval(interval);
-  // }, []);
-
-  // ✅ Format Last Login & Rotate between Date/Time every 4 sec
   const lastLogin = useMemo(() => {
     if (!metricsData?.lastLogin) return { date: "No Login", time: "" };
     const parsedDate = new Date(metricsData.lastLogin);
@@ -598,14 +1806,6 @@ const DashboardPage = () => {
     };
   }, [metricsData?.lastLogin]);
 
-  // useEffect(() => {
-  //   if (!lastLogin.date || !lastLogin.time) return;
-  //   const interval = setInterval(() => {
-  //     setShowDate((prev) => !prev);
-  //   }, 4000);
-  //   return () => clearInterval(interval);
-  // }, [lastLogin]);
-
   const counts = metricsData?.counts || {
     creds: 0,
     notifications: 0,
@@ -613,11 +1813,48 @@ const DashboardPage = () => {
   };
 
   const ActiveFeatureComponent = activeFeature
-    ? features.find((f) => f.id === activeFeature)?.component
+    ? updatedFeatures.find((f) => f.id === activeFeature)?.component
     : null;
 
   const handleBackToDashboard = () => {
     setActiveFeature(null); // Reset the active feature
+  };
+
+  // Check if a feature is active/unlocked based on API response
+  const isFeatureActive = (featureId) => {
+    if (featureId === "credentials") return true; // Credentials is always active (free)
+    return userFeatures[featureId] === true;
+  };
+
+  const handleFeatureClick = (feature) => {
+    // If feature is free or active, open it
+    if (feature.isFree || isFeatureActive(feature.id)) {
+      if (feature.id === "nominee") {
+        handleNomineeFeatureClick();
+      } else {
+        setActiveFeature(feature.id);
+      }
+    }
+    // For locked features, redirection is handled directly in the FeatureCard component
+  };
+
+  const handleNomineeFeatureClick = () => {
+    // First check if the feature is unlocked
+    if (!isFeatureActive("nominee")) {
+      return; // Don't proceed if feature is locked - handled by card component
+    }
+
+    // If feature is unlocked, then check for Aadhaar verification
+    if (!isAadhaarVerified) {
+      // If Aadhaar is not verified, show the Aadhaar modal
+      setShowAadhaarModal(true);
+    } else if (contactCount === 0) {
+      // If no contacts exist, show the Emergency Contact Modal
+      setShowEmergencyContactModal(true);
+    } else {
+      // If Aadhaar is verified and contacts exist, navigate to the Nominee feature
+      setActiveFeature("nominee");
+    }
   };
 
   const handleAadhaarVerificationCheck = () => {
@@ -637,19 +1874,6 @@ const DashboardPage = () => {
       }
     } catch (error) {
       console.error("Aadhaar KYC failed:", error);
-    }
-  };
-
-  const handleNomineeFeatureClick = () => {
-    if (!isAadhaarVerified) {
-      // If Aadhaar is not verified, show the Aadhaar modal
-      setShowAadhaarModal(true);
-    } else if (contactCount === 0) {
-      // If no contacts exist, show the Emergency Contact Modal
-      setShowEmergencyContactModal(true);
-    } else {
-      // If Aadhaar is verified and contacts exist, navigate to the Nominee feature
-      setActiveFeature("nominee");
     }
   };
 
@@ -735,6 +1959,16 @@ const DashboardPage = () => {
       inputRefs[0].current.focus();
     };
 
+    // Format Aadhaar number for display (XXXX XXXX XXXX)
+    const formatAadhaarDisplay = (value) => {
+      if (!value) return "";
+      const groups = [];
+      for (let i = 0; i < value.length; i += 4) {
+        groups.push(value.slice(i, i + 4));
+      }
+      return groups.join(" ");
+    };
+
     return (
       <AnimatePresence>
         {showAadhaarModal && (
@@ -742,104 +1976,198 @@ const DashboardPage = () => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm p-4"
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
           >
             <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              className="bg-gradient-to-br from-dark-200 to-dark-300 p-8 rounded-xl shadow-xl w-full max-w-lg"
+              initial={{ scale: 0.95, opacity: 0, y: 20 }}
+              animate={{ scale: 1, opacity: 1, y: 0 }}
+              exit={{ scale: 0.95, opacity: 0, y: 10 }}
+              transition={{ duration: 0.3, ease: "easeOut" }}
+              className="bg-gradient-to-br from-dark-200 to-dark-300 p-6 md:p-8 rounded-2xl shadow-2xl w-full max-w-md border border-dark-100/20"
             >
-              <div className="flex justify-between items-center mb-6">
-                <div className="flex items-center gap-2">
-                  <Shield className="w-6 h-6 text-accent-100" />
-                  <h2 className="text-2xl font-bold text-accent-100">
-                    Aadhaar Verification
-                  </h2>
+              {/* Header with progress indicator */}
+              <div className="flex flex-col mb-6">
+                <div className="flex justify-between items-center mb-4">
+                  <div className="flex items-center gap-3">
+                    <div className="bg-accent-100/10 p-2 rounded-lg">
+                      <Shield className="w-5 h-5 text-accent-100" />
+                    </div>
+                    <h2 className="text-xl font-bold text-white">
+                      Aadhaar Verification
+                    </h2>
+                  </div>
+                  <button
+                    onClick={() => setShowAadhaarModal(false)}
+                    className="p-1.5 hover:bg-dark-400 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-accent-100/50"
+                    aria-label="Close modal"
+                  >
+                    <X className="w-5 h-5 text-gray-400" />
+                  </button>
                 </div>
-                <button
-                  onClick={() => setShowAadhaarModal(false)}
-                  className="p-2 hover:bg-dark-400 rounded-full transition-colors"
-                  aria-label="Close modal"
-                >
-                  <X className="w-6 h-6 text-gray-400" />
-                </button>
+
+                {/* Progress indicator */}
+                <div className="flex items-center gap-2 mb-1">
+                  <div className="h-1 rounded-full bg-accent-100 flex-1" />
+                  <div
+                    className={`h-1 rounded-full flex-1 ${
+                      isOtpStage ? "bg-accent-100" : "bg-dark-400"
+                    }`}
+                  />
+                </div>
+                <p className="text-xs text-gray-400">
+                  {isOtpStage
+                    ? "Step 2 of 2: Enter OTP"
+                    : "Step 1 of 2: Enter Aadhaar Number"}
+                </p>
               </div>
 
               <div className="space-y-6">
-                <div>
-                  <label className="block text-sm text-gray-400 mb-2">
+                {/* Aadhaar Input Section */}
+                <div
+                  className={`transition-all duration-300 ${
+                    isOtpStage ? "opacity-60" : ""
+                  }`}
+                >
+                  <label className="block text-sm font-medium text-gray-300 mb-2">
                     Aadhaar Number
                   </label>
                   <div className="relative">
+                    <div className="absolute left-4 top-1/2 transform -translate-y-1/2">
+                      <CreditCard className="w-4 h-4 text-gray-400" />
+                    </div>
                     <input
                       type="text"
-                      value={localAadhaarNumber}
+                      value={formatAadhaarDisplay(localAadhaarNumber)}
                       onChange={handleAadhaarChange}
-                      placeholder="Enter 12-digit Aadhaar Number"
-                      className="w-full px-4 py-3 rounded-lg bg-dark-300 text-white focus:outline-none focus:ring-2 focus:ring-accent-100 pr-28"
-                      maxLength="12"
+                      placeholder="XXXX XXXX XXXX"
+                      className="w-full pl-10 pr-28 py-3.5 rounded-xl bg-dark-300/70 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-accent-100/50 border border-dark-100/20 transition-all duration-200 text-center"
+                      maxLength="14"
                       disabled={isOtpStage}
                     />
                     {!isOtpStage && localAadhaarNumber.length === 12 && (
                       <button
                         onClick={() => setIsOtpStage(true)}
-                        className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 rounded-md bg-gradient-to-r from-blue-600 to-indigo-600 text-white text-sm font-medium hover:opacity-90 focus:ring-2 focus:ring-indigo-400 focus:outline-none transition-all duration-300"
+                        className="absolute right-2 top-1/2 transform -translate-y-1/2 px-4 py-1.5 rounded-lg bg-gradient-to-r from-accent-100 to-accent-200 text-white text-sm font-medium hover:shadow-lg hover:opacity-95 focus:ring-2 focus:ring-accent-100/50 focus:outline-none transition-all duration-300 flex items-center gap-1"
                       >
-                        <span className="flex items-center gap-2">Verify</span>
+                        <span>Verify</span>
+                        <ChevronRight className="w-4 h-4" />
                       </button>
                     )}
                   </div>
                   {localAadhaarNumber.length > 0 &&
                     localAadhaarNumber.length !== 12 && (
-                      <p className="text-sm text-red-500 mt-1">
+                      <motion.p
+                        initial={{ opacity: 0, y: -5 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-sm text-red-400 mt-2 flex items-center gap-1"
+                      >
+                        <AlertCircle className="w-3.5 h-3.5" />
                         Aadhaar number must be exactly 12 digits.
-                      </p>
+                      </motion.p>
                     )}
+                  {!isOtpStage && localAadhaarNumber.length === 0 && (
+                    <p className="text-xs text-gray-400 mt-2">
+                      Please enter your 12-digit Aadhaar number for verification
+                    </p>
+                  )}
                 </div>
 
+                {/* OTP Section */}
                 {isOtpStage && (
                   <motion.div
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="space-y-4"
+                    transition={{ delay: 0.1 }}
+                    className="space-y-5"
                   >
-                    <div className="flex justify-between items-center">
-                      <label className="block text-sm text-gray-400">
-                        Enter OTP
-                      </label>
-                      <button
-                        onClick={clearOtp}
-                        className="text-sm text-accent-100 hover:text-accent-200 transition-colors"
-                      >
-                        Clear
-                      </button>
+                    <div>
+                      <div className="flex justify-between items-center mb-2">
+                        <label className="block text-sm font-medium text-gray-300">
+                          Enter OTP
+                        </label>
+                        <button
+                          onClick={clearOtp}
+                          className="text-xs text-accent-100 hover:text-accent-200 transition-colors flex items-center gap-1"
+                        >
+                          <RefreshCw className="w-3 h-3" />
+                          Clear
+                        </button>
+                      </div>
+
+                      <p className="text-xs text-gray-400 mb-4">
+                        OTP has been sent to the mobile number linked with your
+                        Aadhaar
+                      </p>
+
+                      <div className="flex gap-2 justify-center">
+                        {otp.map((digit, index) => (
+                          <input
+                            key={index}
+                            ref={inputRefs[index]}
+                            type="text"
+                            inputMode="numeric"
+                            pattern="[0-9]*"
+                            maxLength="1"
+                            value={digit}
+                            onChange={(e) =>
+                              handleOtpChange(e.target.value, index)
+                            }
+                            onKeyDown={(e) => handleOtpKeyDown(e, index)}
+                            className="w-11 h-12 text-center text-lg font-medium text-white bg-dark-300/80 border border-dark-100/30 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-100/50 focus:border-accent-100 transition-all duration-200"
+                          />
+                        ))}
+                      </div>
+
+                      <div className="flex justify-center mt-3">
+                        <button className="text-xs text-accent-100 hover:text-accent-200 transition-colors flex items-center gap-1">
+                          <Send className="w-3 h-3" />
+                          Resend OTP in 00:30
+                        </button>
+                      </div>
                     </div>
-                    <div className="flex gap-2 justify-center">
-                      {otp.map((digit, index) => (
-                        <input
-                          key={index}
-                          ref={inputRefs[index]}
-                          type="text"
-                          maxLength="1"
-                          value={digit}
-                          onChange={(e) =>
-                            handleOtpChange(e.target.value, index)
-                          }
-                          onKeyDown={(e) => handleOtpKeyDown(e, index)}
-                          className="w-12 h-12 text-center text-white bg-dark-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-100 text-lg"
-                        />
-                      ))}
-                    </div>
+
                     <button
                       onClick={handleSubmit}
-                      className="w-full py-3 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 text-white font-semibold shadow-md hover:opacity-90 transition-all duration-300"
-                      disabled={kycLoading}
+                      className={`w-full py-3.5 rounded-xl text-white font-medium shadow-md hover:shadow-lg transition-all duration-300 flex items-center justify-center gap-2 ${
+                        otp.every((digit) => digit)
+                          ? "bg-gradient-to-r from-green-500 to-teal-500 hover:opacity-95"
+                          : "bg-gradient-to-r from-green-500/70 to-teal-500/70 opacity-70 cursor-not-allowed"
+                      }`}
+                      disabled={kycLoading || !otp.every((digit) => digit)}
                     >
-                      {kycLoading ? "Processing..." : "Submit OTP"}
+                      {kycLoading ? (
+                        <>
+                          <Loader2 className="w-4 h-4 animate-spin" />
+                          Processing...
+                        </>
+                      ) : (
+                        <>
+                          <CheckCircle className="w-4 h-4" />
+                          Verify & Continue
+                        </>
+                      )}
                     </button>
+
+                    {errorMessage && (
+                      <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="text-sm text-red-400 flex items-center gap-1 justify-center"
+                      >
+                        <AlertTriangle className="w-4 h-4" />
+                        {errorMessage}
+                      </motion.p>
+                    )}
                   </motion.div>
                 )}
+
+                {/* Security Note */}
+                <div className="pt-2 mt-2 border-t border-dark-100/20">
+                  <p className="text-xs text-gray-500 flex items-center gap-2">
+                    <Lock className="w-3.5 h-3.5 text-gray-400" />
+                    Your information is encrypted and secure
+                  </p>
+                </div>
               </div>
             </motion.div>
           </motion.div>
@@ -855,51 +2183,122 @@ const DashboardPage = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 backdrop-blur-sm"
+          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-4"
         >
           <motion.div
-            initial={{ scale: 0.95, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            exit={{ scale: 0.95, opacity: 0 }}
-            className="bg-gradient-to-br from-dark-200 to-dark-300 p-8 rounded-xl shadow-lg w-full max-w-lg"
+            initial={{ scale: 0.95, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.95, opacity: 0, y: 10 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            className="bg-gradient-to-br from-dark-200 to-dark-300 p-5 rounded-2xl shadow-2xl w-full max-w-sm border border-dark-100/20 max-h-[90vh] overflow-y-auto"
           >
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-accent-100">
-                Consent Form
-              </h2>
+            <div className="flex justify-between items-center mb-4">
+              <div className="flex items-center gap-2">
+                <div className="bg-accent-100/10 p-1.5 rounded-lg">
+                  <FileText className="w-4 h-4 text-accent-100" />
+                </div>
+                <h2 className="text-lg font-bold text-white">
+                  Aadhaar Consent
+                </h2>
+              </div>
               <button
                 onClick={() => setShowConsentForm(false)}
-                className="p-2 hover:bg-dark-400 rounded-full transition"
-                aria-label="Close"
+                className="p-1.5 hover:bg-dark-400 rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-accent-100/50"
+                aria-label="Close modal"
               >
-                <X className="w-6 h-6 text-gray-400" />
+                <X className="w-4 h-4 text-gray-400" />
               </button>
             </div>
 
-            <p className="text-gray-400 mb-6">
-              By proceeding, you consent to sharing your Aadhaar details for
-              verification purposes. Your data will be handled securely and in
-              compliance with privacy standards.
-            </p>
+            {/* Consent Information Card - More Compact */}
+            <div className="bg-dark-400/40 rounded-xl p-3 mb-4 border border-dark-100/10">
+              <div className="flex items-start gap-2 mb-3">
+                <div className="bg-blue-500/10 p-1.5 rounded-lg mt-0.5">
+                  <Info className="w-3.5 h-3.5 text-blue-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-blue-400 mb-0.5">
+                    Information Sharing
+                  </h3>
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    We'll verify your identity through Aadhaar authentication to
+                    comply with KYC regulations.
+                  </p>
+                </div>
+              </div>
 
-            <div className="flex justify-end gap-4">
+              <div className="flex items-start gap-2">
+                <div className="bg-green-500/10 p-1.5 rounded-lg mt-0.5">
+                  <Lock className="w-3.5 h-3.5 text-green-400" />
+                </div>
+                <div>
+                  <h3 className="text-sm font-medium text-green-400 mb-0.5">
+                    Data Security
+                  </h3>
+                  <p className="text-xs text-gray-300 leading-relaxed">
+                    Your information is encrypted and we don't store biometric
+                    data or share with third parties.
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Aadhaar Number Display */}
+            <div className="bg-dark-400/30 rounded-xl p-3 mb-4 text-center">
+              <p className="text-xs text-gray-400 mb-0.5">Verifying Aadhaar</p>
+              <p className="text-base font-medium text-white">
+                {aadhaarNumber.replace(/(\d{4})(\d{4})(\d{4})/, "$1 $2 $3")}
+              </p>
+            </div>
+
+            {/* Legal Text - Shortened */}
+            <div className="mb-4">
+              <p className="text-xs text-gray-400 leading-relaxed">
+                By accepting, you consent to sharing your Aadhaar details for
+                verification as per the IT Act, 2000 and Aadhaar Act, 2016. Your
+                data will be handled securely.
+              </p>
+            </div>
+
+            {/* Action Buttons - Side by Side for Space Saving */}
+            <div className="flex gap-2">
               <button
                 onClick={() => setShowConsentForm(false)}
-                className="px-6 py-2 bg-gradient-to-r from-red-500 to-pink-500 text-white rounded-lg shadow-md hover:shadow-lg hover:opacity-90 transition"
+                className="flex-1 py-2.5 rounded-lg border border-gray-600 text-gray-300 text-sm font-medium hover:bg-dark-400/50 transition-all duration-300 flex items-center justify-center gap-1 focus:outline-none focus:ring-1 focus:ring-gray-500/30"
               >
+                <X className="w-3.5 h-3.5" />
                 Decline
               </button>
+
               <button
                 onClick={async () => {
                   setConsentProcessing(true);
                   await handleConsentAccept(aadhaarNumber);
                   setConsentProcessing(false);
                 }}
-                className="px-6 py-2 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-lg shadow-md hover:shadow-lg hover:opacity-90 transition"
+                className="flex-1 py-2.5 rounded-lg bg-gradient-to-r from-green-500 to-teal-500 text-white text-sm font-medium shadow-md hover:shadow-lg hover:opacity-95 transition-all duration-300 flex items-center justify-center gap-1 focus:outline-none focus:ring-1 focus:ring-green-500/50"
                 disabled={consentProcessing}
               >
-                {consentProcessing ? "Processing..." : "Accept"}
+                {consentProcessing ? (
+                  <>
+                    <Loader2 className="w-3.5 h-3.5 animate-spin" />
+                    Processing...
+                  </>
+                ) : (
+                  <>
+                    <CheckCircle className="w-3.5 h-3.5" />
+                    Accept
+                  </>
+                )}
               </button>
+            </div>
+
+            {/* Footer Note - Simplified */}
+            <div className="mt-3 pt-2 border-t border-dark-100/10 flex items-center justify-center">
+              <p className="text-xs text-gray-500 flex items-center">
+                <Shield className="w-3 h-3 text-gray-500 mr-1" />
+                Secured by 256-bit encryption
+              </p>
             </div>
           </motion.div>
         </motion.div>
@@ -940,14 +2339,16 @@ const DashboardPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
             <SlidingStats counts={counts} isLoading={isLoading} />
             <ActiveServicesStat
-              features={metricsData?.features || []}
+              features={Object.keys(userFeatures).filter(
+                (key) => userFeatures[key]
+              )}
               isLoading={isLoading}
             />
             <LastLoginStat lastLogin={lastLogin} isLoading={isLoading} />
             <StatCard
               icon={CheckCircle}
               title="Active Plan"
-              value="Full Premium"
+              value={Object.keys(userFeatures).length > 0 ? "Premium" : "Basic"}
               bgColor="bg-gradient-to-r from-indigo-500 to-purple-600"
               isLoading={isLoading}
             />
@@ -956,24 +2357,16 @@ const DashboardPage = () => {
           {!activeFeature ? (
             /* Main Features Grid */
             <div className="grid md:grid-cols-3 gap-8">
-              {features.map((feature) => (
+              {updatedFeatures.map((feature) => (
                 <FeatureCard
                   key={feature.id}
                   feature={feature}
                   isActive={activeFeature === feature.id}
                   isAadhaarVerified={isAadhaarVerified}
-                  setShowAadhaarModal={() => {
-                    if (!isAadhaarVerified) {
-                      setShowAadhaarModal(true);
-                    }
-                  }}
-                  onClick={() => {
-                    if (feature.id === "nominee") {
-                      handleNomineeFeatureClick();
-                    } else {
-                      setActiveFeature(feature.id);
-                    }
-                  }}
+                  setShowAadhaarModal={setShowAadhaarModal}
+                  isLocked={!feature.isFree && !isFeatureActive(feature.id)}
+                  onClick={() => handleFeatureClick(feature)}
+                  navigate={navigate}
                 />
               ))}
             </div>
@@ -989,7 +2382,15 @@ const DashboardPage = () => {
                 <ArrowLeft className="w-5 h-5 mr-2" />
                 Back to Dashboard
               </motion.button>
-              {ActiveFeatureComponent && <ActiveFeatureComponent />}
+              {ActiveFeatureComponent &&
+                (ActiveFeatureComponent.name === "DashboardNominee" ? (
+                  <ActiveFeatureComponent
+                    isAadhaarVerified={isAadhaarVerified}
+                    setAadhaarVerified={() => refetch()}
+                  />
+                ) : (
+                  <ActiveFeatureComponent />
+                ))}
             </div>
           )}
         </motion.div>
@@ -1000,14 +2401,12 @@ const DashboardPage = () => {
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
       />
-      {/* <AadhaarModal /> */}
-      <ConsentForm />
 
       {/* Aadhaar Modal */}
-      <AadhaarModal
-        isOpen={showAadhaarModal}
-        onClose={() => setShowAadhaarModal(false)}
-      />
+      <AadhaarModal />
+
+      {/* Consent Form */}
+      <ConsentForm />
 
       {/* Emergency Contact Modal */}
       <EmergencyContactModal

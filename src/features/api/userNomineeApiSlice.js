@@ -1,3 +1,4 @@
+import { processNomineesResponse } from "@/utils/decryption";
 import { NOMINEE_URL } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
@@ -7,17 +8,20 @@ export const nomineeApiSlice = apiSlice.injectEndpoints({
       query: (nomineeId) => ({
         url: `${NOMINEE_URL}/${nomineeId}`,
       }),
+      // Transform the response to decrypt sensitive data
+      transformResponse: (response) => processNomineesResponse(response),
       providesTags: (result, error, nomineeId) => [
-        { type: "Nominee", id: nomineeId }, { type: "Nominee", id: "LIST" }
+        { type: "Nominee", id: nomineeId },
+        { type: "Nominee", id: "LIST" },
       ],
-      
-
     }),
 
     getEmergencyNominee: builder.query({
       query: (resourceName) => ({
         url: `${NOMINEE_URL}/resources/${resourceName}`,
       }),
+      // Transform the response to decrypt sensitive data
+      transformResponse: (response) => processNomineesResponse(response),
       providesTags: [{ type: "Nominee", id: "EMERGENCY" }],
     }),
 
@@ -25,6 +29,8 @@ export const nomineeApiSlice = apiSlice.injectEndpoints({
       query: (category) => ({
         url: `${NOMINEE_URL}/${category}/resources`,
       }),
+      // Transform the response to decrypt sensitive data
+      transformResponse: (response) => processNomineesResponse(response),
       providesTags: [{ type: "Nominee", id: "LIST" }],
     }),
 
@@ -61,7 +67,6 @@ export const nomineeApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [
         { type: "Nominee", id: "LIST" }, // Refresh all nominees
-
         { type: "Nominee", id: "EMERGENCY" }, // Refresh emergency nominees
       ],
     }),

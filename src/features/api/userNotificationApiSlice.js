@@ -1,3 +1,4 @@
+import { processNotificationsResponse } from "@/utils/decryption";
 import { USER_NOTIFICATIONS } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
@@ -7,6 +8,7 @@ export const usersNotificationApiSlice = apiSlice.injectEndpoints({
       query: (category) => ({
         url: `${USER_NOTIFICATIONS}/${category}/resources`,
       }),
+      transformResponse: (response) => processNotificationsResponse(response),
       providesTags: (result, error, category) => [
         { type: "Notifications", id: category },
       ],
@@ -16,8 +18,10 @@ export const usersNotificationApiSlice = apiSlice.injectEndpoints({
       query: (resourcesName) => ({
         url: `${USER_NOTIFICATIONS}/resources/${resourcesName}`,
       }),
+      transformResponse: (response) => processNotificationsResponse(response),
       providesTags: (result, error, resourcesName) => [
-        { type: "NotificationDetails", id: resourcesName },   { type: "Notifications", id: resourcesName },
+        { type: "NotificationDetails", id: resourcesName },
+        { type: "Notifications", id: resourcesName },
       ],
     }),
 
@@ -61,10 +65,12 @@ export const usersNotificationApiSlice = apiSlice.injectEndpoints({
         { type: "NotificationDetails" },
       ],
     }),
+
     getUpcomingNotifications: builder.query({
       query: () => ({
         url: `${USER_NOTIFICATIONS}/upcoming`,
       }),
+      transformResponse: (response) => processNotificationsResponse(response),
       providesTags: (result, error, category) => [
         { type: "Notifications", id: category },
       ],

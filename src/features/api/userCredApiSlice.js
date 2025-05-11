@@ -1,3 +1,4 @@
+import { processCredentialsResponse } from "@/utils/decryption";
 import { USER_CREDS } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
@@ -7,17 +8,17 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       query: (credId) => ({
         url: `${USER_CREDS}/resources/${credId}`,
       }),
-      providesTags: (result, error, credId) => [{ type: "Creds", id: credId }, ],
-      
-      providesTags: [{ type: "Creds", id: "LIST" }],
-
+      // Transform the response to decrypt sensitive data
+      transformResponse: (response) => processCredentialsResponse(response),
+      providesTags: (result, error, credId) => [{ type: "Creds", id: credId }],
     }),
 
     getAllCreds: builder.query({
       query: (category) => ({
         url: `${USER_CREDS}/${category}/resources`,
       }),
-
+      // Transform the response to decrypt sensitive data
+      transformResponse: (response) => processCredentialsResponse(response),
       providesTags: [{ type: "Creds", id: "LIST" }],
     }),
 

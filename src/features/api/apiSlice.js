@@ -21,8 +21,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logout } from "../auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "http://13.202.217.5:4010/",
-  // baseUrl: "http://localhost:4010/",
+  // baseUrl: "http://13.202.217.5:4010/",
+  baseUrl: "http://localhost:4010/",
 
   prepareHeaders: (headers, { getState, endpoint }) => {
     // If this request is for the S3 upload endpoint,
@@ -35,7 +35,6 @@ const baseQuery = fetchBaseQuery({
     const token = getState().auth.token;
     const controlSignature = getState().auth.controlSignature; // Assuming stored in auth state
     const hashToken = getState().auth.hashToken; // Assuming stored in auth state
-
 
     if (token) {
       headers.set("Authorization", `Bearer ${token}`);
@@ -65,6 +64,6 @@ const baseQueryWithReauth = async (args, api, extraOptions) => {
 export const apiSlice = createApi({
   reducerPath: "api",
   baseQuery: baseQueryWithReauth,
-  tagTypes: ["User", "Cred", "Creds"],
+  tagTypes: ["User", "Cred", "Creds", "Order"],
   endpoints: (builder) => ({}),
 });

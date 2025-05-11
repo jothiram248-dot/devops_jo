@@ -145,7 +145,12 @@
 // export default ChooseNomineePage;
 
 import React, { useRef, useCallback, useState, useEffect } from "react";
-import { AnimatePresence, motion, useScroll, useTransform } from "framer-motion";
+import {
+  AnimatePresence,
+  motion,
+  useScroll,
+  useTransform,
+} from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Check, ChevronDown, Package, Phone } from "lucide-react";
@@ -178,8 +183,8 @@ import GamingImg from "/assets/Images/gaming_credentials.jpg";
 import OthersImg from "/assets/Images/others.jpg";
 import FAQ from "@/components/FAQ";
 import { useInView } from "react-intersection-observer";
-
-
+import RazorpayPayment from "@/utils/RazorpayPayment";
+import toast from "react-hot-toast";
 
 // 3) FAQ Data
 const faqs = [
@@ -213,16 +218,14 @@ const faqs = [
     answer:
       "Yes. Our audit logs track every login and credential access so you can monitor nominee activity and stay informed.",
   },
-
 ];
-
 
 const UncompromisingSecurity = () => {
   const [ref, inView] = useInView({
     triggerOnce: true,
     threshold: 0.1,
   });
-  
+
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
 
   useEffect(() => {
@@ -230,9 +233,9 @@ const UncompromisingSecurity = () => {
       setMousePosition({ x: e.clientX, y: e.clientY });
     };
 
-    window.addEventListener('mousemove', handleMouseMove);
+    window.addEventListener("mousemove", handleMouseMove);
     return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener("mousemove", handleMouseMove);
     };
   }, []);
 
@@ -348,44 +351,48 @@ const UncompromisingSecurity = () => {
       <div className="absolute inset-0 -z-10">
         {/* Deep space gradient base */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-950 to-black"></div>
-        
+
         {/* Background Radial Gradients */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(79,70,229,0.2),transparent_70%),radial-gradient(ellipse_at_bottom_left,_rgba(124,58,237,0.2),transparent_70%)]"></div>
-        
+
         {/* Premium ambient blurs */}
         <div className="absolute top-1/4 right-1/6 w-80 h-80 bg-indigo-600/20 rounded-full filter blur-3xl"></div>
         <div className="absolute bottom-1/4 left-1/6 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl"></div>
-        
+
         {/* Subtle mesh grid overlay */}
         <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:48px_48px] opacity-5"></div>
-        
+
         {/* Enhanced floating particles */}
         <div className="absolute inset-0 overflow-hidden pointer-events-none">
           {[...Array(20)].map((_, i) => (
-            <div 
+            <div
               key={i}
               className="absolute w-1.5 h-1.5 rounded-full bg-white/40 animate-float"
               style={{
                 left: `${Math.random() * 100}%`,
                 top: `${Math.random() * 100}%`,
                 animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${15 + Math.random() * 15}s`
+                animationDuration: `${15 + Math.random() * 15}s`,
               }}
             />
           ))}
         </div>
-        
+
         {/* Responsive glow based on mouse position */}
-        <div className="absolute opacity-30" style={{
-          left: `${mousePosition.x - 200}px`,
-          top: `${mousePosition.y - 200}px`,
-          width: '400px',
-          height: '400px',
-          background: 'radial-gradient(circle, rgba(79, 70, 229, 0.6) 0%, transparent 70%)',
-          borderRadius: '50%',
-          pointerEvents: 'none',
-          transition: 'left 0.3s ease-out, top 0.3s ease-out',
-        }}></div>
+        <div
+          className="absolute opacity-30"
+          style={{
+            left: `${mousePosition.x - 200}px`,
+            top: `${mousePosition.y - 200}px`,
+            width: "400px",
+            height: "400px",
+            background:
+              "radial-gradient(circle, rgba(79, 70, 229, 0.6) 0%, transparent 70%)",
+            borderRadius: "50%",
+            pointerEvents: "none",
+            transition: "left 0.3s ease-out, top 0.3s ease-out",
+          }}
+        ></div>
       </div>
 
       <div className="container mx-auto px-6 relative z-10">
@@ -399,7 +406,9 @@ const UncompromisingSecurity = () => {
           {/* Title with premium visual treatment */}
           <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
             <div className="h-px w-16 mx-auto bg-gradient-to-r from-indigo-500 to-purple-500 mb-6"></div>
-            <span className="bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">Uncompromising</span>
+            <span className="bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
+              Uncompromising
+            </span>
             <br />
             <span className="relative inline-block bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
               Security
@@ -408,18 +417,21 @@ const UncompromisingSecurity = () => {
               <span className="absolute bottom-0 -left-4 w-4 h-4 rounded-full bg-indigo-500/10 blur-sm"></span>
             </span>
           </h2>
-          
+
           {/* Enhanced divider */}
           <div className="flex justify-center items-center gap-3 my-8">
             <div className="h-px w-12 bg-gradient-to-r from-transparent to-indigo-500/70"></div>
             <div className="w-2 h-2 rounded-full bg-purple-500"></div>
             <div className="h-px w-12 bg-gradient-to-l from-transparent to-purple-500/70"></div>
           </div>
-          
+
           {/* Description with improved typography */}
           <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            <span className="text-white font-medium">Protect both your and your nominees' digital assets</span> with robust,
-            zero‐knowledge security measures built into every aspect of our platform.
+            <span className="text-white font-medium">
+              Protect both your and your nominees' digital assets
+            </span>{" "}
+            with robust, zero‐knowledge security measures built into every
+            aspect of our platform.
           </p>
         </motion.div>
 
@@ -438,62 +450,108 @@ const UncompromisingSecurity = () => {
                 <div className="absolute inset-0 rounded-2xl overflow-hidden [backface-visibility:hidden]">
                   {/* Base clean background */}
                   <div className={`absolute inset-0 ${feature.bgColor}`}></div>
-                  
+
                   {/* Subtle dot pattern overlay */}
                   <div className="absolute inset-0 opacity-10 group-hover:opacity-15 transition-all duration-500">
-                    <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
+                    <svg
+                      width="100%"
+                      height="100%"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
                       <defs>
-                        <pattern id={`premium-dots-${index}`} width="20" height="20" patternUnits="userSpaceOnUse">
-                          <circle cx="10" cy="10" r="1" fill={feature.textColor.replace('text-', '')} />
+                        <pattern
+                          id={`premium-dots-${index}`}
+                          width="20"
+                          height="20"
+                          patternUnits="userSpaceOnUse"
+                        >
+                          <circle
+                            cx="10"
+                            cy="10"
+                            r="1"
+                            fill={feature.textColor.replace("text-", "")}
+                          />
                         </pattern>
                       </defs>
-                      <rect width="100%" height="100%" fill={`url(#premium-dots-${index})`} />
+                      <rect
+                        width="100%"
+                        height="100%"
+                        fill={`url(#premium-dots-${index})`}
+                      />
                     </svg>
                   </div>
-                  
+
                   {/* Diagonal premium accent */}
-                  <div className={`absolute top-0 right-0 w-full h-full opacity-5 transform rotate-[-15deg] translate-x-1/3 -translate-y-1/4 ${feature.accentColor} rounded-full`}></div>
-                  
+                  <div
+                    className={`absolute top-0 right-0 w-full h-full opacity-5 transform rotate-[-15deg] translate-x-1/3 -translate-y-1/4 ${feature.accentColor} rounded-full`}
+                  ></div>
+
                   {/* Elegant accent border at top */}
-                  <div className={`absolute top-0 left-0 w-full h-1 ${feature.accentColor}`}></div>
+                  <div
+                    className={`absolute top-0 left-0 w-full h-1 ${feature.accentColor}`}
+                  ></div>
 
                   {/* Premium icon container with white background and shiny icon */}
-                  <div className={`absolute top-4 left-4 group-hover:left-5 transition-all duration-500 bg-white border ${feature.borderColor} p-3 rounded-2xl shadow-lg`}>
-                    <div className={`relative overflow-hidden bg-gradient-to-br ${feature.color} rounded-xl p-3 shadow-inner`}>
+                  <div
+                    className={`absolute top-4 left-4 group-hover:left-5 transition-all duration-500 bg-white border ${feature.borderColor} p-3 rounded-2xl shadow-lg`}
+                  >
+                    <div
+                      className={`relative overflow-hidden bg-gradient-to-br ${feature.color} rounded-xl p-3 shadow-inner`}
+                    >
                       {/* Shiny effect overlay */}
                       <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
                         <div className="absolute -inset-[100%] animate-shine bg-white/30 rotate-[25deg] transform-gpu"></div>
                       </div>
-                      {React.createElement(feature.icon, { 
-                        className: "w-6 h-6 text-white drop-shadow-lg relative z-10"
+                      {React.createElement(feature.icon, {
+                        className:
+                          "w-6 h-6 text-white drop-shadow-lg relative z-10",
                       })}
                     </div>
                   </div>
 
                   {/* Subtle corner accent */}
-                  <div className={`absolute top-0 right-0 w-20 h-20 opacity-60 bg-gradient-to-bl ${feature.bgColor} to-transparent rounded-bl-full`}></div>
+                  <div
+                    className={`absolute top-0 right-0 w-20 h-20 opacity-60 bg-gradient-to-bl ${feature.bgColor} to-transparent rounded-bl-full`}
+                  ></div>
 
                   {/* Professional content area */}
                   <div className="absolute inset-x-0 top-28 px-6">
-                    <h3 className={`text-xl font-bold mb-2 text-gray-800 group-hover:${feature.textColor} transition-colors duration-300`}>
+                    <h3
+                      className={`text-xl font-bold mb-2 text-gray-800 group-hover:${feature.textColor} transition-colors duration-300`}
+                    >
                       {feature.title}
                     </h3>
                     <p className="text-gray-600 text-md leading-relaxed">
                       {feature.description}
                     </p>
                   </div>
-                  
+
                   {/* Left side accent */}
-                  <div className={`absolute left-0 top-1/4 bottom-1/4 w-1 ${feature.borderColor}`}></div>
-                  
+                  <div
+                    className={`absolute left-0 top-1/4 bottom-1/4 w-1 ${feature.borderColor}`}
+                  ></div>
+
                   {/* Subtle floating detail effect */}
-                  <div className={`absolute -bottom-6 -right-6 w-24 h-24 rounded-full opacity-10 ${feature.accentColor}`}></div>
-                  
+                  <div
+                    className={`absolute -bottom-6 -right-6 w-24 h-24 rounded-full opacity-10 ${feature.accentColor}`}
+                  ></div>
+
                   {/* Card flip indicator */}
                   <div className="absolute bottom-3 right-3 text-xs text-gray-400 flex items-center space-x-1 opacity-80">
                     <span>Flip for details</span>
-                    <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-3 w-3"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                      />
                     </svg>
                   </div>
                 </div>
@@ -502,39 +560,52 @@ const UncompromisingSecurity = () => {
                 <div className="absolute inset-0 rounded-2xl overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)]">
                   {/* Professional clean white background */}
                   <div className={`absolute inset-0 bg-white`}></div>
-                  
+
                   {/* Subtle grain texture for depth */}
                   <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMjAwdjIwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]"></div>
-                  
+
                   {/* Premium border and accents */}
-                  <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${feature.color}`}></div>
-                  <div className={`absolute left-0 top-2 bottom-0 w-2 bg-gradient-to-b ${feature.color} opacity-10`}></div>
-                  
+                  <div
+                    className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${feature.color}`}
+                  ></div>
+                  <div
+                    className={`absolute left-0 top-2 bottom-0 w-2 bg-gradient-to-b ${feature.color} opacity-10`}
+                  ></div>
+
                   {/* Subtle curved accent in corner */}
-                  <div className={`absolute top-0 right-0 w-40 h-40 rounded-full opacity-5 bg-gradient-to-bl ${feature.color}`} style={{ transform: 'translate(50%, -50%)' }}></div>
-                  
+                  <div
+                    className={`absolute top-0 right-0 w-40 h-40 rounded-full opacity-5 bg-gradient-to-bl ${feature.color}`}
+                    style={{ transform: "translate(50%, -50%)" }}
+                  ></div>
+
                   {/* Content Container */}
                   <div className="relative h-full flex flex-col p-6">
                     {/* Premium Icon with 3D effect */}
                     <div className="absolute top-3 right-4">
-                      <div className={`relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br ${feature.color} text-white shadow-lg border border-white/10`}>
+                      <div
+                        className={`relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br ${feature.color} text-white shadow-lg border border-white/10`}
+                      >
                         {React.createElement(feature.icon, {
                           className: "w-5 h-5",
-                          strokeWidth: 1.5
+                          strokeWidth: 1.5,
                         })}
                         {/* Subtle shadow for 3D effect */}
-                        <div className={`absolute -bottom-1.5 inset-x-1 h-2 bg-black/20 blur rounded-full`}></div>
+                        <div
+                          className={`absolute -bottom-1.5 inset-x-1 h-2 bg-black/20 blur rounded-full`}
+                        ></div>
                       </div>
                     </div>
-                    
+
                     {/* Title */}
                     <div className="relative mb-6">
                       <h3 className={`text-xl font-bold mb-1 text-gray-800`}>
                         {feature.title}
                       </h3>
-                      <div className={`h-0.5 w-10 ${feature.accentColor}`}></div>
+                      <div
+                        className={`h-0.5 w-10 ${feature.accentColor}`}
+                      ></div>
                     </div>
-                    
+
                     {/* Details List with staggered animation */}
                     <ul className="space-y-3 flex-grow">
                       {feature.details.map((detail, idx) => (
@@ -543,16 +614,31 @@ const UncompromisingSecurity = () => {
                           className="flex items-start text-gray-600 transition-colors duration-300"
                           style={{
                             opacity: 0,
-                            animation: `fadeIn 0.5s forwards ${idx * 0.1 + 0.2}s`,
+                            animation: `fadeIn 0.5s forwards ${
+                              idx * 0.1 + 0.2
+                            }s`,
                           }}
                         >
                           {/* Professional checkmark */}
-                          <div className={`flex-shrink-0 w-5 h-5 mr-3 rounded-full bg-gradient-to-br ${feature.color} flex items-center justify-center text-white`}>
-                            <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
+                          <div
+                            className={`flex-shrink-0 w-5 h-5 mr-3 rounded-full bg-gradient-to-br ${feature.color} flex items-center justify-center text-white`}
+                          >
+                            <svg
+                              className="w-3 h-3"
+                              fill="none"
+                              stroke="currentColor"
+                              viewBox="0 0 24 24"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                strokeLinecap="round"
+                                strokeLinejoin="round"
+                                strokeWidth="2"
+                                d="M5 13l4 4L19 7"
+                              ></path>
                             </svg>
                           </div>
-                          
+
                           {/* Text */}
                           <span className="text-sm font-medium">{detail}</span>
                         </li>
@@ -561,14 +647,20 @@ const UncompromisingSecurity = () => {
                   </div>
                 </div>
               </div>
-              
+
               {/* Add animation for staggered list items */}
               <style jsx>{`
                 @keyframes fadeIn {
-                  from { opacity: 0; transform: translateY(10px); }
-                  to { opacity: 1; transform: translateY(0); }
+                  from {
+                    opacity: 0;
+                    transform: translateY(10px);
+                  }
+                  to {
+                    opacity: 1;
+                    transform: translateY(0);
+                  }
                 }
-                
+
                 @keyframes shine {
                   0% {
                     left: -100%;
@@ -580,19 +672,30 @@ const UncompromisingSecurity = () => {
                 .animate-shine {
                   animation: shine 2s infinite linear;
                 }
-                
+
                 @keyframes shimmer {
-                  0% { transform: translateX(-100%); }
-                  100% { transform: translateX(500%); }
+                  0% {
+                    transform: translateX(-100%);
+                  }
+                  100% {
+                    transform: translateX(500%);
+                  }
                 }
                 .animate-shimmer {
                   animation: shimmer 3s infinite;
                 }
-                
+
                 @keyframes float {
-                  0%, 100% { transform: translateY(0) translateX(0); }
-                  25% { transform: translateY(-10px) translateX(5px); }
-                  75% { transform: translateY(-5px) translateX(-5px); }
+                  0%,
+                  100% {
+                    transform: translateY(0) translateX(0);
+                  }
+                  25% {
+                    transform: translateY(-10px) translateX(5px);
+                  }
+                  75% {
+                    transform: translateY(-5px) translateX(-5px);
+                  }
                 }
                 .animate-float {
                   animation: float 15s ease-in-out infinite;
@@ -627,16 +730,16 @@ const NomineeCredentialCard = ({ feature, index }) => {
           loading={index < 3 ? "eager" : "lazy"}
           style={{ aspectRatio: "400/256" }}
         />
-        
+
         {/* Lighter overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
       </div>
-      
+
       {/* Premium glass card overlay */}
       <div className="absolute inset-0 rounded-2xl overflow-hidden border border-gray-800/50 group-hover:border-accent-100/30 transition-colors duration-300">
         {/* Top border accent with glow */}
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        
+
         {/* Bottom glass panel */}
         <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-black/95 via-black/90 to-transparent backdrop-blur-sm">
           {/* Animated gradient shimmer effect */}
@@ -653,12 +756,12 @@ const NomineeCredentialCard = ({ feature, index }) => {
           <div className="w-16 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100">
             <div className="h-0.5 w-full bg-accent-100/50 rounded-full"></div>
           </div>
-          
+
           {/* Premium icon */}
           <div className="relative">
             {/* Animated ring */}
             <div className="absolute -inset-1 rounded-full border border-accent-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-ping-slow"></div>
-            
+
             {/* Icon container with glow */}
             <div className="relative flex items-center justify-center w-14 h-14 bg-gradient-to-br from-gray-900 to-black rounded-full shadow-lg border border-gray-700 group-hover:border-accent-100/50 group-hover:bg-gradient-to-br group-hover:from-accent-100 group-hover:to-accent-200 transition-all duration-500">
               <div className="absolute inset-0 rounded-full bg-accent-100/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -666,7 +769,7 @@ const NomineeCredentialCard = ({ feature, index }) => {
             </div>
           </div>
         </div>
-        
+
         {/* Content area */}
         <div className="mt-auto">
           {/* Title with consistent height */}
@@ -674,11 +777,11 @@ const NomineeCredentialCard = ({ feature, index }) => {
             <h3 className="text-2xl font-bold text-white group-hover:text-accent-100 transition-colors duration-300">
               {feature.title}
             </h3>
-            
+
             {/* Animated underline */}
             <div className="h-0.5 w-0 bg-gradient-to-r from-accent-100 to-accent-200 mt-2 rounded-full group-hover:w-24 transition-all duration-500 ease-out"></div>
           </div>
-          
+
           {/* Description */}
           <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-light">
             {feature.description}
@@ -691,59 +794,169 @@ const NomineeCredentialCard = ({ feature, index }) => {
 
 const DelegateCredentials = () => {
   const [isInView, setIsInView] = useState(false);
-  
+
   // Example data - replace with your actual nomineeCredentialTypes data
   const nomineeCredentialTypes = [
     {
       id: 1,
       title: "Banking Credentials",
-      icon: props => <svg xmlns="http://www.w3.org/2000/svg" className={props.className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" x="2" y="5" rx="2"/><line x1="2" x2="22" y1="10" y2="10"/></svg>,
+      icon: (props) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={props.className}
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect width="20" height="14" x="2" y="5" rx="2" />
+          <line x1="2" x2="22" y1="10" y2="10" />
+        </svg>
+      ),
       image: "/assets/Images/Banking_credentials.jpg",
-      description: "Securely delegate your banking user ID/password and other credentials to trusted nominees.",
-      color: "from-accent-100 to-accent-200"
+      description:
+        "Securely delegate your banking user ID/password and other credentials to trusted nominees.",
+      color: "from-accent-100 to-accent-200",
     },
     {
       id: 2,
       title: "Investment Credentials",
-      icon: props => <svg xmlns="http://www.w3.org/2000/svg" className={props.className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="22 7 13.5 15.5 8.5 10.5 2 17"/><polyline points="16 7 22 7 22 13"/></svg>,
+      icon: (props) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={props.className}
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <polyline points="22 7 13.5 15.5 8.5 10.5 2 17" />
+          <polyline points="16 7 22 7 22 13" />
+        </svg>
+      ),
       image: "/assets/Images/Investment_credneitals.jpg",
-      description: "Ensure your investment platforms remain accessible to your nominees when needed.",
-      color: "from-purple-500 to-indigo-500"
+      description:
+        "Ensure your investment platforms remain accessible to your nominees when needed.",
+      color: "from-purple-500 to-indigo-500",
     },
     {
       id: 3,
       title: "Entertainment Platform Credentials",
-      icon: props => <svg xmlns="http://www.w3.org/2000/svg" className={props.className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="20" height="14" rx="2" ry="2" x="2" y="3"/><line x1="8" x2="16" y1="21" y2="21"/><line x1="12" x2="12" y1="17" y2="21"/></svg>,
+      icon: (props) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={props.className}
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect width="20" height="14" rx="2" ry="2" x="2" y="3" />
+          <line x1="8" x2="16" y1="21" y2="21" />
+          <line x1="12" x2="12" y1="17" y2="21" />
+        </svg>
+      ),
       image: "/assets/Images/Entertainment.jpg",
-      description: "Safely share your streaming and entertainment login details with family members.",
-      color: "from-blue-500 to-cyan-400"
+      description:
+        "Safely share your streaming and entertainment login details with family members.",
+      color: "from-blue-500 to-cyan-400",
     },
     {
       id: 4,
       title: "Social Media Credentials",
-      icon: props => <svg xmlns="http://www.w3.org/2000/svg" className={props.className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" x2="15.42" y1="13.51" y2="17.49"/><line x1="15.41" x2="8.59" y1="6.51" y2="10.49"/></svg>,
+      icon: (props) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={props.className}
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <circle cx="18" cy="5" r="3" />
+          <circle cx="6" cy="12" r="3" />
+          <circle cx="18" cy="19" r="3" />
+          <line x1="8.59" x2="15.42" y1="13.51" y2="17.49" />
+          <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
+        </svg>
+      ),
       image: "/assets/Images/SocialMedia.jpg",
-      description: "Grant access to your social media accounts to trusted individuals when needed.",
-      color: "from-pink-500 to-rose-400"
+      description:
+        "Grant access to your social media accounts to trusted individuals when needed.",
+      color: "from-pink-500 to-rose-400",
     },
     {
       id: 5,
       title: "Gaming Platform Credentials",
-      icon: props => <svg xmlns="http://www.w3.org/2000/svg" className={props.className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="6" x2="10" y1="11" y2="11"/><line x1="8" x2="8" y1="9" y2="13"/><line x1="15" x2="15.01" y1="12" y2="12"/><line x1="18" x2="18.01" y1="10" y2="10"/><rect width="20" height="12" x="2" y="6" rx="2"/></svg>,
+      icon: (props) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={props.className}
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <line x1="6" x2="10" y1="11" y2="11" />
+          <line x1="8" x2="8" y1="9" y2="13" />
+          <line x1="15" x2="15.01" y1="12" y2="12" />
+          <line x1="18" x2="18.01" y1="10" y2="10" />
+          <rect width="20" height="12" x="2" y="6" rx="2" />
+        </svg>
+      ),
       image: "/assets/Images/gaming_credentials.jpg",
-      description: "Ensure your gaming accounts remain secure and accessible to your nominees.",
-      color: "from-green-500 to-emerald-400"
+      description:
+        "Ensure your gaming accounts remain secure and accessible to your nominees.",
+      color: "from-green-500 to-emerald-400",
     },
     {
       id: 6,
       title: "Others",
-      icon: props => <svg xmlns="http://www.w3.org/2000/svg" className={props.className} width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><rect width="14" height="10" x="5" y="11" rx="2"/><circle cx="12" cy="16" r="1"/><path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>,
+      icon: (props) => (
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          className={props.className}
+          width="24"
+          height="24"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+        >
+          <rect width="14" height="10" x="5" y="11" rx="2" />
+          <circle cx="12" cy="16" r="1" />
+          <path d="M8 11V7a4 4 0 0 1 8 0v4" />
+        </svg>
+      ),
       image: "/assets/Images/others.jpg",
-      description: "Delegate credentials for any other platforms and portals to your trusted nominees.",
-      color: "from-amber-500 to-orange-400"
-    }
+      description:
+        "Delegate credentials for any other platforms and portals to your trusted nominees.",
+      color: "from-amber-500 to-orange-400",
+    },
   ];
-  
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -751,12 +964,12 @@ const DelegateCredentials = () => {
       },
       { threshold: 0.1 }
     );
-    
-    const section = document.getElementById('delegate-credentials-section');
+
+    const section = document.getElementById("delegate-credentials-section");
     if (section) {
       observer.observe(section);
     }
-    
+
     return () => {
       if (section) {
         observer.unobserve(section);
@@ -770,35 +983,38 @@ const DelegateCredentials = () => {
       <div className="relative w-full h-px">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-100 to-transparent"></div>
       </div>
-      
-      <section id="delegate-credentials-section" className="relative py-20 overflow-hidden">
+
+      <section
+        id="delegate-credentials-section"
+        className="relative py-20 overflow-hidden"
+      >
         {/* Premium background */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/95 via-white to-gray-50/95 z-0"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/90 via-white/95 to-gray-100/90 z-0"></div>
-        
+
         {/* Ambient gradient overlays */}
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-200/30 to-transparent opacity-60 z-0"></div>
         <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-tr from-purple-200/30 to-transparent opacity-50 z-0"></div>
-        
+
         {/* Floating gradient spheres */}
         <div className="absolute top-40 right-20 w-80 h-80 bg-indigo-300 rounded-full filter blur-3xl opacity-30 animate-float-slow"></div>
         <div className="absolute bottom-20 left-10 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl opacity-30 animate-float-slow-reverse"></div>
         <div className="absolute top-10 left-1/4 w-64 h-64 bg-blue-300 rounded-full filter blur-3xl opacity-30 animate-float-medium"></div>
         <div className="absolute bottom-40 right-1/4 w-72 h-72 bg-violet-300 rounded-full filter blur-3xl opacity-30 animate-float-medium-reverse"></div>
-        
+
         {/* Mesh gradient overlay */}
         <div className="absolute inset-0 opacity-40 z-0 bg-[radial-gradient(circle_at_top_right,_rgba(129,140,248,0.3),_transparent_70%),radial-gradient(circle_at_bottom_left,_rgba(167,139,250,0.3),_transparent_70%)]"></div>
-        
+
         {/* Diagonal gradient */}
         <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/20 via-transparent to-purple-100/20 z-0"></div>
-        
+
         {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iLjAyIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTRtMC0xN2MwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNG0tMTcgMGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNG0wIDE3YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00Ii8+PC9nPjwvZz48L3N2Zz4=')] z-0"></div>
-        
+
         {/* More gradient overlays */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-100/10 via-transparent to-transparent opacity-60 z-0"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-200/10 via-transparent to-transparent opacity-40 z-0"></div>
-        
+
         {/* Floating gradient spheres */}
         <div className="absolute top-20 right-10 w-96 h-96 bg-accent-100/20 rounded-full filter blur-3xl opacity-20"></div>
         <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-purple-300/20 rounded-full filter blur-3xl opacity-20"></div>
@@ -816,13 +1032,17 @@ const DelegateCredentials = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full blur-sm opacity-70"></div>
             </div>
-            
+
             <h2 className="text-5xl md:text-6xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
               Delegate These Credentials
             </h2>
-            
+
             <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light">
-              Securely pass on crucial credentials to those you trust with our <span className="text-accent-100 font-medium">advanced nominee system</span> designed for complete peace of mind.
+              Securely pass on crucial credentials to those you trust with our{" "}
+              <span className="text-accent-100 font-medium">
+                advanced nominee system
+              </span>{" "}
+              designed for complete peace of mind.
             </p>
           </motion.div>
 
@@ -832,76 +1052,106 @@ const DelegateCredentials = () => {
               <motion.div
                 key={feature.id}
                 initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ 
-                  duration: 0.5, 
+                animate={
+                  isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
+                }
+                transition={{
+                  duration: 0.5,
                   delay: index * 0.1,
-                  ease: "easeOut"
+                  ease: "easeOut",
                 }}
                 className="h-full"
               >
-                <NomineeCredentialCard 
-                  feature={feature} 
-                  index={index}
-                />
+                <NomineeCredentialCard feature={feature} index={index} />
               </motion.div>
             ))}
           </div>
         </div>
       </section>
-      
+
       {/* Custom animations style */}
       <style jsx>{`
         @keyframes float-slow {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-20px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-20px);
+          }
         }
-        
+
         @keyframes float-slow-reverse {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(20px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(20px);
+          }
         }
-        
+
         @keyframes float-medium {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-15px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(-15px);
+          }
         }
-        
+
         @keyframes float-medium-reverse {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(15px); }
+          0%,
+          100% {
+            transform: translateY(0);
+          }
+          50% {
+            transform: translateY(15px);
+          }
         }
-        
+
         @keyframes animate-shimmer {
-          0% { transform: translateX(-100%) skewX(-15deg); }
-          100% { transform: translateX(100%) skewX(-15deg); }
+          0% {
+            transform: translateX(-100%) skewX(-15deg);
+          }
+          100% {
+            transform: translateX(100%) skewX(-15deg);
+          }
         }
-        
+
         @keyframes animate-ping-slow {
-          0%, 100% { transform: scale(1); opacity: 0.3; }
-          50% { transform: scale(1.2); opacity: 0.5; }
+          0%,
+          100% {
+            transform: scale(1);
+            opacity: 0.3;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.5;
+          }
         }
-        
+
         .animate-float-slow {
           animation: float-slow 8s ease-in-out infinite;
         }
-        
+
         .animate-float-slow-reverse {
           animation: float-slow-reverse 9s ease-in-out infinite;
         }
-        
+
         .animate-float-medium {
           animation: float-medium 6s ease-in-out infinite;
         }
-        
+
         .animate-float-medium-reverse {
           animation: float-medium-reverse 7s ease-in-out infinite;
         }
-        
+
         .animate-shimmer {
           animation: animate-shimmer 3s infinite;
         }
-        
+
         .animate-ping-slow {
           animation: animate-ping-slow 3s infinite;
         }
@@ -909,7 +1159,6 @@ const DelegateCredentials = () => {
     </>
   );
 };
-
 
 // 4) MAIN COMPONENT
 const ChooseNomineePage = () => {
@@ -921,7 +1170,7 @@ const ChooseNomineePage = () => {
   const { scrollY } = useScroll();
   const y = useTransform(scrollY, [0, 300], [0, 100]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
-
+  const [subscriptionPlan, setSubscriptionPlan] = useState("");
   const [nomineeCategories, setNomineeCategories] = useState([
     { id: "1", name: "Manage Your Credentials", selected: false, plan: null },
     { id: "2", name: "Investment Credentials", selected: false, plan: null },
@@ -931,34 +1180,14 @@ const ChooseNomineePage = () => {
     { id: "6", name: "Others", selected: false, plan: null },
   ]);
 
-  const handleCategoryToggle = (id) => {
-    setNomineeCategories((categories) =>
-      categories.map((cat) =>
-        cat.id === id ? { ...cat, selected: !cat.selected, plan: null } : cat
-      )
-    );
+  const getPlanPrice = () => {
+    const prices = {
+      quarterly: 500,
+      halfYearly: 1000,
+      yearly: 2000,
+    };
+    return subscriptionPlan ? prices[subscriptionPlan] : 0;
   };
-
-  const handlePlanChange = (id, plan) => {
-    setNomineeCategories((categories) =>
-      categories.map((cat) =>
-        cat.id === id ? { ...cat, plan } : cat
-      )
-    );
-  };
-
-  const calculateTotal = () => {
-    return nomineeCategories.reduce((total, cat) => {
-      if (!cat.selected || !cat.plan) return total;
-      const prices = {
-        quarterly: 250,
-        halfYearly: 500,
-        yearly: 1000,
-      };
-      return total + prices[cat.plan];
-    }, 0);
-  };
-
   // Smooth scroll to CTA
   const handleGoToDown = useCallback(() => {
     const goToStartForFree = document.getElementById("gotostartforfree");
@@ -976,554 +1205,669 @@ const ChooseNomineePage = () => {
     navigate("/nominee/setup");
   };
 
+  // Handler for successful payment
+  const handlePaymentSuccess = (paymentData) => {
+    toast.success("Payment successful!");
+    navigate("/payment/success", {
+      state: {
+        subscription: {
+          id: paymentData.orderId,
+          title: "Nominee Plan - " + subscriptionPlan,
+          price: paymentData.amount / 100, // Convert from paise to rupees
+          features: [
+            "Banking Credentials",
+            "Investment Credentials",
+            "Social Media Platform",
+            "Subscription Services",
+            "Gaming Credentials",
+            "Other Credentials",
+          ],
+        },
+        orderId: paymentData.orderId,
+        paymentId: paymentData.razorpay_payment_id,
+      },
+    });
+  };
+
+  // Handler for payment errors
+  const handlePaymentError = (error) => {
+    toast.error(error || "Payment failed. Please try again.");
+  };
+
+  const getFormattedPlan = () => {
+    if (!subscriptionPlan) return "";
+
+    switch (subscriptionPlan) {
+      case "quarterly":
+        return "Quarterly - ₹500";
+      case "halfYearly":
+        return "Half-Yearly - ₹1000";
+      case "yearly":
+        return "Yearly - ₹2000";
+      default:
+        return "";
+    }
+  };
+
   return (
     <div className="min-h-screen bg-dark-100">
       {/* ─────────────────────────────────────────
           HERO SECTION with Video
       ───────────────────────────────────────── */}
-    <section
-  ref={videoRef}
-  className="relative min-h-screen overflow-visible flex flex-col justify-start py-8 md:py-16"
->
-  {/* Immersive Background Base Layer */}
-  <div className="absolute inset-0 bg-[#050816]"></div>
-  
-  {/* Parallax Animated Background */}
-  <motion.div
-    style={{ y, opacity }}
-    className="absolute inset-0 w-full h-full"
-  >
-    {/* Cinematic Background Video with Custom Masking */}
-    <video
-      autoPlay
-      muted
-      loop
-      playsInline
-      id="bg-video"
-      className="absolute inset-0 w-full h-auto object-cover opacity-60"
-    >
-      <source
-        src="/assets/Images/managecredentials.mp4"
-        type="video/mp4"
-      />
-    </video>
-    
-    {/* Dynamic Multi-Layer Gradient Overlays with Custom Blend Modes */}
-    <div className="absolute inset-0 bg-gradient-to-b from-[#050816]/90 via-[#050816]/60 to-[#050816]/90 mix-blend-overlay"></div>
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/10 via-transparent to-transparent opacity-80 mix-blend-screen"></div>
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent opacity-80 mix-blend-color-dodge"></div>
-    
-    {/* Futuristic Grid Elements with Pulse Effect */}
-    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM0MzM4REQiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2Utb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMCAwIEw2MCA2MCIvPjxwYXRoIGQ9Ik02MCAwIEwwIDYwIi8+PHBhdGggZD0iTTMwIDAgTDMwIDYwIi8+PHBhdGggZD0iTTAgMzAgTDYwIDMwIi8+PC9nPjwvc3ZnPg==')] opacity-10 animate-pulse-slow"></div>
-  </motion.div>
-  
-  {/* Interactive Animated Elements */}
-  <div className="absolute inset-0 overflow-hidden">
-    {/* Advanced 3D Particle System with Movement Tracking */}
-    <div className="particles-3d-container absolute inset-0 opacity-40 pointer-events-none"></div>
-    
-    {/* Neon Data Streams with Reactive Animation */}
-    <div className="absolute inset-0 data-streams opacity-15">
-      {[...Array(8)].map((_, i) => (
-        <div key={`hline-${i}`} className="absolute h-px left-0 right-0 bg-gradient-to-r from-transparent via-blue-500 to-transparent data-line neon-glow" 
-             style={{top: `${(i+1) * 11}%`}}></div>
-      ))}
-      {[...Array(8)].map((_, i) => (
-        <div key={`vline-${i}`} className="absolute w-px top-0 bottom-0 bg-gradient-to-b from-transparent via-purple-600 to-transparent data-line neon-glow"
-             style={{left: `${(i+1) * 11}%`}}></div>
-      ))}
-    </div>
-    
-    {/* Holographic Orbital Elements with Depth Effect */}
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] border border-blue-400/10 rounded-full animate-spin-very-slow blur-sm"></div>
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] border border-cyan-400/8 rounded-full animate-spin-moderate"></div>
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] border border-purple-500/10 rounded-full animate-spin-slow-reverse holographic-edge"></div>
-  </div>
+      <section
+        ref={videoRef}
+        className="relative min-h-screen overflow-visible flex flex-col justify-start py-8 md:py-16"
+      >
+        {/* Immersive Background Base Layer */}
+        <div className="absolute inset-0 bg-[#050816]"></div>
 
-  {/* Content Container with Fixed Positioning */}
-  <div className="relative z-10 container mx-auto px-4 md:px-6 pt-10 sm:pt-16 md:pt-20">
-    <div className="w-full max-w-7xl mx-auto relative">
-      {/* Main Content Area - Starting at Top of Screen */}
-      <div className="flex flex-col items-center">
-        {/* Enterprise-Grade Header Section */}
-        <div className="text-center w-full mb-8">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight enterprise-heading">
-            Choose Your <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Nominee</span>
-          </h1>
-          
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-8">
-            with <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">SacredSecret</span>
-          </h2>
-          
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full"></div>
-        </div>
-
-        {/* Professional Two-Column Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mt-4">
-          {/* Left Column: Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative p-8 md:p-10 flex flex-col justify-center z-10"
-            whileHover={{ scale: 1.01, transition: { duration: 0.3 } }}
-          >
-            {/* Text Content */}
-            <p className="text-lg md:text-2xl text-gray-100 leading-relaxed dynamic-text">
-              Securely pass on <span className="highlight-text">crucial credentials</span>—banking, investments, social media, and
-              more—to those you trust. Safeguard your <span className="highlight-text">digital legacy</span> while maintaining
-              full control over what and how your nominees can access, ensuring <span className="highlight-text">peace of
-              mind</span> for you and your loved ones.
-            </p>
-
-            {/* CTA Button */}
-            <div className="mt-6 md:mt-8 flex justify-start">
-              <motion.button
-                whileHover={{
-                  scale: 1.03,
-                  boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)"
-                }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleGoToDown}
-                className="px-8 py-3 md:px-10 md:py-4 text-base md:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
-              >
-                {/* Light Effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                <span className="relative z-10 flex items-center font-bold">
-                  Start For Free <span className="ml-2 arrow-icon">→</span>
-                </span>
-              </motion.button>
-            </div>
-          </motion.div>
-
-          {/* Right Column: Video */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative flex justify-center items-start"
-          >
-            {/* Video Container */}
-            <div className="w-full max-w-xl mx-auto">
-              {/* Video with Styling */}
-              <div className="relative rounded-2xl overflow-hidden shadow-xl group border border-white/20 video-frame">
-                {/* Corner Accents */}
-                <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-blue-400/70 rounded-tl-2xl z-20"></div>
-                <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-purple-500/70 rounded-br-2xl z-20"></div>
-                
-                {/* Video Player */}
-                <div className="relative z-10" style={{ aspectRatio: "16/9" }}>
-                  <VideoPlayer
-                    videoUrl="/assets/Images/managecredentials.mp4"
-                    thumbnailUrl="/assets/Images/managecredentials_thumbnail.jpg"
-                    title="Nominee Overview"
-                  />
-                  
-                  {/* Video Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
-                    {/* Scan Lines */}
-                    <div className="absolute inset-0 scan-lines-subtle"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-        
-        {/* Clean Scroll Indicator */}
+        {/* Parallax Animated Background */}
         <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-12 transform"
+          style={{ y, opacity }}
+          className="absolute inset-0 w-full h-full"
         >
-          <div className="flex flex-col items-center gap-2">
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className="w-8 h-14 rounded-full border-2 border-cyan-400/50 flex items-center justify-center cursor-pointer glow-pulse"
-              onClick={handleGoToDown}
-            >
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1.5 h-3 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full neon-glow"
-              ></motion.div>
-            </motion.div>
-            <span className="text-xs text-cyan-400/80 uppercase tracking-widest font-medium letter-spacing-wide">Explore</span>
-          </div>
+          {/* Cinematic Background Video with Custom Masking */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            id="bg-video"
+            className="absolute inset-0 w-full h-auto object-cover opacity-60"
+          >
+            <source
+              src="/assets/Images/managecredentials.mp4"
+              type="video/mp4"
+            />
+          </video>
+
+          {/* Dynamic Multi-Layer Gradient Overlays with Custom Blend Modes */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050816]/90 via-[#050816]/60 to-[#050816]/90 mix-blend-overlay"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/10 via-transparent to-transparent opacity-80 mix-blend-screen"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent opacity-80 mix-blend-color-dodge"></div>
+
+          {/* Futuristic Grid Elements with Pulse Effect */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM0MzM4REQiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2Utb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMCAwIEw2MCA2MCIvPjxwYXRoIGQ9Ik02MCAwIEwwIDYwIi8+PHBhdGggZD0iTTMwIDAgTDMwIDYwIi8+PHBhdGggZD0iTTAgMzAgTDYwIDMwIi8+PC9nPjwvc3ZnPg==')] opacity-10 animate-pulse-slow"></div>
         </motion.div>
-      </div>
-    </div>
-  </div>
-  
-  {/* Custom Styles */}
-  <style jsx>{`
-    /* Neo-Morphic Glass Effect with Depth */
-    .neo-glass {
-      position: relative;
-      background: rgba(8, 8, 30, 0.25);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.25),
-        0 5px 15px rgba(0, 0, 0, 0.1),
-        inset 0 1px 1px rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-      transition: all 0.5s ease;
-    }
-    
-    /* Enterprise-grade heading style */
-    .enterprise-heading {
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      font-weight: 800;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Premium Text Highlighting */
-    .dynamic-text {
-      letter-spacing: 0.01em;
-    }
-    
-    .highlight-text {
-      position: relative;
-      color: #38bdf8;
-      font-weight: 600;
-    }
-    
-    .highlight-text:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 30%;
-      background: linear-gradient(90deg, #38bdf8, #818cf8);
-      opacity: 0.15;
-      border-radius: 4px;
-      z-index: -1;
-    }
-    
-    /* Futuristic Button Styling */
-    .neo-button {
-      transition: all 0.4s ease;
-    }
-    
-    .neo-button:hover .arrow-icon {
-      transform: translateX(5px);
-      transition: transform 0.3s ease;
-    }
-    
-    /* Video frame styling */
-    .video-frame {
-      transition: transform 0.3s ease-out;
-      position: relative;
-      background: rgba(8, 8, 30, 0.4);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Professional animation speeds */
-    .animate-pulse-slow {
-      animation: pulse-slow 5s ease-in-out infinite;
-    }
-    
-    /* Premium Scan Lines Effect */
-    .scan-lines-subtle {
-      background-image: repeating-linear-gradient(
-        0deg,
-        rgba(56, 189, 248, 0.04),
-        rgba(56, 189, 248, 0.04) 1px,
-        transparent 1px,
-        transparent 2px
-      );
-      background-size: 100% 4px;
-      animation: scan-animation-premium 10s linear infinite;
-    }
-    
-    /* Neon Glow Effects */
-    .neon-glow {
-      box-shadow: 
-        0 0 5px rgba(56, 189, 248, 0.7),
-        0 0 10px rgba(56, 189, 248, 0.5);
-    }
-    
-    .glow-pulse {
-      animation: glow-pulsate 3s infinite alternate;
-    }
-    
-    .holographic-edge {
-      border-image: linear-gradient(to right, #38bdf8, #818cf8, #c084fc, #38bdf8) 1;
-      border-image-slice: 1;
-    }
-    
-    /* Letter Spacing Utilities */
-    .letter-spacing-wide {
-      letter-spacing: 0.05em;
-    }
-    
-    /* Enhanced Animations */
-    @keyframes scan-animation-premium {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 100%; }
-    }
-    
-    @keyframes glow-pulsate {
-      0% { box-shadow: 0 0 5px rgba(56, 189, 248, 0.5); }
-      100% { box-shadow: 0 0 20px rgba(56, 189, 248, 0.8), 0 0 30px rgba(139, 92, 246, 0.5); }
-    }
-    
-    @keyframes pulse-slow {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-    
-    /* Advanced Spin Animations */
-    .animate-spin-very-slow {
-      animation: spin 120s linear infinite;
-    }
-    
-    .animate-spin-moderate {
-      animation: spin 60s linear infinite;
-    }
-    
-    .animate-spin-slow-reverse {
-      animation: spin 80s linear infinite reverse;
-    }
-    
-    @keyframes spin {
-      from {
-        transform: translate(-50%, -50%) rotate(0deg);
-      }
-      to {
-        transform: translate(-50%, -50%) rotate(360deg);
-      }
-    }
-  `}</style>
-</section>
+
+        {/* Interactive Animated Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Advanced 3D Particle System with Movement Tracking */}
+          <div className="particles-3d-container absolute inset-0 opacity-40 pointer-events-none"></div>
+
+          {/* Neon Data Streams with Reactive Animation */}
+          <div className="absolute inset-0 data-streams opacity-15">
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={`hline-${i}`}
+                className="absolute h-px left-0 right-0 bg-gradient-to-r from-transparent via-blue-500 to-transparent data-line neon-glow"
+                style={{ top: `${(i + 1) * 11}%` }}
+              ></div>
+            ))}
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={`vline-${i}`}
+                className="absolute w-px top-0 bottom-0 bg-gradient-to-b from-transparent via-purple-600 to-transparent data-line neon-glow"
+                style={{ left: `${(i + 1) * 11}%` }}
+              ></div>
+            ))}
+          </div>
+
+          {/* Holographic Orbital Elements with Depth Effect */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] border border-blue-400/10 rounded-full animate-spin-very-slow blur-sm"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] border border-cyan-400/8 rounded-full animate-spin-moderate"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] border border-purple-500/10 rounded-full animate-spin-slow-reverse holographic-edge"></div>
+        </div>
+
+        {/* Content Container with Fixed Positioning */}
+        <div className="relative z-10 container mx-auto px-4 md:px-6 pt-10 sm:pt-16 md:pt-20">
+          <div className="w-full max-w-7xl mx-auto relative">
+            {/* Main Content Area - Starting at Top of Screen */}
+            <div className="flex flex-col items-center">
+              {/* Enterprise-Grade Header Section */}
+              <div className="text-center w-full mb-8">
+                <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight enterprise-heading">
+                  Choose Your{" "}
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                    Nominee
+                  </span>
+                </h1>
+
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-8">
+                  with{" "}
+                  <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
+                    SacredSecret
+                  </span>
+                </h2>
+
+                <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full"></div>
+              </div>
+
+              {/* Professional Two-Column Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mt-4">
+                {/* Left Column: Text Content */}
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="relative p-8 md:p-10 flex flex-col justify-center z-10"
+                  whileHover={{ scale: 1.01, transition: { duration: 0.3 } }}
+                >
+                  {/* Text Content */}
+                  <p className="text-lg md:text-2xl text-gray-100 leading-relaxed dynamic-text">
+                    Securely pass on{" "}
+                    <span className="highlight-text">crucial credentials</span>
+                    —banking, investments, social media, and more—to those you
+                    trust. Safeguard your{" "}
+                    <span className="highlight-text">digital legacy</span> while
+                    maintaining full control over what and how your nominees can
+                    access, ensuring{" "}
+                    <span className="highlight-text">peace of mind</span> for
+                    you and your loved ones.
+                  </p>
+
+                  {/* CTA Button */}
+                  <div className="mt-6 md:mt-8 flex justify-start">
+                    <motion.button
+                      whileHover={{
+                        scale: 1.03,
+                        boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)",
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleGoToDown}
+                      className="px-8 py-3 md:px-10 md:py-4 text-base md:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
+                    >
+                      {/* Light Effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                      <span className="relative z-10 flex items-center font-bold">
+                        Start For Free{" "}
+                        <span className="ml-2 arrow-icon">→</span>
+                      </span>
+                    </motion.button>
+                  </div>
+                </motion.div>
+
+                {/* Right Column: Video */}
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="relative flex justify-center items-start"
+                >
+                  {/* Video Container */}
+                  <div className="w-full max-w-xl mx-auto">
+                    {/* Video with Styling */}
+                    <div className="relative rounded-2xl overflow-hidden shadow-xl group border border-white/20 video-frame">
+                      {/* Corner Accents */}
+                      <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-blue-400/70 rounded-tl-2xl z-20"></div>
+                      <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-purple-500/70 rounded-br-2xl z-20"></div>
+
+                      {/* Video Player */}
+                      <div
+                        className="relative z-10"
+                        style={{ aspectRatio: "16/9" }}
+                      >
+                        <VideoPlayer
+                          videoUrl="/assets/Images/managecredentials.mp4"
+                          thumbnailUrl="/assets/Images/managecredentials_thumbnail.jpg"
+                          title="Nominee Overview"
+                        />
+
+                        {/* Video Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
+                          {/* Scan Lines */}
+                          <div className="absolute inset-0 scan-lines-subtle"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Clean Scroll Indicator */}
+              <motion.div
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 0.8 }}
+                className="mt-12 transform"
+              >
+                <div className="flex flex-col items-center gap-2">
+                  <motion.div
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="w-8 h-14 rounded-full border-2 border-cyan-400/50 flex items-center justify-center cursor-pointer glow-pulse"
+                    onClick={handleGoToDown}
+                  >
+                    <motion.div
+                      animate={{ y: [0, 6, 0] }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="w-1.5 h-3 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full neon-glow"
+                    ></motion.div>
+                  </motion.div>
+                  <span className="text-xs text-cyan-400/80 uppercase tracking-widest font-medium letter-spacing-wide">
+                    Explore
+                  </span>
+                </div>
+              </motion.div>
+            </div>
+          </div>
+        </div>
+
+        {/* Custom Styles */}
+        <style jsx>{`
+          /* Neo-Morphic Glass Effect with Depth */
+          .neo-glass {
+            position: relative;
+            background: rgba(8, 8, 30, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25),
+              0 5px 15px rgba(0, 0, 0, 0.1),
+              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: all 0.5s ease;
+          }
+
+          /* Enterprise-grade heading style */
+          .enterprise-heading {
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          }
+
+          /* Premium Text Highlighting */
+          .dynamic-text {
+            letter-spacing: 0.01em;
+          }
+
+          .highlight-text {
+            position: relative;
+            color: #38bdf8;
+            font-weight: 600;
+          }
+
+          .highlight-text:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            opacity: 0.15;
+            border-radius: 4px;
+            z-index: -1;
+          }
+
+          /* Futuristic Button Styling */
+          .neo-button {
+            transition: all 0.4s ease;
+          }
+
+          .neo-button:hover .arrow-icon {
+            transform: translateX(5px);
+            transition: transform 0.3s ease;
+          }
+
+          /* Video frame styling */
+          .video-frame {
+            transition: transform 0.3s ease-out;
+            position: relative;
+            background: rgba(8, 8, 30, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+          }
+
+          /* Professional animation speeds */
+          .animate-pulse-slow {
+            animation: pulse-slow 5s ease-in-out infinite;
+          }
+
+          /* Premium Scan Lines Effect */
+          .scan-lines-subtle {
+            background-image: repeating-linear-gradient(
+              0deg,
+              rgba(56, 189, 248, 0.04),
+              rgba(56, 189, 248, 0.04) 1px,
+              transparent 1px,
+              transparent 2px
+            );
+            background-size: 100% 4px;
+            animation: scan-animation-premium 10s linear infinite;
+          }
+
+          /* Neon Glow Effects */
+          .neon-glow {
+            box-shadow: 0 0 5px rgba(56, 189, 248, 0.7),
+              0 0 10px rgba(56, 189, 248, 0.5);
+          }
+
+          .glow-pulse {
+            animation: glow-pulsate 3s infinite alternate;
+          }
+
+          .holographic-edge {
+            border-image: linear-gradient(
+                to right,
+                #38bdf8,
+                #818cf8,
+                #c084fc,
+                #38bdf8
+              )
+              1;
+            border-image-slice: 1;
+          }
+
+          /* Letter Spacing Utilities */
+          .letter-spacing-wide {
+            letter-spacing: 0.05em;
+          }
+
+          /* Enhanced Animations */
+          @keyframes scan-animation-premium {
+            0% {
+              background-position: 0 0;
+            }
+            100% {
+              background-position: 0 100%;
+            }
+          }
+
+          @keyframes glow-pulsate {
+            0% {
+              box-shadow: 0 0 5px rgba(56, 189, 248, 0.5);
+            }
+            100% {
+              box-shadow: 0 0 20px rgba(56, 189, 248, 0.8),
+                0 0 30px rgba(139, 92, 246, 0.5);
+            }
+          }
+
+          @keyframes pulse-slow {
+            0%,
+            100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0.7;
+            }
+          }
+
+          /* Advanced Spin Animations */
+          .animate-spin-very-slow {
+            animation: spin 120s linear infinite;
+          }
+
+          .animate-spin-moderate {
+            animation: spin 60s linear infinite;
+          }
+
+          .animate-spin-slow-reverse {
+            animation: spin 80s linear infinite reverse;
+          }
+
+          @keyframes spin {
+            from {
+              transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+              transform: translate(-50%, -50%) rotate(360deg);
+            }
+          }
+        `}</style>
+      </section>
 
       {/* ─────────────────────────────────────────
           NOMINEE CREDENTIAL TYPES (Fade Overlay)
       ───────────────────────────────────────── */}
-      <DelegateCredentials/>
+      <DelegateCredentials />
 
       {/* ─────────────────────────────────────────
           ADVANCED NOMINEE FEATURES (Flipping Cards)
       ───────────────────────────────────────── */}
-   <UncompromisingSecurity/>
+      <UncompromisingSecurity />
 
       {/* ─────────────────────────────────────────
           CTA SECTION (Pricing Card)
       ───────────────────────────────────────── */}
-    <section className="py-20 relative overflow-hidden">
-      {/* Enhanced background with multiple gradient effects */}
-      <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800 to-dark-900">
-        {/* Radial gradient overlays */}
-        <div className="absolute inset-0 opacity-70"
-             style={{
-               background: "radial-gradient(circle at 20% 30%, rgba(136, 58, 234, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(58, 136, 234, 0.15) 0%, transparent 50%)"
-             }}></div>
-        
-        {/* Subtle grid pattern */}
-        <div className="absolute inset-0 opacity-10"
-             style={{
-               backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
-               backgroundSize: "40px 40px"
-             }}></div>
-        
-        {/* Animated particles */}
-        <div className="absolute inset-0 overflow-hidden">
-          {[...Array(15)].map((_, i) => (
-            <div 
-              key={i}
-              className="absolute rounded-full bg-white/5"
-              style={{
-                top: `${Math.random() * 100}%`,
-                left: `${Math.random() * 100}%`,
-                width: `${Math.random() * 4 + 1}px`,
-                height: `${Math.random() * 4 + 1}px`,
-                boxShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
-                animation: `float-${i % 3} ${Math.random() * 20 + 10}s infinite ease-in-out`
-              }}
-            ></div>
-          ))}
+      <section className="py-20 relative overflow-hidden">
+        {/* Enhanced background with multiple gradient effects */}
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800 to-dark-900">
+          {/* Radial gradient overlays */}
+          <div
+            className="absolute inset-0 opacity-70"
+            style={{
+              background:
+                "radial-gradient(circle at 20% 30%, rgba(136, 58, 234, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(58, 136, 234, 0.15) 0%, transparent 50%)",
+            }}
+          ></div>
+
+          {/* Subtle grid pattern */}
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          ></div>
+
+          {/* Animated particles */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(15)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full bg-white/5"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  width: `${Math.random() * 4 + 1}px`,
+                  height: `${Math.random() * 4 + 1}px`,
+                  boxShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
+                  animation: `float-${i % 3} ${
+                    Math.random() * 20 + 10
+                  }s infinite ease-in-out`,
+                }}
+              ></div>
+            ))}
+          </div>
         </div>
-      </div>
-      
-      <div className="container mx-auto max-w-screen-xl px-6 relative z-10">
-        {/* Header Section */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          className="text-center mb-16"
-        >
-          <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent">
-            Choose Your Nominee Subscription
-          </h2>
-          <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-            Secure your digital assets by selecting nominee categories.
-          </p>
-        </motion.div>
 
-        {/* Premium Light-Themed Subscription Card with Prominent Glow */}
-        <motion.div
-          initial={{ opacity: 0, scale: 0.95 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{ duration: 0.6, delay: 0.2 }}
-          className="max-w-lg mx-auto relative"
+        <div
+          className="container mx-auto max-w-screen-xl px-6 relative z-10"
+          id="cyn"
         >
-          {/* Prominent outer glow effect */}
-          <div className="absolute -inset-3 bg-gradient-to-r from-accent-100/30 via-accent-200/20 to-accent-100/30 rounded-2xl blur-lg"></div>
-          
-          {/* Card main container */}
-          <div className="relative rounded-xl overflow-hidden border border-white/30 shadow-2xl"
-               style={{ boxShadow: "0 0 30px rgba(136, 58, 234, 0.3), 0 0 10px rgba(255, 255, 255, 0.2)" }}>
-            
-            {/* Card background */}
-            <div className="absolute inset-0 bg-white"></div>
-            
-            {/* Glowing border */}
-            <div className="absolute inset-0 rounded-xl overflow-hidden">
-              <div className="absolute inset-0 border-4 border-accent-100/20 rounded-xl"></div>
-              <div className="absolute top-0 right-0 bottom-0 left-0 border border-white/50 rounded-xl"></div>
-            </div>
-            
-            {/* Prominent Badge - Positioned higher to be fully visible */}
-            <div className="absolute top-0 left-0 right-0 flex justify-center">
-              <div className="px-6 py-2 bg-gradient-to-r from-accent-100 to-accent-200 text-white font-bold rounded-b-lg shadow-lg transform translate-y-0">
-                FLEXIBLE PLANS
-              </div>
-            </div>
-            
-            {/* Card content with proper padding for badge */}
-            <div className="relative p-8 pt-10 z-10">
-              {/* Title */}
-              <div className="text-center mb-8 pt-2">
-                <Users className="w-12 h-12 mx-auto text-accent-100 mb-4" />
-                <p className="text-gray-600 text-lg">
-                  Customize your nominee access with premium security.
-                </p>
+          {/* Header Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent">
+              Choose Your Nominee Subscription
+            </h2>
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Secure your digital assets by selecting nominee categories.
+            </p>
+          </motion.div>
+
+          {/* Premium Light-Themed Subscription Card with Prominent Glow */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-lg mx-auto relative"
+          >
+            {/* Prominent outer glow effect */}
+            <div className="absolute -inset-3 bg-gradient-to-r from-accent-100/30 via-accent-200/20 to-accent-100/30 rounded-2xl blur-lg"></div>
+
+            {/* Card main container */}
+            <div
+              className="relative rounded-xl overflow-hidden border border-white/30 shadow-2xl"
+              style={{
+                boxShadow:
+                  "0 0 30px rgba(136, 58, 234, 0.3), 0 0 10px rgba(255, 255, 255, 0.2)",
+              }}
+            >
+              {/* Card background */}
+              <div className="absolute inset-0 bg-white"></div>
+
+              {/* Glowing border */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden">
+                <div className="absolute inset-0 border-4 border-accent-100/20 rounded-xl"></div>
+                <div className="absolute top-0 right-0 bottom-0 left-0 border border-white/50 rounded-xl"></div>
               </div>
 
-              {/* Separator */}
-              <div className="w-full h-px bg-accent-100/20 my-6"></div>
+              {/* Prominent Badge */}
+              <div className="absolute top-0 left-0 right-0 flex justify-center">
+                <div className="px-6 py-2 bg-gradient-to-r from-accent-100 to-accent-200 text-white font-bold rounded-b-lg shadow-lg transform translate-y-0">
+                  CHOOSE YOUR PLAN
+                </div>
+              </div>
 
-              {/* Features - Choose Nominee Categories */}
-              <div className="space-y-5 mb-8">
-                {nomineeCategories.map((category) => (
-                  <div key={category.id} className="space-y-3">
-                    <div className="flex items-center justify-between">
-                      <label className="flex items-center space-x-3 cursor-pointer">
-                        <motion.div whileTap={{ scale: 0.9 }}>
-                          <input
-                            type="checkbox"
-                            checked={category.selected}
-                            onChange={() => handleCategoryToggle(category.id)}
-                            className="rounded border-gray-300 text-accent-100 focus:ring-accent-200 w-5 h-5"
-                          />
-                        </motion.div>
-                        <span className="text-gray-700 text-lg">{category.name}</span>
-                      </label>
+              {/* Card content with proper padding for badge */}
+              <div className="relative p-8 pt-10 z-10">
+                {/* Title */}
+                <div className="text-center mb-8 pt-2">
+                  <Users className="w-12 h-12 mx-auto text-accent-100 mb-4" />
+                  <p className="text-gray-600 text-lg">
+                    Access all nominee features with premium security
+                  </p>
+                </div>
+
+                {/* Separator */}
+                <div className="w-full h-px bg-accent-100/20 my-6"></div>
+
+                {/* Features List */}
+                <div className="space-y-3 mb-8">
+                  {[
+                    "Banking Credentials",
+                    "Investment Credentials",
+                    "Social Media Platform",
+                    "Subscription Services",
+                    "Gaming Credentials",
+                    "Other Credentials",
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center space-x-3">
+                      <div className="flex-shrink-0">
+                        <Check className="h-5 w-5 text-accent-100" />
+                      </div>
+                      <span className="text-gray-700">{feature}</span>
                     </div>
+                  ))}
+                </div>
 
-                    {/* Subscription Plan Dropdown */}
-                    <AnimatePresence>
-                      {category.selected && (
-                        <motion.div
-                          initial={{ opacity: 0, y: -5 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          exit={{ opacity: 0, y: -5 }}
-                          transition={{ duration: 0.3 }}
-                          className="relative"
-                        >
-                          <select
-                            value={category.plan || ""}
-                            onChange={(e) => handlePlanChange(category.id, e.target.value)}
-                            className="w-full p-3 rounded-lg bg-gray-100 border border-gray-200 text-gray-700 
-                                       focus:outline-none focus:border-accent-100 focus:ring-2 focus:ring-accent-100/30
-                                       transition-all cursor-pointer appearance-none"
-                          >
-                            <option value="">Select a plan</option>
-                            <option value="quarterly">Quarterly - ₹250</option>
-                            <option value="halfYearly">Half-Yearly - ₹500</option>
-                            <option value="yearly">Yearly - ₹1000</option>
-                          </select>
+                {/* Subscription Plan Dropdown */}
+                <div className="relative mb-8">
+                  <select
+                    value={subscriptionPlan}
+                    onChange={(e) => setSubscriptionPlan(e.target.value)}
+                    className="w-full p-3 rounded-lg bg-gray-100 border border-gray-200 text-gray-700 
+                   focus:outline-none focus:border-accent-100 focus:ring-2 focus:ring-accent-100/30
+                   transition-all cursor-pointer appearance-none"
+                  >
+                    <option value="">Select a plan</option>
+                    <option value="quarterly">Quarterly - ₹500</option>
+                    <option value="halfYearly">Half-Yearly - ₹1000</option>
+                    <option value="yearly">Yearly - ₹2000</option>
+                  </select>
 
-                          {/* Dropdown Arrow */}
-                          <div className="absolute top-1/2 right-4 transform -translate-y-1/2 pointer-events-none">
-                            <ChevronDown className="w-5 h-5 text-accent-100" />
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                  {/* Dropdown Arrow */}
+                  <div className="absolute top-1/2 right-4 transform -translate-y-1/2 pointer-events-none">
+                    <ChevronDown className="w-5 h-5 text-accent-100" />
                   </div>
-                ))}
-              </div>
+                </div>
 
-              {/* Total Price Display */}
-              <div className="mt-8 pt-6 border-t border-gray-200">
-                <div className="flex justify-between items-center text-lg font-semibold">
-                  <span className="text-gray-700">Total:</span>
-                  <span className="text-2xl font-bold bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent">
-                    ₹{calculateTotal()}
+                {/* Total Price Display */}
+                <div className="mt-8 pt-6 border-t border-gray-200">
+                  <div className="flex justify-between items-center text-lg font-semibold">
+                    <span className="text-gray-700">Total:</span>
+                    <span className="text-2xl font-bold bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent">
+                      ₹{getPlanPrice()}
+                    </span>
+                  </div>
+                </div>
+
+                <div className="relative mt-6">
+                  {/* Button glow effect */}
+                  <div className="absolute -inset-1 bg-accent-100/40 rounded-lg blur-md opacity-75"></div>
+
+                  <RazorpayPayment
+                    feature="NOMINEE"
+                    selectedPlan={getFormattedPlan()}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                </div>
+
+                {/* Trust badge */}
+                <div className="mt-5 text-center">
+                  <span className="inline-flex items-center text-xs text-gray-500">
+                    <svg
+                      className="w-4 h-4 mr-1.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                    Secure payment, premium support included
                   </span>
                 </div>
               </div>
 
-              {/* Subscribe Button with prominent glow */}
-              <div className="relative mt-6">
-                {/* Button glow effect */}
-                <div className="absolute -inset-1 bg-accent-100/40 rounded-lg blur-md opacity-75"></div>
-                
-                <motion.button
-                  whileHover={{ scale: 1.03 }}
-                  whileTap={{ scale: 0.98 }}
-                  disabled={calculateTotal() === 0}
-                  className={`relative w-full py-3.5 rounded-lg font-bold text-lg transition-all ${
-                    calculateTotal() > 0
-                      ? "bg-gradient-to-r from-accent-100 to-accent-200 text-white shadow-lg"
-                      : "bg-gray-300 text-gray-500 cursor-not-allowed"
-                  }`}
-                >
-                  Subscribe Now
-                </motion.button>
-              </div>
-              
-              {/* Trust badge */}
-              <div className="mt-5 text-center">
-                <span className="inline-flex items-center text-xs text-gray-500">
-                  <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                  </svg>
-                  Secure payment, premium support included
-                </span>
-              </div>
+              {/* Bottom glow effect */}
+              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-accent-100/5 to-transparent"></div>
             </div>
-            
-            {/* Bottom glow effect */}
-            <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-accent-100/5 to-transparent"></div>
-          </div>
-        </motion.div>
-      </div>
-      
-      {/* Custom animations */}
-      <style jsx>{`
-        @keyframes float-0 {
-          0%, 100% { transform: translateY(0) translateX(0); }
-          50% { transform: translateY(-30px) translateX(15px); }
-        }
-        @keyframes float-1 {
-          0%, 100% { transform: translateY(0) translateX(0); }
-          50% { transform: translateY(20px) translateX(-20px); }
-        }
-        @keyframes float-2 {
-          0%, 100% { transform: translateY(0) translateX(0); }
-          50% { transform: translateY(-15px) translateX(-25px); }
-        }
-      `}</style>
-    </section>
+          </motion.div>
+        </div>
+
+        {/* Custom animations */}
+        <style jsx>{`
+          @keyframes float-0 {
+            0%,
+            100% {
+              transform: translateY(0) translateX(0);
+            }
+            50% {
+              transform: translateY(-30px) translateX(15px);
+            }
+          }
+          @keyframes float-1 {
+            0%,
+            100% {
+              transform: translateY(0) translateX(0);
+            }
+            50% {
+              transform: translateY(20px) translateX(-20px);
+            }
+          }
+          @keyframes float-2 {
+            0%,
+            100% {
+              transform: translateY(0) translateX(0);
+            }
+            50% {
+              transform: translateY(-15px) translateX(-25px);
+            }
+          }
+        `}</style>
+      </section>
 
       {/* ─────────────────────────────────────────
           FAQ SECTION
@@ -1564,7 +1908,7 @@ const ChooseNomineePage = () => {
         </div>
       </section> */}
 
-<FAQ faqs={faqs} />
+      <FAQ faqs={faqs} />
 
       {/* FOOTER */}
       <Footer />

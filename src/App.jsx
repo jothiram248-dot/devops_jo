@@ -225,18 +225,14 @@
 
 // export default App;
 
-
-
-
-
-import React, { lazy, Suspense } from "react";
-import { Routes, Route, useLocation } from "react-router-dom";
-import { Toaster } from "react-hot-toast";
-import { match } from "path-to-regexp";
-import Navbar from "./components/Navbar";
-import HelpAssistant from "./components/HelpAssistant";
-
-
+// import React, { lazy, Suspense } from "react";
+// import { Routes, Route, useLocation } from "react-router-dom";
+// import { Toaster } from "react-hot-toast";
+// import { match } from "path-to-regexp";
+// import Navbar from "./components/Navbar";
+// import HelpAssistant from "./components/HelpAssistant";
+// import OrderHistory from "./pages/OrderHistory";
+// import OrderDetailPage from "./pages/OrderDetailPage";
 
 // const PremiumLoader = () => {
 //   const [progress, setProgress] = useState(0);
@@ -275,7 +271,7 @@ import HelpAssistant from "./components/HelpAssistant";
 //   return (
 //     <div className="fixed inset-0 z-50 flex items-center justify-center overflow-hidden">
 //       {/* Dynamic background with subtle animation */}
-//       <motion.div 
+//       <motion.div
 //         className="absolute inset-0 bg-gradient-to-br from-gray-950 via-gray-900 to-gray-950"
 //         animate={{
 //           background: [
@@ -291,8 +287,8 @@ import HelpAssistant from "./components/HelpAssistant";
 //         }}
 //       >
 //         {/* Animated grid pattern */}
-//         <div 
-//           className="absolute inset-0" 
+//         <div
+//           className="absolute inset-0"
 //           style={{
 //             backgroundImage: `
 //               linear-gradient(to right, rgba(37, 38, 77, 0.05) 1px, transparent 1px),
@@ -302,24 +298,24 @@ import HelpAssistant from "./components/HelpAssistant";
 //             opacity: 0.4
 //           }}
 //         ></div>
-        
+
 //         {/* Subtle particles floating around */}
 //         <div className="absolute inset-0 overflow-hidden">
 //           {particles.map((_, i) => (
 //             <motion.div
 //               key={i}
 //               className="absolute w-1 h-1 rounded-full bg-blue-500 opacity-20"
-//               initial={{ 
-//                 x: Math.random() * window.innerWidth, 
+//               initial={{
+//                 x: Math.random() * window.innerWidth,
 //                 y: Math.random() * window.innerHeight,
 //                 opacity: 0.1 + Math.random() * 0.3
 //               }}
-//               animate={{ 
+//               animate={{
 //                 x: [null, Math.random() * window.innerWidth],
 //                 y: [null, Math.random() * window.innerHeight],
 //                 opacity: [0.1 + Math.random() * 0.3, 0.1, 0.3, 0.1]
 //               }}
-//               transition={{ 
+//               transition={{
 //                 duration: 10 + Math.random() * 20,
 //                 repeat: Infinity,
 //                 ease: "linear"
@@ -334,7 +330,7 @@ import HelpAssistant from "./components/HelpAssistant";
 //       </motion.div>
 
 //       {/* Main loader container with glass effect */}
-//       <motion.div 
+//       <motion.div
 //         initial={{ opacity: 0, scale: 0.9 }}
 //         animate={{ opacity: 1, scale: 1 }}
 //         transition={{ duration: 0.5 }}
@@ -344,62 +340,62 @@ import HelpAssistant from "./components/HelpAssistant";
 //         <div className="relative w-36 h-36 mb-8">
 //           {/* Glow effect behind the rings */}
 //           <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-28 h-28 rounded-full bg-blue-500/10 blur-xl"></div>
-          
+
 //           {/* Rotating rings with gradient effects */}
-//           <motion.div 
+//           <motion.div
 //             className="absolute inset-0 rounded-full border border-transparent"
-//             style={{ 
+//             style={{
 //               background: 'linear-gradient(to right, transparent, rgba(59, 130, 246, 0.3), transparent)',
 //               backgroundSize: '200% 100%',
 //             }}
 //             animate={{ rotate: 360 }}
 //             transition={{ duration: 8, repeat: Infinity, ease: "linear" }}
 //           ></motion.div>
-          
-//           <motion.div 
+
+//           <motion.div
 //             className="absolute inset-2 rounded-full border border-transparent"
-//             style={{ 
+//             style={{
 //               background: 'linear-gradient(to right, transparent, rgba(99, 102, 241, 0.3), transparent)',
 //               backgroundSize: '200% 100%',
 //             }}
 //             animate={{ rotate: -360 }}
 //             transition={{ duration: 10, repeat: Infinity, ease: "linear" }}
 //           ></motion.div>
-          
-//           <motion.div 
+
+//           <motion.div
 //             className="absolute inset-4 rounded-full border border-transparent"
-//             style={{ 
+//             style={{
 //               background: 'linear-gradient(to right, transparent, rgba(139, 92, 246, 0.3), transparent)',
 //               backgroundSize: '200% 100%',
 //             }}
 //             animate={{ rotate: 360 }}
 //             transition={{ duration: 12, repeat: Infinity, ease: "linear" }}
 //           ></motion.div>
-          
+
 //           {/* Central pulsing element */}
-//           <motion.div 
+//           <motion.div
 //             className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-20 h-20 rounded-xl bg-gradient-to-br from-gray-900 to-gray-800 flex items-center justify-center"
-//             style={{ 
+//             style={{
 //               boxShadow: '0 0 20px rgba(59, 130, 246, 0.2)',
-//               border: '1px solid rgba(255, 255, 255, 0.1)' 
+//               border: '1px solid rgba(255, 255, 255, 0.1)'
 //             }}
-//             animate={{ 
+//             animate={{
 //               boxShadow: [
 //                 '0 0 20px rgba(59, 130, 246, 0.1)',
 //                 '0 0 25px rgba(59, 130, 246, 0.3)',
 //                 '0 0 20px rgba(59, 130, 246, 0.1)'
-//               ] 
+//               ]
 //             }}
-//             transition={{ 
-//               duration: 2, 
-//               repeat: Infinity, 
-//               ease: "easeInOut" 
+//             transition={{
+//               duration: 2,
+//               repeat: Infinity,
+//               ease: "easeInOut"
 //             }}
 //           >
 //             {/* Logo element */}
-//             <motion.div 
+//             <motion.div
 //               className="w-12 h-12 rounded-md bg-gradient-to-br from-blue-600 to-indigo-700 flex items-center justify-center"
-//               animate={{ 
+//               animate={{
 //                 scale: [1, 1.05, 1],
 //                 background: [
 //                   'linear-gradient(to bottom right, rgba(37, 99, 235, 1), rgba(79, 70, 229, 1))',
@@ -407,23 +403,23 @@ import HelpAssistant from "./components/HelpAssistant";
 //                   'linear-gradient(to bottom right, rgba(37, 99, 235, 1), rgba(79, 70, 229, 1))'
 //                 ]
 //               }}
-//               transition={{ 
-//                 duration: 3, 
-//                 repeat: Infinity, 
-//                 ease: "easeInOut" 
+//               transition={{
+//                 duration: 3,
+//                 repeat: Infinity,
+//                 ease: "easeInOut"
 //               }}
 //             >
 //               <span className="text-white font-bold text-lg">SS</span>
 //             </motion.div>
 //           </motion.div>
-          
+
 //           {/* Animated particles orbiting the center */}
 //           {[...Array(6)].map((_, i) => {
 //             const angle = (i * 60) * (Math.PI / 180);
 //             const radius = 60;
 //             const x = radius * Math.cos(angle);
 //             const y = radius * Math.sin(angle);
-            
+
 //             return (
 //               <motion.div
 //                 key={i}
@@ -433,18 +429,18 @@ import HelpAssistant from "./components/HelpAssistant";
 //                   marginTop: '-4px',
 //                   boxShadow: '0 0 8px rgba(59, 130, 246, 0.6)'
 //                 }}
-//                 initial={{ 
-//                   x, 
+//                 initial={{
+//                   x,
 //                   y,
 //                   opacity: 0.6 + (i * 0.05)
 //                 }}
-//                 animate={{ 
+//                 animate={{
 //                   x: [x, x * 1.1, x],
 //                   y: [y, y * 1.1, y],
 //                   opacity: [0.6 + (i * 0.05), 0.8 + (i * 0.05), 0.6 + (i * 0.05)]
 //                 }}
-//                 transition={{ 
-//                   duration: 2 + (i * 0.3), 
+//                 transition={{
+//                   duration: 2 + (i * 0.3),
 //                   repeat: Infinity,
 //                   ease: "easeInOut"
 //                 }}
@@ -472,12 +468,12 @@ import HelpAssistant from "./components/HelpAssistant";
 //               {formattedProgress}%
 //             </motion.span>
 //           </div>
-          
+
 //           {/* Advanced progress bar with glowing effect */}
 //           <div className="h-1 w-full bg-gray-800 rounded-full overflow-hidden">
-//             <motion.div 
+//             <motion.div
 //               className="h-full rounded-full"
-//               style={{ 
+//               style={{
 //                 width: `${progress}%`,
 //                 background: 'linear-gradient(to right, #2563eb, #4f46e5, #7c3aed)',
 //                 boxShadow: '0 0 8px rgba(79, 70, 229, 0.6)'
@@ -487,18 +483,18 @@ import HelpAssistant from "./components/HelpAssistant";
 //               transition={{ type: 'spring', stiffness: 50, damping: 20 }}
 //             >
 //               {/* Animated shine effect overlay */}
-//               <div 
+//               <div
 //                 className="h-full w-full relative overflow-hidden"
 //                 style={{ borderRadius: 'inherit' }}
 //               >
-//                 <motion.div 
+//                 <motion.div
 //                   className="absolute top-0 bottom-0 w-20 bg-gradient-to-r from-transparent via-white/20 to-transparent"
-//                   animate={{ 
+//                   animate={{
 //                     left: ['-100%', '100%']
 //                   }}
-//                   transition={{ 
-//                     repeat: Infinity, 
-//                     duration: 1.5, 
+//                   transition={{
+//                     repeat: Infinity,
+//                     duration: 1.5,
 //                     ease: "easeInOut",
 //                     repeatDelay: 0.5
 //                   }}
@@ -510,12 +506,12 @@ import HelpAssistant from "./components/HelpAssistant";
 
 //         {/* Connection status indicator */}
 //         <div className="flex items-center justify-center text-gray-400 text-xs">
-//           <motion.div 
+//           <motion.div
 //             className="w-2 h-2 rounded-full mr-2"
-//             animate={{ 
+//             animate={{
 //               background: [
-//                 'rgba(34, 197, 94, 0.7)', 
-//                 'rgba(34, 197, 94, 0.3)', 
+//                 'rgba(34, 197, 94, 0.7)',
+//                 'rgba(34, 197, 94, 0.3)',
 //                 'rgba(34, 197, 94, 0.7)'
 //               ],
 //               boxShadow: [
@@ -531,7 +527,7 @@ import HelpAssistant from "./components/HelpAssistant";
 //       </motion.div>
 
 //       {/* Bottom decorative elements */}
-//       <motion.div 
+//       <motion.div
 //         className="absolute bottom-8 left-0 right-0 flex justify-center"
 //         initial={{ opacity: 0, y: 10 }}
 //         animate={{ opacity: 1, y: 0 }}
@@ -544,15 +540,15 @@ import HelpAssistant from "./components/HelpAssistant";
 //           <div className="flex space-x-3 opacity-50">
 //             {/* Decorative dots */}
 //             {[...Array(5)].map((_, i) => (
-//               <motion.div 
+//               <motion.div
 //                 key={i}
 //                 className="w-1 h-1 rounded-full bg-blue-400"
-//                 animate={{ 
+//                 animate={{
 //                   opacity: [0.3, 1, 0.3]
 //                 }}
-//                 transition={{ 
-//                   duration: 1.5, 
-//                   repeat: Infinity, 
+//                 transition={{
+//                   duration: 1.5,
+//                   repeat: Infinity,
 //                   delay: i * 0.2,
 //                   ease: "easeInOut"
 //                 }}
@@ -568,47 +564,64 @@ import HelpAssistant from "./components/HelpAssistant";
 // Implement a premium loader component
 const PremiumLoader = () => (
   <div className="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-90 z-50">
-      <div className="flex flex-col items-center">
-        {/* Spinner animation */}
-        <div className="relative w-16 h-16 mb-4">
-          {/* Outer spinning circle */}
-          <div className="absolute inset-0 rounded-full border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
-          
-          {/* Inner spinning circle (opposite direction) */}
-          <div className="absolute inset-2 rounded-full border-4 border-t-transparent border-r-transparent border-b-purple-500 border-l-transparent animate-spin" style={{ animationDirection: 'reverse', animationDuration: '1s' }}></div>
-          
-          {/* Center logo */}
-          <div className="absolute inset-0 flex items-center justify-center">
-            <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
-              <span className="text-white font-bold text-xs">SS</span>
-            </div>
+    <div className="flex flex-col items-center">
+      {/* Spinner animation */}
+      <div className="relative w-16 h-16 mb-4">
+        {/* Outer spinning circle */}
+        <div className="absolute inset-0 rounded-full border-4 border-t-blue-500 border-r-transparent border-b-transparent border-l-transparent animate-spin"></div>
+
+        {/* Inner spinning circle (opposite direction) */}
+        <div
+          className="absolute inset-2 rounded-full border-4 border-t-transparent border-r-transparent border-b-purple-500 border-l-transparent animate-spin"
+          style={{ animationDirection: "reverse", animationDuration: "1s" }}
+        ></div>
+
+        {/* Center logo */}
+        <div className="absolute inset-0 flex items-center justify-center">
+          <div className="w-8 h-8 bg-blue-600 rounded-md flex items-center justify-center">
+            <span className="text-white font-bold text-xs">SS</span>
           </div>
         </div>
-        
-        {/* Loading text */}
-        <div className="text-white text-sm font-medium tracking-wider">LOADING</div>
-        
-        {/* Simple loading dots */}
-        <div className="flex mt-2 space-x-1">
-          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0s' }}></div>
-          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-          <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
-        </div>
+      </div>
+
+      {/* Loading text */}
+      <div className="text-white text-sm font-medium tracking-wider">
+        LOADING
+      </div>
+
+      {/* Simple loading dots */}
+      <div className="flex mt-2 space-x-1">
+        <div
+          className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+          style={{ animationDelay: "0s" }}
+        ></div>
+        <div
+          className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+          style={{ animationDelay: "0.2s" }}
+        ></div>
+        <div
+          className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"
+          style={{ animationDelay: "0.4s" }}
+        ></div>
       </div>
     </div>
+  </div>
 );
 
-// Add this to your global CSS or tailwind.config.js
-// @keyframes loadingBar {
-//   0% { width: 0%; transform: translateX(-100%); }
-//   50% { width: 70%; }
-//   100% { width: 100%; transform: translateX(100%); }
-// }
-// .animate-loadingBar {
-//   animation: loadingBar 2s ease-in-out infinite;
-// }
+// Lazy load components
+import React, { lazy, Suspense, useRef } from "react";
+import { Routes, Route, useLocation, Link } from "react-router-dom";
+import { match } from "path-to-regexp";
+import { Toaster } from "react-hot-toast";
+import Navbar from "./components/Navbar";
+import HelpAssistant from "./components/HelpAssistant";
+import ProtectedRoute from "./components/ProtectedRoute";
+import FeatureProtectedRoute from "./utils/FeatureProtectedRoute";
+import OrderDetailPage from "./pages/OrderDetailPage";
+import OrderHistory from "./pages/OrderHistory";
 
-
+// import OrderHistory from "./pages/OrderHistory";
+// import OrderDetailPage from "./pages/OrderDetailPage";
 
 // Lazy load components
 const VoiceBot = lazy(() => import("./components/VoiceBot"));
@@ -617,7 +630,9 @@ const LandingPage = lazy(() => import("./pages/LandingPage"));
 const SignUpPage = lazy(() => import("./pages/SignUpPage"));
 const SignInPage = lazy(() => import("./pages/SignInPage"));
 const VerificationPage = lazy(() => import("./pages/VerificationPage"));
-const VerificationSuccessPage = lazy(() => import("./pages/VerificationSuccessPage"));
+const VerificationSuccessPage = lazy(() =>
+  import("./pages/VerificationSuccessPage")
+);
 const ForgotPasswordPage = lazy(() => import("./pages/ForgotPasswordPage"));
 const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
@@ -625,28 +640,37 @@ const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
 const FeaturesPage = lazy(() => import("./pages/FeaturesPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
-const ManageCredentialsPage = lazy(() => import("./pages/ManageCredentialsPage"));
-const SmartNotificationsPage = lazy(() => import("./pages/SmartNotificationsPage"));
+const ManageCredentialsPage = lazy(() =>
+  import("./pages/ManageCredentialsPage")
+);
+const SmartNotificationsPage = lazy(() =>
+  import("./pages/SmartNotificationsPage")
+);
 const ChooseNomineePage = lazy(() => import("./pages/ChooseNomineePage"));
-const CredentialListPage = lazy(() => import("./pages/credentials/CredentialListPage"));
-const CredentialFormPage = lazy(() => import("./pages/credentials/CredentialFormPage"));
-const PaymentPage = lazy(() => import("./pages/PaymentPage"));
+const CredentialListPage = lazy(() =>
+  import("./pages/credentials/CredentialListPage")
+);
+const CredentialFormPage = lazy(() =>
+  import("./pages/credentials/CredentialFormPage")
+);
+
 const PaymentSuccessPage = lazy(() => import("./pages/PaymentSuccessPage"));
-const ProtectedRoute = lazy(() => import("./components/ProtectedRoute"));
-const NotificationListPage = lazy(() => import("./pages/notifications/NotificationListPage"));
-const NotificationFormPage = lazy(() => import("./pages/notifications/NotificationFormPage"));
-const NotificationDetailsPage = lazy(() => import("./pages/notifications/NotificationDetailPage"));
+const NotificationListPage = lazy(() =>
+  import("./pages/notifications/NotificationListPage")
+);
+const NotificationFormPage = lazy(() =>
+  import("./pages/notifications/NotificationFormPage")
+);
+const NotificationDetailsPage = lazy(() =>
+  import("./pages/notifications/NotificationDetailPage")
+);
 const AgreementPage = lazy(() => import("./pages/nominees/AgreementPage"));
 const NomineeFormPage = lazy(() => import("./pages/nominees/NomineeFormPage"));
 const NomineeListPage = lazy(() => import("./pages/nominees/NomineeListPage"));
 const ProfileUpload = lazy(() => import("./pages/ProfileImage"));
 
-
-// Create route groups for more efficient code splitting
-// const AuthRoutes = lazy(() => import("./routes/AuthRoutes"));
-// const CredentialRoutes = lazy(() => import("./routes/CredentialRoutes"));
-// const NotificationRoutes = lazy(() => import("./routes/NotificationRoutes"));
-// const NomineeRoutes = lazy(() => import("./routes/NomineeRoutes"));
+const PrivacyPolicy = lazy(() => import("./pages/PrivacyPolicy"));
+const TermsAndConditions = lazy(() => import("./pages/TermsAndConditions"));
 
 function App() {
   const hideNavbarPaths = [
@@ -658,7 +682,7 @@ function App() {
     "/profileimage-upload",
     "/nominees/:type/agreement",
   ];
-  const voiceBotRef = React.useRef();
+  const voiceBotRef = useRef();
   const location = useLocation();
 
   const handleStartReading = () => {
@@ -697,6 +721,11 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/features" element={<FeaturesPage />} />
               <Route path="/about" element={<AboutPage />} />
+              <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route
+                path="/terms-and-conditions"
+                element={<TermsAndConditions />}
+              />
               <Route
                 path="/manage-credentials"
                 element={<ManageCredentialsPage />}
@@ -708,8 +737,30 @@ function App() {
               <Route path="/choose-nominee" element={<ChooseNomineePage />} />
 
               {/* Payment Routes */}
-              <Route path="/payment" element={<PaymentPage />} />
               <Route path="/payment/success" element={<PaymentSuccessPage />} />
+
+              {/* Orders Route */}
+              <Route
+                path="/account/orders"
+                element={
+                  <Suspense fallback={<PremiumLoader />}>
+                    <ProtectedRoute>
+                      <OrderHistory />
+                    </ProtectedRoute>
+                  </Suspense>
+                }
+              />
+
+              <Route
+                path="/account/order/:id"
+                element={
+                  <Suspense fallback={<PremiumLoader />}>
+                    <ProtectedRoute>
+                      <OrderDetailPage />
+                    </ProtectedRoute>
+                  </Suspense>
+                }
+              />
 
               {/* Protected Routes - wrapped in their own Suspense for more granular loading */}
               <Route
@@ -775,13 +826,15 @@ function App() {
                 }
               />
 
-              {/* Notification Routes */}
+              {/* Notification Routes - NOW WITH FEATURE PROTECTION */}
               <Route
                 path="/notifications/:type"
                 element={
                   <Suspense fallback={<PremiumLoader />}>
                     <ProtectedRoute>
-                      <NotificationListPage />
+                      <FeatureProtectedRoute featureName="smartNotifications">
+                        <NotificationListPage />
+                      </FeatureProtectedRoute>
                     </ProtectedRoute>
                   </Suspense>
                 }
@@ -791,7 +844,9 @@ function App() {
                 element={
                   <Suspense fallback={<PremiumLoader />}>
                     <ProtectedRoute>
-                      <NotificationFormPage />
+                      <FeatureProtectedRoute featureName="smartNotifications">
+                        <NotificationFormPage />
+                      </FeatureProtectedRoute>
                     </ProtectedRoute>
                   </Suspense>
                 }
@@ -801,19 +856,23 @@ function App() {
                 element={
                   <Suspense fallback={<PremiumLoader />}>
                     <ProtectedRoute>
-                      <NotificationDetailsPage />
+                      <FeatureProtectedRoute featureName="smartNotifications">
+                        <NotificationDetailsPage />
+                      </FeatureProtectedRoute>
                     </ProtectedRoute>
                   </Suspense>
                 }
               />
 
-              {/* Nominee Routes */}
+              {/* Nominee Routes - NOW WITH FEATURE PROTECTION */}
               <Route
                 path="/nominees/:type"
                 element={
                   <Suspense fallback={<PremiumLoader />}>
                     <ProtectedRoute>
-                      <NomineeListPage />
+                      <FeatureProtectedRoute featureName="nominee">
+                        <NomineeListPage />
+                      </FeatureProtectedRoute>
                     </ProtectedRoute>
                   </Suspense>
                 }
@@ -823,7 +882,9 @@ function App() {
                 element={
                   <Suspense fallback={<PremiumLoader />}>
                     <ProtectedRoute>
-                      <NomineeFormPage />
+                      <FeatureProtectedRoute featureName="nominee">
+                        <NomineeFormPage />
+                      </FeatureProtectedRoute>
                     </ProtectedRoute>
                   </Suspense>
                 }
@@ -833,7 +894,9 @@ function App() {
                 element={
                   <Suspense fallback={<PremiumLoader />}>
                     <ProtectedRoute>
-                      <NomineeFormPage />
+                      <FeatureProtectedRoute featureName="nominee">
+                        <NomineeFormPage />
+                      </FeatureProtectedRoute>
                     </ProtectedRoute>
                   </Suspense>
                 }
@@ -843,7 +906,9 @@ function App() {
                 element={
                   <Suspense fallback={<PremiumLoader />}>
                     <ProtectedRoute>
-                      <AgreementPage />
+                      <FeatureProtectedRoute featureName="nominee">
+                        <AgreementPage />
+                      </FeatureProtectedRoute>
                     </ProtectedRoute>
                   </Suspense>
                 }

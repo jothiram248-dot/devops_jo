@@ -1,7 +1,11 @@
-
-
 import React, { useState, useRef, useCallback, useEffect } from "react";
-import { motion, useScroll, useTransform, useAnimation, AnimatePresence } from "framer-motion";
+import {
+  motion,
+  useScroll,
+  useTransform,
+  useAnimation,
+  AnimatePresence,
+} from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { useNavigate } from "react-router-dom";
 import {
@@ -32,6 +36,8 @@ import SecurityFeatures from "../components/SecurityFeatures";
 import Footer from "../components/Footer";
 import VideoPlayer from "../components/VideoPlayer";
 import NotificationGrid from "./NotificationGrid";
+import RazorpayPayment from "@/utils/RazorpayPayment";
+import toast from "react-hot-toast";
 
 export const notificationFaqs = [
   {
@@ -200,31 +206,61 @@ const SmartNotificationsPage = () => {
     threshold: 0.1,
   });
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  
-    useEffect(() => {
-      const handleMouseMove = (e) => {
-        setMousePosition({ x: e.clientX, y: e.clientY });
-      };
-  
-      window.addEventListener('mousemove', handleMouseMove);
-      return () => {
-        window.removeEventListener('mousemove', handleMouseMove);
-      };
-    }, []);
 
-  const handleGetStarted = () => {
-    if (!isAuthenticated) {
-      navigate("/signin", { state: { from: "/payment" } });
-      return;
-    }
+  useEffect(() => {
+    const handleMouseMove = (e) => {
+      setMousePosition({ x: e.clientX, y: e.clientY });
+    };
 
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove);
+    };
+  }, []);
+
+  // const handleGetStarted = () => {
+  //   if (!isAuthenticated) {
+  //     navigate("/signin", { state: { from: "/payment" } });
+  //     return;
+  //   }
+
+  //   navigate("/payment/success", {
+  //     state: {
+  //       subscription: {
+  //         id: "starter",
+  //         title: "Free Forever Plan",
+  //         price: 0,
+  //         features: [
+  //           "Store unlimited credentials",
+  //           "Secure encryption",
+  //           "Multi-factor authentication",
+  //           "Mobile access",
+  //           "Email support",
+  //           "Regular security updates",
+  //         ],
+  //       },
+  //       orderId: "free_" + Math.random().toString(36).substr(2, 9),
+  //     },
+  //   });
+  // };
+
+  // Handler for successful payment
+  const handlePaymentSuccess = (paymentData) => {
+    toast.success("Payment successful!");
     navigate("/payment/success", {
       state: {
         subscription: {
-          id: "starter",
-          title: "Free Forever Plan",
-          price: 0,
+          id: paymentData.orderId,
+          title: "Smart Notifications " + selectedPlan,
+          price: paymentData.amount / 100, // Convert from paise to rupees
           features: [
+            // "Unlimited notification setup",
+            // "Multiple notification channels (SMS, Email, Call)",
+            // "Custom reminder intervals",
+            // "Priority notifications",
+            // "Payment tracking alerts",
+            // "Subscription renewal reminders",
+
             "Store unlimited credentials",
             "Secure encryption",
             "Multi-factor authentication",
@@ -233,9 +269,14 @@ const SmartNotificationsPage = () => {
             "Regular security updates",
           ],
         },
-        orderId: "free_" + Math.random().toString(36).substr(2, 9),
+        orderId: paymentData.orderId,
+        paymentId: paymentData.razorpay_payment_id,
       },
     });
+  };
+
+  const handlePaymentError = (error) => {
+    toast.error(error || "Payment failed. Please try again.");
   };
 
   const handleSubscribe = () => {
@@ -250,952 +291,1188 @@ const SmartNotificationsPage = () => {
   return (
     <div className="min-h-screen bg-dark-100">
       {/* Hero Section */}
-    <section
-  ref={videoRef}
-  className="relative min-h-screen overflow-visible flex flex-col justify-start py-8 md:py-16"
->
-  {/* Immersive Background Base Layer */}
-  <div className="absolute inset-0 bg-[#050816]"></div>
-  
-  {/* Parallax Animated Background */}
-  <motion.div
-    style={{ y, opacity }}
-    className="absolute inset-0 w-full h-full"
-  >
-    {/* Cinematic Background Video with Custom Masking */}
-    <video
-      autoPlay
-      muted
-      loop
-      playsInline
-      id="bg-video"
-      className="absolute inset-0 w-full h-auto object-cover opacity-60"
-    >
-      <source
-        src="/assets/Images/smart_notifications.mp4"
-        type="video/mp4"
-      />
-    </video>
-    
-    {/* Dynamic Multi-Layer Gradient Overlays with Custom Blend Modes */}
-    <div className="absolute inset-0 bg-gradient-to-b from-[#050816]/90 via-[#050816]/60 to-[#050816]/90 mix-blend-overlay"></div>
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/10 via-transparent to-transparent opacity-80 mix-blend-screen"></div>
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent opacity-80 mix-blend-color-dodge"></div>
-    
-    {/* Futuristic Grid Elements with Pulse Effect */}
-    <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM0MzM4REQiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2Utb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMCAwIEw2MCA2MCIvPjxwYXRoIGQ9Ik02MCAwIEwwIDYwIi8+PHBhdGggZD0iTTMwIDAgTDMwIDYwIi8+PHBhdGggZD0iTTAgMzAgTDYwIDMwIi8+PC9nPjwvc3ZnPg==')] opacity-10 animate-pulse-slow"></div>
-  </motion.div>
-  
-  {/* Interactive Animated Elements */}
-  <div className="absolute inset-0 overflow-hidden">
-    {/* Advanced 3D Particle System with Movement Tracking */}
-    <div className="particles-3d-container absolute inset-0 opacity-40 pointer-events-none"></div>
-    
-    {/* Neon Data Streams with Reactive Animation */}
-    <div className="absolute inset-0 data-streams opacity-15">
-      {[...Array(8)].map((_, i) => (
-        <div key={`hline-${i}`} className="absolute h-px left-0 right-0 bg-gradient-to-r from-transparent via-blue-500 to-transparent data-line neon-glow" 
-             style={{top: `${(i+1) * 11}%`}}></div>
-      ))}
-      {[...Array(8)].map((_, i) => (
-        <div key={`vline-${i}`} className="absolute w-px top-0 bottom-0 bg-gradient-to-b from-transparent via-purple-600 to-transparent data-line neon-glow"
-             style={{left: `${(i+1) * 11}%`}}></div>
-      ))}
-    </div>
-    
-    {/* Holographic Orbital Elements with Depth Effect */}
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] border border-blue-400/10 rounded-full animate-spin-very-slow blur-sm"></div>
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] border border-cyan-400/8 rounded-full animate-spin-moderate"></div>
-    <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] border border-purple-500/10 rounded-full animate-spin-slow-reverse holographic-edge"></div>
-  </div>
-
-  {/* Content Container with Fixed Positioning */}
-  <div className="relative z-10 container mx-auto px-4 md:px-6 pt-10 sm:pt-16 md:pt-20">
-    <div className="w-full max-w-7xl mx-auto relative">
-      {/* Main Content Area - Starting at Top of Screen */}
-      <div className="flex flex-col items-center">
-        {/* Enterprise-Grade Header Section */}
-        <div className="text-center w-full mb-8">
-          <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight enterprise-heading">
-            Smart <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">Notifications</span>
-          </h1>
-          
-          <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-8">
-            with <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">SacredSecret</span>
-          </h2>
-          
-          <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full"></div>
-        </div>
-
-        {/* Professional Two-Column Layout */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mt-4">
-          {/* Left Column: Text Content */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.2 }}
-            className="relative p-8 md:p-10 flex flex-col justify-center z-10"
-            whileHover={{ scale: 1.01, transition: { duration: 0.3 } }}
-          >
-            {/* Text Content */}
-            <p className="text-lg md:text-2xl text-gray-100 leading-relaxed dynamic-text">
-              Receive <span className="highlight-text">important notifications</span> for payments that are
-              automatically deducted, whether for subscription services,
-              credit card payments, or any other services requiring a
-              <span className="highlight-text"> linked payment option</span> for recurring deductions. Stay
-              informed and <span className="highlight-text">manage your finances</span> effectively.
-            </p>
-
-            {/* CTA Button */}
-            <div className="mt-6 md:mt-8 flex justify-start">
-              <motion.button
-                whileHover={{
-                  scale: 1.03,
-                  boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)"
-                }}
-                whileTap={{ scale: 0.98 }}
-                onClick={handleGoToDown}
-                className="px-8 py-3 md:px-10 md:py-4 text-base md:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
-              >
-                {/* Light Effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                <span className="relative z-10 flex items-center font-bold">
-                  Start For Free <span className="ml-2 arrow-icon">→</span>
-                </span>
-              </motion.button>
-            </div>
-          </motion.div>
-
-          {/* Right Column: Image with Video Player */}
-          <motion.div
-            initial={{ opacity: 0, x: 30 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.6, delay: 0.4 }}
-            className="relative flex justify-center items-start"
-          >
-            {/* Video/Image Container */}
-            <div className="w-full max-w-xl mx-auto">
-              {/* Video with Original Styling */}
-              <div className="relative rounded-2xl overflow-hidden shadow-xl group border border-white/20 video-frame">
-                {/* Corner Accents */}
-                <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-blue-400/70 rounded-tl-2xl z-20"></div>
-                <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-purple-500/70 rounded-br-2xl z-20"></div>
-                
-                {/* Image/Video Player */}
-                <div className="relative z-10" style={{ aspectRatio: "16/9" }}>
-                  <img
-                    src="/assets/Images/Smart_notifications_thumblin.jpg"
-                    alt="Smart Notifications"
-                    className="w-full h-full object-cover"
-                  />
-                  
-                  {/* Overlay */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
-                    {/* Scan Lines */}
-                    <div className="absolute inset-0 scan-lines-subtle"></div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </motion.div>
-        </div>
-        
-        {/* Clean Scroll Indicator */}
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2, duration: 0.8 }}
-          className="mt-12 transform"
-        >
-          <div className="flex flex-col items-center gap-2">
-            <motion.div
-              animate={{ y: [0, 8, 0] }}
-              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-              className="w-8 h-14 rounded-full border-2 border-cyan-400/50 flex items-center justify-center cursor-pointer glow-pulse"
-              onClick={handleGoToDown}
-            >
-              <motion.div
-                animate={{ y: [0, 6, 0] }}
-                transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
-                className="w-1.5 h-3 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full neon-glow"
-              ></motion.div>
-            </motion.div>
-            <span className="text-xs text-cyan-400/80 uppercase tracking-widest font-medium letter-spacing-wide">Explore</span>
-          </div>
-        </motion.div>
-      </div>
-    </div>
-  </div>
-  
-  {/* CSS Styles */}
-  <style jsx>{`
-    /* Neo-Morphic Glass Effect with Depth */
-    .neo-glass {
-      position: relative;
-      background: rgba(8, 8, 30, 0.25);
-      backdrop-filter: blur(10px);
-      border-radius: 20px;
-      border: 1px solid rgba(255, 255, 255, 0.08);
-      box-shadow: 
-        0 15px 35px rgba(0, 0, 0, 0.25),
-        0 5px 15px rgba(0, 0, 0, 0.1),
-        inset 0 1px 1px rgba(255, 255, 255, 0.1);
-      overflow: hidden;
-      transition: all 0.5s ease;
-    }
-    
-    .neo-glass:before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, transparent, rgba(56, 189, 248, 0.08), transparent);
-      transform: translateX(-100%);
-      animation: neo-shine 8s infinite;
-      z-index: -1;
-    }
-    
-    /* 3D Typography Effects */
-    /* Enterprise-grade heading style */
-    .enterprise-heading {
-      letter-spacing: -0.02em;
-      line-height: 1.1;
-      font-weight: 800;
-      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-    }
-    
-    /* Video container styling */
-    .video-container {
-      position: relative;
-      overflow: hidden;
-      border-radius: 0.75rem;
-      width: 100%;
-      aspect-ratio: 16/9;
-      background-color: rgba(17, 24, 39, 0.7);
-      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2), 0 10px 10px -5px rgba(0, 0, 0, 0.1);
-    }
-    
-    .text-gradient-animated {
-      background: linear-gradient(to right, #38bdf8, #818cf8, #c084fc, #38bdf8);
-      background-size: 200% auto;
-      background-clip: text;
-      -webkit-background-clip: text;
-      color: transparent;
-      animation: gradient-text 6s linear infinite;
-    }
-    
-    /* Futuristic Button Styling */
-    .neo-button {
-      transition: all 0.4s ease;
-    }
-    
-    .neo-button:hover .arrow-icon {
-      transform: translateX(5px);
-      transition: transform 0.3s ease;
-    }
-    
-    .neo-button:before {
-      content: '';
-      position: absolute;
-      inset: -2px;
-      border-radius: 999px;
-      padding: 2px;
-      background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
-      -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-      -webkit-mask-composite: xor;
-      mask-composite: exclude;
-      opacity: 0;
-      transition: opacity 0.4s ease;
-    }
-    
-    .neo-button:hover:before {
-      opacity: 1;
-    }
-    
-    /* Premium Text Highlighting */
-    .dynamic-text {
-      letter-spacing: 0.01em;
-    }
-    
-    .highlight-text {
-      position: relative;
-      color: #38bdf8;
-      font-weight: 600;
-    }
-    
-    .highlight-text:after {
-      content: '';
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      width: 100%;
-      height: 30%;
-      background: linear-gradient(90deg, #38bdf8, #818cf8);
-      opacity: 0.15;
-      border-radius: 4px;
-      z-index: -1;
-    }
-    
-    /* Holographic Card Effects */
-    .video-frame {
-      transition: transform 0.3s ease-out;
-      position: relative;
-      background: rgba(8, 8, 30, 0.4);
-      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-    }
-    
-    .video-frame:after {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(120deg, 
-        rgba(255, 255, 255, 0) 0%, 
-        rgba(255, 255, 255, 0.03) 25%, 
-        rgba(255, 255, 255, 0.05) 50%, 
-        rgba(255, 255, 255, 0.03) 75%, 
-        rgba(255, 255, 255, 0) 100%);
-      opacity: 0.3;
-    }
-    
-    /* Professional animation speeds */
-    .animate-pulse-slow {
-      animation: pulse-slow 5s ease-in-out infinite;
-    }
-    
-    /* Premium Scan Lines Effect */
-    .scan-lines-subtle {
-      background-image: repeating-linear-gradient(
-        0deg,
-        rgba(56, 189, 248, 0.04),
-        rgba(56, 189, 248, 0.04) 1px,
-        transparent 1px,
-        transparent 2px
-      );
-      background-size: 100% 4px;
-      animation: scan-animation-premium 10s linear infinite;
-    }
-    
-    /* Neon Glow Effects */
-    .neon-glow {
-      box-shadow: 
-        0 0 5px rgba(56, 189, 248, 0.7),
-        0 0 10px rgba(56, 189, 248, 0.5);
-    }
-    
-    .glow-pulse {
-      animation: glow-pulsate 3s infinite alternate;
-    }
-    
-    .holographic-edge {
-      border-image: linear-gradient(to right, #38bdf8, #818cf8, #c084fc, #38bdf8) 1;
-      border-image-slice: 1;
-    }
-    
-    /* Advanced Spin Animations */
-    .animate-spin-very-slow {
-      animation: spin 120s linear infinite;
-    }
-    
-    .animate-spin-moderate {
-      animation: spin 60s linear infinite;
-    }
-    
-    .animate-spin-slow-reverse {
-      animation: spin 80s linear infinite reverse;
-    }
-    
-    .animate-pulse-slow {
-      animation: pulse-slow 8s ease-in-out infinite;
-    }
-    
-    /* Enhanced Animations */
-    @keyframes neo-shine {
-      0% { transform: translateX(-100%); }
-      20%, 100% { transform: translateX(100%); }
-    }
-    
-    @keyframes gradient-text {
-      0% { background-position: 0% 50%; }
-      100% { background-position: 200% 50%; }
-    }
-    
-    @keyframes scan-animation-premium {
-      0% { background-position: 0 0; }
-      100% { background-position: 0 100%; }
-    }
-    
-    @keyframes glow-pulsate {
-      0% { box-shadow: 0 0 5px rgba(56, 189, 248, 0.5); }
-      100% { box-shadow: 0 0 20px rgba(56, 189, 248, 0.8), 0 0 30px rgba(139, 92, 246, 0.5); }
-    }
-    
-    @keyframes pulse-slow {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.7; }
-    }
-    
-    @keyframes spin {
-      from {
-        transform: translate(-50%, -50%) rotate(0deg);
-      }
-      to {
-        transform: translate(-50%, -50%) rotate(360deg);
-      }
-    }
-    
-    /* Letter Spacing Utilities */
-    .letter-spacing-wide {
-      letter-spacing: 0.05em;
-    }
-  `}</style>
-</section>
-
-  
-      {/* Notification Types Section */}
-          <NotificationGrid />
-    
-
-{/*  Features Section - Premium Style */}
-<section className="relative py-20 overflow-hidden">
-  {/* Premium Dark Background with effects */}
-  <div className="absolute inset-0 -z-10">
-    {/* Deep space gradient base */}
-    <div className="absolute inset-0 bg-gradient-to-b from-gray-950 to-black"></div>
-    
-    {/* Background Radial Gradients */}
-    <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(79,70,229,0.2),transparent_70%),radial-gradient(ellipse_at_bottom_left,_rgba(124,58,237,0.2),transparent_70%)]"></div>
-    
-    {/* Premium ambient blurs */}
-    <div className="absolute top-1/4 right-1/6 w-80 h-80 bg-indigo-600/20 rounded-full filter blur-3xl"></div>
-    <div className="absolute bottom-1/4 left-1/6 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl"></div>
-    
-    {/* Subtle mesh grid overlay */}
-    <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:48px_48px] opacity-5"></div>
-    
-    {/* Enhanced floating particles */}
-    <div className="absolute inset-0 overflow-hidden pointer-events-none">
-      {[...Array(20)].map((_, i) => (
-        <div 
-          key={i}
-          className="absolute w-1.5 h-1.5 rounded-full bg-white/40 animate-float"
-          style={{
-            left: `${Math.random() * 100}%`,
-            top: `${Math.random() * 100}%`,
-            animationDelay: `${Math.random() * 5}s`,
-            animationDuration: `${15 + Math.random() * 15}s`
-          }}
-        />
-      ))}
-    </div>
-    
-    {/* Responsive glow based on mouse position */}
-    <div className="absolute opacity-30" style={{
-      left: `${mousePosition.x - 200}px`,
-      top: `${mousePosition.y - 200}px`,
-      width: '400px',
-      height: '400px',
-      background: 'radial-gradient(circle, rgba(79, 70, 229, 0.6) 0%, transparent 70%)',
-      borderRadius: '50%',
-      pointerEvents: 'none',
-      transition: 'left 0.3s ease-out, top 0.3s ease-out',
-    }}></div>
-  </div>
-
-  <div className="container mx-auto px-6 relative z-10">
-    <motion.div
-      ref={ref}
-      initial={{ opacity: 0, y: 20 }}
-      animate={inView ? { opacity: 1, y: 0 } : {}}
-      transition={{ duration: 0.8 }}
-      className="text-center mb-20"
-    >
-      {/* Title with premium visual treatment */}
-      <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
-        <div className="h-px w-16 mx-auto bg-gradient-to-r from-indigo-500 to-purple-500"></div>
-        <span className="bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">Secure and Reliable</span>
-        <br />
-        <span className="relative inline-block bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
-          Notifications
-          {/* Decorative elements */}
-          <span className="absolute -top-2 -right-8 w-6 h-6 rounded-full bg-purple-500/10 blur-sm"></span>
-          <span className="absolute bottom-0 -left-4 w-4 h-4 rounded-full bg-indigo-500/10 blur-sm"></span>
-        </span>
-      </h2>
-      
-      {/* Enhanced divider */}
-      <div className="flex justify-center items-center gap-3 my-8">
-        <div className="h-px w-12 bg-gradient-to-r from-transparent to-indigo-500/70"></div>
-        <div className="w-2 h-2 rounded-full bg-purple-500"></div>
-        <div className="h-px w-12 bg-gradient-to-l from-transparent to-purple-500/70"></div>
-      </div>
-      
-      {/* Description with improved typography */}
-      <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-        <span className="text-white font-medium">Our notification system is built with security and reliability in mind.</span> We ensure
-        your alerts remain private, protected, and delivered exactly when you need them.
-      </p>
-    </motion.div>
-
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-      {features.map((feature, index) => {
-        // Define different color schemes for variety
-        const colorSchemes = [
-          {
-            bgColor: 'bg-white',
-            accentColor: 'bg-indigo-500',
-            color: 'from-indigo-500 to-purple-600',
-            textColor: 'text-indigo-600',
-            borderColor: 'border-indigo-200'
-          },
-          {
-            bgColor: 'bg-white',
-            accentColor: 'bg-teal-500',
-            color: 'from-teal-500 to-emerald-600',
-            textColor: 'text-teal-600',
-            borderColor: 'border-teal-200'
-          },
-          {
-            bgColor: 'bg-white',
-            accentColor: 'bg-amber-500',
-            color: 'from-amber-500 to-orange-600',
-            textColor: 'text-amber-600',
-            borderColor: 'border-amber-200'
-          },
-          {
-            bgColor: 'bg-white',
-            accentColor: 'bg-rose-500',
-            color: 'from-rose-500 to-pink-600',
-            textColor: 'text-rose-600',
-            borderColor: 'border-rose-200'
-          },
-          {
-            bgColor: 'bg-white',
-            accentColor: 'bg-blue-500',
-            color: 'from-blue-500 to-sky-600',
-            textColor: 'text-blue-600',
-            borderColor: 'border-blue-200'
-          },
-          {
-            bgColor: 'bg-white',
-            accentColor: 'bg-purple-500',
-            color: 'from-purple-500 to-violet-600',
-            textColor: 'text-purple-600',
-            borderColor: 'border-purple-200'
-          }
-        ];
-        
-        // Use modulo to cycle through color schemes
-        const colors = colorSchemes[index % colorSchemes.length];
-        
-        return (
-        <motion.div
-          key={feature.title}
-          initial={{ opacity: 0, y: 20 }}
-          animate={inView ? { opacity: 1, y: 0 } : {}}
-          transition={{ duration: 0.6, delay: index * 0.2 }}
-          className="relative h-auto min-h-[300px] overflow-hidden rounded-2xl shadow-lg group cursor-pointer [perspective:1200px]"
-        >
-          {/* Card with 3D flip effect */}
-          <div className="relative w-full h-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
-            {/* Front Side */}
-            <div className="absolute inset-0 rounded-2xl overflow-hidden [backface-visibility:hidden]">
-              {/* Base clean background */}
-              <div className={`absolute inset-0 ${colors.bgColor}`}></div>
-              
-              {/* Add shine animation keyframes */}
-              <style jsx>{`
-                @keyframes shine {
-                  0% {
-                    left: -100%;
-                  }
-                  100% {
-                    left: 200%;
-                  }
-                }
-                .animate-shine {
-                  animation: shine 2s infinite linear;
-                }
-                
-                @keyframes shimmer {
-                  0% { transform: translateX(-100%); }
-                  100% { transform: translateX(500%); }
-                }
-                .animate-shimmer {
-                  animation: shimmer 3s infinite;
-                }
-                
-                @keyframes float {
-                  0%, 100% { transform: translateY(0) translateX(0); }
-                  25% { transform: translateY(-10px) translateX(5px); }
-                  75% { transform: translateY(-5px) translateX(-5px); }
-                }
-                .animate-float {
-                  animation: float 15s ease-in-out infinite;
-                }
-              `}</style>
-              
-              {/* Subtle dot pattern overlay */}
-              <div className="absolute inset-0 opacity-10 group-hover:opacity-15 transition-all duration-500">
-                <svg width="100%" height="100%" xmlns="http://www.w3.org/2000/svg">
-                  <defs>
-                    <pattern id={`premium-dots-${index}`} width="20" height="20" patternUnits="userSpaceOnUse">
-                      <circle cx="10" cy="10" r="1" fill="currentColor" />
-                    </pattern>
-                  </defs>
-                  <rect width="100%" height="100%" fill={`url(#premium-dots-${index})`} />
-                </svg>
-              </div>
-              
-              {/* Diagonal premium accent */}
-              <div className={`absolute top-0 right-0 w-full h-full opacity-5 transform rotate-[-15deg] translate-x-1/3 -translate-y-1/4 ${colors.accentColor} rounded-full`}></div>
-              
-              {/* Elegant accent border at top */}
-              <div className={`absolute top-0 left-0 w-full h-1 ${colors.accentColor}`}></div>
-
-              {/* Premium icon container with white background and shiny icon */}
-              <div className={`absolute top-4 left-4 group-hover:left-5 transition-all duration-500 bg-white border ${colors.borderColor} p-3 rounded-2xl shadow-lg`}>
-                <div className={`relative overflow-hidden bg-gradient-to-br ${colors.color} rounded-xl p-3 shadow-inner`}>
-                  {/* Shiny effect overlay */}
-                  <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
-                    <div className="absolute -inset-[100%] animate-shine bg-white/30 rotate-[25deg] transform-gpu"></div>
-                  </div>
-                  {React.createElement(feature.icon, { 
-                    className: "w-6 h-6 text-white drop-shadow-lg relative z-10"
-                  })}
-                </div>
-              </div>
-
-              {/* Subtle corner accent */}
-              <div className={`absolute top-0 right-0 w-20 h-20 opacity-60 bg-gradient-to-bl ${feature.bgColor || 'bg-white'} to-transparent rounded-bl-full`}></div>
-
-              {/* Professional content area */}
-              <div className="absolute inset-x-0 top-28 px-6">
-                <h3 className={`text-xl font-bold mb-2 text-gray-800 group-hover:${feature.textColor || 'text-indigo-500'} transition-colors duration-300`}>
-                  {feature.title}
-                </h3>
-                <p className="text-gray-600 text-md leading-relaxed">
-                  {feature.description}
-                </p>
-              </div>
-              
-              {/* Left side accent */}
-              <div className={`absolute left-0 top-1/4 bottom-1/4 w-1 ${feature.borderColor || 'bg-indigo-200'}`}></div>
-              
-              {/* Subtle floating detail effect */}
-              <div className={`absolute -bottom-6 -right-6 w-24 h-24 rounded-full opacity-10 ${feature.accentColor || 'bg-indigo-500'}`}></div>
-              
-              {/* Card flip indicator */}
-              <div className="absolute bottom-3 right-3 text-xs text-gray-400 flex items-center space-x-1 opacity-80">
-                <span>Flip for details</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
-                </svg>
-              </div>
-            </div>
-
-            {/* Back Side */}
-            <div className="absolute inset-0 rounded-2xl overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)]">
-              {/* Professional clean white background */}
-              <div className={`absolute inset-0 bg-white`}></div>
-              
-              {/* Subtle grain texture for depth */}
-              <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMjAwdjIwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]"></div>
-              
-              {/* Premium border and accents */}
-              <div className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${feature.color || 'from-indigo-500 to-purple-600'}`}></div>
-              <div className={`absolute left-0 top-2 bottom-0 w-2 bg-gradient-to-b ${feature.color || 'from-indigo-500 to-purple-600'} opacity-10`}></div>
-              
-              {/* Subtle curved accent in corner */}
-              <div className={`absolute top-0 right-0 w-40 h-40 rounded-full opacity-5 bg-gradient-to-bl ${feature.color || 'from-indigo-500 to-purple-600'}`} style={{ transform: 'translate(50%, -50%)' }}></div>
-              
-              {/* Content Container */}
-              <div className="relative h-full flex flex-col p-6">
-                {/* Premium Icon with 3D effect */}
-                <div className="absolute top-3 right-4">
-                  <div className={`relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br ${feature.color || 'from-indigo-500 to-purple-600'} text-white shadow-lg border border-white/10`}>
-                    {React.createElement(feature.icon, {
-                      className: "w-5 h-5",
-                      strokeWidth: 1.5
-                    })}
-                    {/* Subtle shadow for 3D effect */}
-                    <div className={`absolute -bottom-1.5 inset-x-1 h-2 bg-black/20 blur rounded-full`}></div>
-                  </div>
-                </div>
-                
-                {/* Title */}
-                <div className="relative mb-6">
-                  <h3 className={`text-xl font-bold mb-1 text-gray-800`}>
-                    {feature.title}
-                  </h3>
-                  <div className={`h-0.5 w-10 ${feature.accentColor || 'bg-indigo-500'}`}></div>
-                </div>
-                
-                {/* Details List with staggered animation */}
-                <ul className="space-y-3 flex-grow">
-                  {feature.details.map((detail, idx) => (
-                    <li
-                      key={idx}
-                      className="flex items-start text-gray-600 transition-colors duration-300"
-                      style={{
-                        opacity: 0,
-                        animation: `fadeIn 0.5s forwards ${idx * 0.1 + 0.2}s`,
-                      }}
-                    >
-                      {/* Professional checkmark */}
-                      <div className={`flex-shrink-0 w-5 h-5 mr-3 rounded-full bg-gradient-to-br ${feature.color || 'from-indigo-500 to-purple-600'} flex items-center justify-center text-white`}>
-                        <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7"></path>
-                        </svg>
-                      </div>
-                      
-                      {/* Text */}
-                      <span className="text-sm font-medium">{detail}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </div>
-          </div>
-          
-          {/* Add animation for staggered list items */}
-          <style jsx>{`
-            @keyframes fadeIn {
-              from { opacity: 0; transform: translateY(10px); }
-              to { opacity: 1; transform: translateY(0); }
-            }
-          `}</style>
-        </motion.div>
-      )})}
-    </div>
-  </div>
-</section>
-
-<section className="py-20 relative overflow-hidden">
-<div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800 to-dark-900">
-    {/* Radial gradient overlays */}
-    <div className="absolute inset-0 opacity-70"
-         style={{
-           background: "radial-gradient(circle at 20% 30%, rgba(136, 58, 234, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(58, 136, 234, 0.15) 0%, transparent 50%)"
-         }}></div>
-    
-    {/* Subtle grid pattern */}
-    <div className="absolute inset-0 opacity-10"
-         style={{
-           backgroundImage: "linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
-           backgroundSize: "40px 40px"
-         }}></div>
-    
-    {/* Animated particles */}
-    <div className="absolute inset-0 overflow-hidden">
-      {[...Array(15)].map((_, i) => (
-        <div 
-          key={i}
-          className="absolute rounded-full bg-white/5"
-          style={{
-            top: `${Math.random() * 100}%`,
-            left: `${Math.random() * 100}%`,
-            width: `${Math.random() * 4 + 1}px`,
-            height: `${Math.random() * 4 + 1}px`,
-            boxShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
-            animation: `float-${i % 3} ${Math.random() * 20 + 10}s infinite ease-in-out`
-          }}
-        ></div>
-      ))}
-    </div>
-  </div>
-  
-  
-  <div className="container mx-auto max-w-screen-xl px-6 relative z-10">
-    {/* Header Section */}
-    <motion.div
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      className="text-center mb-16"
-    >
-      <h2
-        className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent"
-        id="startfreetrialheader"
+      <section
+        ref={videoRef}
+        className="relative min-h-screen overflow-visible flex flex-col justify-start py-8 md:py-16"
       >
-        Start Your Free Trial
-      </h2>
-      <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-        Try our comprehensive notification system risk-free for 15 days.
-      </p>
-    </motion.div>
+        {/* Immersive Background Base Layer */}
+        <div className="absolute inset-0 bg-[#050816]"></div>
 
-    {/* Premium Light-Themed Pricing Card with Prominent Glow */}
-    <motion.div
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      transition={{ duration: 0.6, delay: 0.2 }}
-      className="max-w-lg mx-auto relative"
-    >
-      {/* Prominent outer glow effect */}
-      <div className="absolute -inset-3 bg-gradient-to-r from-accent-100/30 via-accent-200/20 to-accent-100/30 rounded-2xl blur-lg"></div>
-      
-      {/* Card main container */}
-      <div className="relative rounded-xl overflow-hidden border border-white/30 shadow-2xl"
-           style={{ boxShadow: "0 0 30px rgba(122, 162, 247, 0.3), 0 0 10px rgba(255, 255, 255, 0.2)" }}>
-        
-        {/* Card background */}
-        <div className="absolute inset-0 bg-white"></div>
-        
-        {/* Glowing border */}
-        <div className="absolute inset-0 rounded-xl overflow-hidden">
-          <div className="absolute inset-0 border-4 border-accent-100/20 rounded-xl"></div>
-          <div className="absolute top-0 right-0 bottom-0 left-0 border border-white/50 rounded-xl"></div>
-        </div>
-        
-        {/* Prominent Badge - Positioned higher to be fully visible */}
-        <div className="absolute top-0 left-0 right-0 flex justify-center">
-          <div className="px-6 py-2 bg-gradient-to-r from-accent-100 to-accent-200 text-white font-bold rounded-b-lg shadow-lg transform translate-y-0">
-            ELITE PLAN
-          </div>
-        </div>
-        
-        {/* Card content with proper padding for badge */}
-        <div className="relative p-8 pt-10 z-10">
-          {/* Price Display */}
-          <div className="text-center mb-6 mt-2">
-            <h3 className="text-2xl font-bold text-gray-800 mb-3">
-              Smart Notifications
-            </h3>
-            <p className="text-gray-600 text-lg mb-4">
-              Get premium notification services with advanced features.
-            </p>
-          </div>
+        {/* Parallax Animated Background */}
+        <motion.div
+          style={{ y, opacity }}
+          className="absolute inset-0 w-full h-full"
+        >
+          {/* Cinematic Background Video with Custom Masking */}
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            id="bg-video"
+            className="absolute inset-0 w-full h-auto object-cover opacity-60"
+          >
+            <source
+              src="/assets/Images/smart_notifications.mp4"
+              type="video/mp4"
+            />
+          </video>
 
-          {/* Separator */}
-          <div className="w-full h-px bg-blue-500/20 my-6"></div>
+          {/* Dynamic Multi-Layer Gradient Overlays with Custom Blend Modes */}
+          <div className="absolute inset-0 bg-gradient-to-b from-[#050816]/90 via-[#050816]/60 to-[#050816]/90 mix-blend-overlay"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-blue-600/10 via-transparent to-transparent opacity-80 mix-blend-screen"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-600/10 via-transparent to-transparent opacity-80 mix-blend-color-dodge"></div>
 
-          {/* Features List */}
-          <div className="space-y-3 mb-8">
-            {[
-              "Unlimited notification setup",
-              "Multiple notification channels (SMS, Email, Call)",
-              "Custom reminder intervals",
-              "Priority notifications",
-              "Payment tracking alerts",
-              "Subscription renewal reminders",
-            ].map((feature, index) => (
+          {/* Futuristic Grid Elements with Pulse Effect */}
+          <div className="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBzdHJva2U9IiM0MzM4REQiIHN0cm9rZS13aWR0aD0iMC41IiBzdHJva2Utb3BhY2l0eT0iMC4xIj48cGF0aCBkPSJNMCAwIEw2MCA2MCIvPjxwYXRoIGQ9Ik02MCAwIEwwIDYwIi8+PHBhdGggZD0iTTMwIDAgTDMwIDYwIi8+PHBhdGggZD0iTTAgMzAgTDYwIDMwIi8+PC9nPjwvc3ZnPg==')] opacity-10 animate-pulse-slow"></div>
+        </motion.div>
+
+        {/* Interactive Animated Elements */}
+        <div className="absolute inset-0 overflow-hidden">
+          {/* Advanced 3D Particle System with Movement Tracking */}
+          <div className="particles-3d-container absolute inset-0 opacity-40 pointer-events-none"></div>
+
+          {/* Neon Data Streams with Reactive Animation */}
+          <div className="absolute inset-0 data-streams opacity-15">
+            {[...Array(8)].map((_, i) => (
               <div
-                key={index}
-                className="flex items-center py-2"
-              >
-                <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent-100/10 flex items-center justify-center mr-3">
-                  <Check className="w-4 h-4 text-accent-100" />
-                </div>
-                <span className="text-gray-700">
-                  {feature}
-                </span>
-              </div>
+                key={`hline-${i}`}
+                className="absolute h-px left-0 right-0 bg-gradient-to-r from-transparent via-blue-500 to-transparent data-line neon-glow"
+                style={{ top: `${(i + 1) * 11}%` }}
+              ></div>
+            ))}
+            {[...Array(8)].map((_, i) => (
+              <div
+                key={`vline-${i}`}
+                className="absolute w-px top-0 bottom-0 bg-gradient-to-b from-transparent via-purple-600 to-transparent data-line neon-glow"
+                style={{ left: `${(i + 1) * 11}%` }}
+              ></div>
             ))}
           </div>
 
-          {/* Subscription Plan Dropdown */}
-          <div className="mb-6 relative">
-            <label className="block text-gray-700 text-sm font-medium mb-2">
-              Select a subscription plan:
-            </label>
+          {/* Holographic Orbital Elements with Depth Effect */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] border border-blue-400/10 rounded-full animate-spin-very-slow blur-sm"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] border border-cyan-400/8 rounded-full animate-spin-moderate"></div>
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] border border-purple-500/10 rounded-full animate-spin-slow-reverse holographic-edge"></div>
+        </div>
 
-            <div
-              className="relative w-full p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 
-                       focus:border-accent-100 focus:ring-2 focus:ring-accent-100/50 transition-all 
-                       text-lg font-semibold cursor-pointer select-none flex justify-between items-center"
-              onClick={() => setIsOpen(!isOpen)}
-            >
-              <span>{selectedPlan ? selectedPlan : "Choose a plan"}</span>
+        {/* Content Container with Fixed Positioning */}
+        <div className="relative z-10 container mx-auto px-4 md:px-6 pt-10 sm:pt-16 md:pt-20">
+          <div className="w-full max-w-7xl mx-auto relative">
+            {/* Main Content Area - Starting at Top of Screen */}
+            <div className="flex flex-col items-center">
+              {/* Enterprise-Grade Header Section */}
+              <div className="text-center w-full mb-8">
+                <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight enterprise-heading">
+                  Smart{" "}
+                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                    Notifications
+                  </span>
+                </h1>
 
+                <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-8">
+                  with{" "}
+                  <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
+                    SacredSecret
+                  </span>
+                </h2>
+
+                <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full"></div>
+              </div>
+
+              {/* Professional Two-Column Layout */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mt-4">
+                {/* Left Column: Text Content */}
+                <motion.div
+                  initial={{ opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                  className="relative p-8 md:p-10 flex flex-col justify-center z-10"
+                  whileHover={{ scale: 1.01, transition: { duration: 0.3 } }}
+                >
+                  {/* Text Content */}
+                  <p className="text-lg md:text-2xl text-gray-100 leading-relaxed dynamic-text">
+                    Receive{" "}
+                    <span className="highlight-text">
+                      important notifications
+                    </span>{" "}
+                    for payments that are automatically deducted, whether for
+                    subscription services, credit card payments, or any other
+                    services requiring a
+                    <span className="highlight-text">
+                      {" "}
+                      linked payment option
+                    </span>{" "}
+                    for recurring deductions. Stay informed and{" "}
+                    <span className="highlight-text">
+                      manage your finances
+                    </span>{" "}
+                    effectively.
+                  </p>
+
+                  {/* CTA Button */}
+                  <div className="mt-6 md:mt-8 flex justify-start">
+                    <motion.button
+                      whileHover={{
+                        scale: 1.03,
+                        boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)",
+                      }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={handleGoToDown}
+                      className="px-8 py-3 md:px-10 md:py-4 text-base md:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
+                    >
+                      {/* Light Effect */}
+                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                      <span className="relative z-10 flex items-center font-bold">
+                        Start For Free{" "}
+                        <span className="ml-2 arrow-icon">→</span>
+                      </span>
+                    </motion.button>
+                  </div>
+                </motion.div>
+
+                {/* Right Column: Image with Video Player */}
+                <motion.div
+                  initial={{ opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.6, delay: 0.4 }}
+                  className="relative flex justify-center items-start"
+                >
+                  {/* Video/Image Container */}
+                  <div className="w-full max-w-xl mx-auto">
+                    {/* Video with Original Styling */}
+                    <div className="relative rounded-2xl overflow-hidden shadow-xl group border border-white/20 video-frame">
+                      {/* Corner Accents */}
+                      <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-blue-400/70 rounded-tl-2xl z-20"></div>
+                      <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-purple-500/70 rounded-br-2xl z-20"></div>
+
+                      {/* Image/Video Player */}
+                      <div
+                        className="relative z-10"
+                        style={{ aspectRatio: "16/9" }}
+                      >
+                        <img
+                          src="/assets/Images/Smart_notifications_thumblin.jpg"
+                          alt="Smart Notifications"
+                          className="w-full h-full object-cover"
+                        />
+
+                        {/* Overlay */}
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
+                          {/* Scan Lines */}
+                          <div className="absolute inset-0 scan-lines-subtle"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              </div>
+
+              {/* Clean Scroll Indicator */}
               <motion.div
-                animate={{ rotate: isOpen ? 180 : 0 }}
-                transition={{ duration: 0.3 }}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 1.2, duration: 0.8 }}
+                className="mt-12 transform"
               >
-                <ChevronDown className="w-5 h-5 text-blue-500" />
+                <div className="flex flex-col items-center gap-2">
+                  <motion.div
+                    animate={{ y: [0, 8, 0] }}
+                    transition={{
+                      duration: 1.5,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    }}
+                    className="w-8 h-14 rounded-full border-2 border-cyan-400/50 flex items-center justify-center cursor-pointer glow-pulse"
+                    onClick={handleGoToDown}
+                  >
+                    <motion.div
+                      animate={{ y: [0, 6, 0] }}
+                      transition={{
+                        duration: 1.5,
+                        repeat: Infinity,
+                        ease: "easeInOut",
+                      }}
+                      className="w-1.5 h-3 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full neon-glow"
+                    ></motion.div>
+                  </motion.div>
+                  <span className="text-xs text-cyan-400/80 uppercase tracking-widest font-medium letter-spacing-wide">
+                    Explore
+                  </span>
+                </div>
               </motion.div>
             </div>
-
-            {/* Dropdown Options */}
-            <AnimatePresence>
-              {isOpen && (
-                <motion.ul
-                  initial={{ opacity: 0, y: -5, scale: 0.95 }}
-                  animate={{ opacity: 1, y: 0, scale: 1 }}
-                  exit={{ opacity: 0, y: -5, scale: 0.95 }}
-                  transition={{ duration: 0.3 }}
-                  className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg z-20"
-                >
-                  {[
-                    { value: "quarterly", label: "Quarterly - ₹250" },
-                    { value: "halfYearly", label: "Half-Yearly - ₹500" },
-                    { value: "yearly", label: "Yearly - ₹1000" },
-                  ].map((option, index) => (
-                    <motion.li
-                      key={index}
-                      onClick={() => handlePlanChange(option.label)}
-                      whileHover={{ backgroundColor: "rgba(59, 130, 246, 0.1)" }}
-                      className="px-4 py-3 text-gray-700 cursor-pointer transition-all hover:text-blue-500"
-                    >
-                      {option.label}
-                    </motion.li>
-                  ))}
-                </motion.ul>
-              )}
-            </AnimatePresence>
-          </div>
-
-          {/* CTA Button with prominent glow */}
-          <div className="relative">
-            {/* Button glow effect */}
-            <div className="absolute -inset-1 bg-blue-500/40 rounded-lg blur-md"></div>
-            
-            <motion.button
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => console.log(`Subscribed to ${selectedPlan}`)}
-              disabled={!selectedPlan}
-              className={`relative w-full py-3.5 rounded-lg font-bold text-lg shadow-lg ${
-                selectedPlan
-                  ? "bg-gradient-to-r from-blue-500 to-purple-600 text-white"
-                  : "bg-gray-200 text-gray-400 cursor-not-allowed"
-              }`}
-            >
-              Subscribe Now
-            </motion.button>
-          </div>
-          
-          {/* Trust badge */}
-          <div className="mt-5 text-center">
-            <span className="inline-flex items-center text-xs text-gray-500">
-              <svg className="w-4 h-4 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-              </svg>
-              Secure & encrypted, 15-day free trial
-            </span>
           </div>
         </div>
-        
-        {/* Bottom glow effect */}
-        <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-blue-500/5 to-transparent"></div>
-      </div>
-    </motion.div>
-  </div>
-  
-  {/* Custom animations */}
-  <style jsx>{`
-    @keyframes float-0 {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-30px) translateX(15px); }
-    }
-    @keyframes float-1 {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(20px) translateX(-20px); }
-    }
-    @keyframes float-2 {
-      0%, 100% { transform: translateY(0) translateX(0); }
-      50% { transform: translateY(-15px) translateX(-25px); }
-    }
-  `}</style>
-</section>
+
+        {/* CSS Styles */}
+        <style jsx>{`
+          /* Neo-Morphic Glass Effect with Depth */
+          .neo-glass {
+            position: relative;
+            background: rgba(8, 8, 30, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25),
+              0 5px 15px rgba(0, 0, 0, 0.1),
+              inset 0 1px 1px rgba(255, 255, 255, 0.1);
+            overflow: hidden;
+            transition: all 0.5s ease;
+          }
+
+          .neo-glass:before {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+              120deg,
+              transparent,
+              rgba(56, 189, 248, 0.08),
+              transparent
+            );
+            transform: translateX(-100%);
+            animation: neo-shine 8s infinite;
+            z-index: -1;
+          }
+
+          /* 3D Typography Effects */
+          /* Enterprise-grade heading style */
+          .enterprise-heading {
+            letter-spacing: -0.02em;
+            line-height: 1.1;
+            font-weight: 800;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+          }
+
+          /* Video container styling */
+          .video-container {
+            position: relative;
+            overflow: hidden;
+            border-radius: 0.75rem;
+            width: 100%;
+            aspect-ratio: 16/9;
+            background-color: rgba(17, 24, 39, 0.7);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2),
+              0 10px 10px -5px rgba(0, 0, 0, 0.1);
+          }
+
+          .text-gradient-animated {
+            background: linear-gradient(
+              to right,
+              #38bdf8,
+              #818cf8,
+              #c084fc,
+              #38bdf8
+            );
+            background-size: 200% auto;
+            background-clip: text;
+            -webkit-background-clip: text;
+            color: transparent;
+            animation: gradient-text 6s linear infinite;
+          }
+
+          /* Futuristic Button Styling */
+          .neo-button {
+            transition: all 0.4s ease;
+          }
+
+          .neo-button:hover .arrow-icon {
+            transform: translateX(5px);
+            transition: transform 0.3s ease;
+          }
+
+          .neo-button:before {
+            content: "";
+            position: absolute;
+            inset: -2px;
+            border-radius: 999px;
+            padding: 2px;
+            background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+            -webkit-mask: linear-gradient(#fff 0 0) content-box,
+              linear-gradient(#fff 0 0);
+            -webkit-mask-composite: xor;
+            mask-composite: exclude;
+            opacity: 0;
+            transition: opacity 0.4s ease;
+          }
+
+          .neo-button:hover:before {
+            opacity: 1;
+          }
+
+          /* Premium Text Highlighting */
+          .dynamic-text {
+            letter-spacing: 0.01em;
+          }
+
+          .highlight-text {
+            position: relative;
+            color: #38bdf8;
+            font-weight: 600;
+          }
+
+          .highlight-text:after {
+            content: "";
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 30%;
+            background: linear-gradient(90deg, #38bdf8, #818cf8);
+            opacity: 0.15;
+            border-radius: 4px;
+            z-index: -1;
+          }
+
+          /* Holographic Card Effects */
+          .video-frame {
+            transition: transform 0.3s ease-out;
+            position: relative;
+            background: rgba(8, 8, 30, 0.4);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+          }
+
+          .video-frame:after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(
+              120deg,
+              rgba(255, 255, 255, 0) 0%,
+              rgba(255, 255, 255, 0.03) 25%,
+              rgba(255, 255, 255, 0.05) 50%,
+              rgba(255, 255, 255, 0.03) 75%,
+              rgba(255, 255, 255, 0) 100%
+            );
+            opacity: 0.3;
+          }
+
+          /* Professional animation speeds */
+          .animate-pulse-slow {
+            animation: pulse-slow 5s ease-in-out infinite;
+          }
+
+          /* Premium Scan Lines Effect */
+          .scan-lines-subtle {
+            background-image: repeating-linear-gradient(
+              0deg,
+              rgba(56, 189, 248, 0.04),
+              rgba(56, 189, 248, 0.04) 1px,
+              transparent 1px,
+              transparent 2px
+            );
+            background-size: 100% 4px;
+            animation: scan-animation-premium 10s linear infinite;
+          }
+
+          /* Neon Glow Effects */
+          .neon-glow {
+            box-shadow: 0 0 5px rgba(56, 189, 248, 0.7),
+              0 0 10px rgba(56, 189, 248, 0.5);
+          }
+
+          .glow-pulse {
+            animation: glow-pulsate 3s infinite alternate;
+          }
+
+          .holographic-edge {
+            border-image: linear-gradient(
+                to right,
+                #38bdf8,
+                #818cf8,
+                #c084fc,
+                #38bdf8
+              )
+              1;
+            border-image-slice: 1;
+          }
+
+          /* Advanced Spin Animations */
+          .animate-spin-very-slow {
+            animation: spin 120s linear infinite;
+          }
+
+          .animate-spin-moderate {
+            animation: spin 60s linear infinite;
+          }
+
+          .animate-spin-slow-reverse {
+            animation: spin 80s linear infinite reverse;
+          }
+
+          .animate-pulse-slow {
+            animation: pulse-slow 8s ease-in-out infinite;
+          }
+
+          /* Enhanced Animations */
+          @keyframes neo-shine {
+            0% {
+              transform: translateX(-100%);
+            }
+            20%,
+            100% {
+              transform: translateX(100%);
+            }
+          }
+
+          @keyframes gradient-text {
+            0% {
+              background-position: 0% 50%;
+            }
+            100% {
+              background-position: 200% 50%;
+            }
+          }
+
+          @keyframes scan-animation-premium {
+            0% {
+              background-position: 0 0;
+            }
+            100% {
+              background-position: 0 100%;
+            }
+          }
+
+          @keyframes glow-pulsate {
+            0% {
+              box-shadow: 0 0 5px rgba(56, 189, 248, 0.5);
+            }
+            100% {
+              box-shadow: 0 0 20px rgba(56, 189, 248, 0.8),
+                0 0 30px rgba(139, 92, 246, 0.5);
+            }
+          }
+
+          @keyframes pulse-slow {
+            0%,
+            100% {
+              opacity: 1;
+            }
+            50% {
+              opacity: 0.7;
+            }
+          }
+
+          @keyframes spin {
+            from {
+              transform: translate(-50%, -50%) rotate(0deg);
+            }
+            to {
+              transform: translate(-50%, -50%) rotate(360deg);
+            }
+          }
+
+          /* Letter Spacing Utilities */
+          .letter-spacing-wide {
+            letter-spacing: 0.05em;
+          }
+        `}</style>
+      </section>
+
+      {/* Notification Types Section */}
+      <NotificationGrid />
+
+      {/*  Features Section - Premium Style */}
+      <section className="relative py-20 overflow-hidden">
+        {/* Premium Dark Background with effects */}
+        <div className="absolute inset-0 -z-10">
+          {/* Deep space gradient base */}
+          <div className="absolute inset-0 bg-gradient-to-b from-gray-950 to-black"></div>
+
+          {/* Background Radial Gradients */}
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_rgba(79,70,229,0.2),transparent_70%),radial-gradient(ellipse_at_bottom_left,_rgba(124,58,237,0.2),transparent_70%)]"></div>
+
+          {/* Premium ambient blurs */}
+          <div className="absolute top-1/4 right-1/6 w-80 h-80 bg-indigo-600/20 rounded-full filter blur-3xl"></div>
+          <div className="absolute bottom-1/4 left-1/6 w-96 h-96 bg-purple-600/20 rounded-full filter blur-3xl"></div>
+
+          {/* Subtle mesh grid overlay */}
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.02)_1px,transparent_1px),linear-gradient(to_right,rgba(255,255,255,0.02)_1px,transparent_1px)] bg-[size:48px_48px] opacity-5"></div>
+
+          {/* Enhanced floating particles */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none">
+            {[...Array(20)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute w-1.5 h-1.5 rounded-full bg-white/40 animate-float"
+                style={{
+                  left: `${Math.random() * 100}%`,
+                  top: `${Math.random() * 100}%`,
+                  animationDelay: `${Math.random() * 5}s`,
+                  animationDuration: `${15 + Math.random() * 15}s`,
+                }}
+              />
+            ))}
+          </div>
+
+          {/* Responsive glow based on mouse position */}
+          <div
+            className="absolute opacity-30"
+            style={{
+              left: `${mousePosition.x - 200}px`,
+              top: `${mousePosition.y - 200}px`,
+              width: "400px",
+              height: "400px",
+              background:
+                "radial-gradient(circle, rgba(79, 70, 229, 0.6) 0%, transparent 70%)",
+              borderRadius: "50%",
+              pointerEvents: "none",
+              transition: "left 0.3s ease-out, top 0.3s ease-out",
+            }}
+          ></div>
+        </div>
+
+        <div className="container mx-auto px-6 relative z-10">
+          <motion.div
+            ref={ref}
+            initial={{ opacity: 0, y: 20 }}
+            animate={inView ? { opacity: 1, y: 0 } : {}}
+            transition={{ duration: 0.8 }}
+            className="text-center mb-20"
+          >
+            {/* Title with premium visual treatment */}
+            <h2 className="text-5xl md:text-6xl font-bold mb-6 leading-tight">
+              <div className="h-px w-16 mx-auto bg-gradient-to-r from-indigo-500 to-purple-500"></div>
+              <span className="bg-gradient-to-r from-white via-gray-300 to-white bg-clip-text text-transparent">
+                Secure and Reliable
+              </span>
+              <br />
+              <span className="relative inline-block bg-gradient-to-r from-indigo-400 via-purple-400 to-indigo-400 bg-clip-text text-transparent">
+                Notifications
+                {/* Decorative elements */}
+                <span className="absolute -top-2 -right-8 w-6 h-6 rounded-full bg-purple-500/10 blur-sm"></span>
+                <span className="absolute bottom-0 -left-4 w-4 h-4 rounded-full bg-indigo-500/10 blur-sm"></span>
+              </span>
+            </h2>
+
+            {/* Enhanced divider */}
+            <div className="flex justify-center items-center gap-3 my-8">
+              <div className="h-px w-12 bg-gradient-to-r from-transparent to-indigo-500/70"></div>
+              <div className="w-2 h-2 rounded-full bg-purple-500"></div>
+              <div className="h-px w-12 bg-gradient-to-l from-transparent to-purple-500/70"></div>
+            </div>
+
+            {/* Description with improved typography */}
+            <p className="text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              <span className="text-white font-medium">
+                Our notification system is built with security and reliability
+                in mind.
+              </span>{" "}
+              We ensure your alerts remain private, protected, and delivered
+              exactly when you need them.
+            </p>
+          </motion.div>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => {
+              // Define different color schemes for variety
+              const colorSchemes = [
+                {
+                  bgColor: "bg-white",
+                  accentColor: "bg-indigo-500",
+                  color: "from-indigo-500 to-purple-600",
+                  textColor: "text-indigo-600",
+                  borderColor: "border-indigo-200",
+                },
+                {
+                  bgColor: "bg-white",
+                  accentColor: "bg-teal-500",
+                  color: "from-teal-500 to-emerald-600",
+                  textColor: "text-teal-600",
+                  borderColor: "border-teal-200",
+                },
+                {
+                  bgColor: "bg-white",
+                  accentColor: "bg-amber-500",
+                  color: "from-amber-500 to-orange-600",
+                  textColor: "text-amber-600",
+                  borderColor: "border-amber-200",
+                },
+                {
+                  bgColor: "bg-white",
+                  accentColor: "bg-rose-500",
+                  color: "from-rose-500 to-pink-600",
+                  textColor: "text-rose-600",
+                  borderColor: "border-rose-200",
+                },
+                {
+                  bgColor: "bg-white",
+                  accentColor: "bg-blue-500",
+                  color: "from-blue-500 to-sky-600",
+                  textColor: "text-blue-600",
+                  borderColor: "border-blue-200",
+                },
+                {
+                  bgColor: "bg-white",
+                  accentColor: "bg-purple-500",
+                  color: "from-purple-500 to-violet-600",
+                  textColor: "text-purple-600",
+                  borderColor: "border-purple-200",
+                },
+              ];
+
+              // Use modulo to cycle through color schemes
+              const colors = colorSchemes[index % colorSchemes.length];
+
+              return (
+                <motion.div
+                  key={feature.title}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={inView ? { opacity: 1, y: 0 } : {}}
+                  transition={{ duration: 0.6, delay: index * 0.2 }}
+                  className="relative h-auto min-h-[300px] overflow-hidden rounded-2xl shadow-lg group cursor-pointer [perspective:1200px]"
+                >
+                  {/* Card with 3D flip effect */}
+                  <div className="relative w-full h-full transition-all duration-700 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+                    {/* Front Side */}
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden [backface-visibility:hidden]">
+                      {/* Base clean background */}
+                      <div
+                        className={`absolute inset-0 ${colors.bgColor}`}
+                      ></div>
+
+                      {/* Add shine animation keyframes */}
+                      <style jsx>{`
+                        @keyframes shine {
+                          0% {
+                            left: -100%;
+                          }
+                          100% {
+                            left: 200%;
+                          }
+                        }
+                        .animate-shine {
+                          animation: shine 2s infinite linear;
+                        }
+
+                        @keyframes shimmer {
+                          0% {
+                            transform: translateX(-100%);
+                          }
+                          100% {
+                            transform: translateX(500%);
+                          }
+                        }
+                        .animate-shimmer {
+                          animation: shimmer 3s infinite;
+                        }
+
+                        @keyframes float {
+                          0%,
+                          100% {
+                            transform: translateY(0) translateX(0);
+                          }
+                          25% {
+                            transform: translateY(-10px) translateX(5px);
+                          }
+                          75% {
+                            transform: translateY(-5px) translateX(-5px);
+                          }
+                        }
+                        .animate-float {
+                          animation: float 15s ease-in-out infinite;
+                        }
+                      `}</style>
+
+                      {/* Subtle dot pattern overlay */}
+                      <div className="absolute inset-0 opacity-10 group-hover:opacity-15 transition-all duration-500">
+                        <svg
+                          width="100%"
+                          height="100%"
+                          xmlns="http://www.w3.org/2000/svg"
+                        >
+                          <defs>
+                            <pattern
+                              id={`premium-dots-${index}`}
+                              width="20"
+                              height="20"
+                              patternUnits="userSpaceOnUse"
+                            >
+                              <circle
+                                cx="10"
+                                cy="10"
+                                r="1"
+                                fill="currentColor"
+                              />
+                            </pattern>
+                          </defs>
+                          <rect
+                            width="100%"
+                            height="100%"
+                            fill={`url(#premium-dots-${index})`}
+                          />
+                        </svg>
+                      </div>
+
+                      {/* Diagonal premium accent */}
+                      <div
+                        className={`absolute top-0 right-0 w-full h-full opacity-5 transform rotate-[-15deg] translate-x-1/3 -translate-y-1/4 ${colors.accentColor} rounded-full`}
+                      ></div>
+
+                      {/* Elegant accent border at top */}
+                      <div
+                        className={`absolute top-0 left-0 w-full h-1 ${colors.accentColor}`}
+                      ></div>
+
+                      {/* Premium icon container with white background and shiny icon */}
+                      <div
+                        className={`absolute top-4 left-4 group-hover:left-5 transition-all duration-500 bg-white border ${colors.borderColor} p-3 rounded-2xl shadow-lg`}
+                      >
+                        <div
+                          className={`relative overflow-hidden bg-gradient-to-br ${colors.color} rounded-xl p-3 shadow-inner`}
+                        >
+                          {/* Shiny effect overlay */}
+                          <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-1000">
+                            <div className="absolute -inset-[100%] animate-shine bg-white/30 rotate-[25deg] transform-gpu"></div>
+                          </div>
+                          {React.createElement(feature.icon, {
+                            className:
+                              "w-6 h-6 text-white drop-shadow-lg relative z-10",
+                          })}
+                        </div>
+                      </div>
+
+                      {/* Subtle corner accent */}
+                      <div
+                        className={`absolute top-0 right-0 w-20 h-20 opacity-60 bg-gradient-to-bl ${
+                          feature.bgColor || "bg-white"
+                        } to-transparent rounded-bl-full`}
+                      ></div>
+
+                      {/* Professional content area */}
+                      <div className="absolute inset-x-0 top-28 px-6">
+                        <h3
+                          className={`text-xl font-bold mb-2 text-gray-800 group-hover:${
+                            feature.textColor || "text-indigo-500"
+                          } transition-colors duration-300`}
+                        >
+                          {feature.title}
+                        </h3>
+                        <p className="text-gray-600 text-md leading-relaxed">
+                          {feature.description}
+                        </p>
+                      </div>
+
+                      {/* Left side accent */}
+                      <div
+                        className={`absolute left-0 top-1/4 bottom-1/4 w-1 ${
+                          feature.borderColor || "bg-indigo-200"
+                        }`}
+                      ></div>
+
+                      {/* Subtle floating detail effect */}
+                      <div
+                        className={`absolute -bottom-6 -right-6 w-24 h-24 rounded-full opacity-10 ${
+                          feature.accentColor || "bg-indigo-500"
+                        }`}
+                      ></div>
+
+                      {/* Card flip indicator */}
+                      <div className="absolute bottom-3 right-3 text-xs text-gray-400 flex items-center space-x-1 opacity-80">
+                        <span>Flip for details</span>
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-3 w-3"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                          />
+                        </svg>
+                      </div>
+                    </div>
+
+                    {/* Back Side */}
+                    <div className="absolute inset-0 rounded-2xl overflow-hidden [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                      {/* Professional clean white background */}
+                      <div className={`absolute inset-0 bg-white`}></div>
+
+                      {/* Subtle grain texture for depth */}
+                      <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIj48ZmlsdGVyIGlkPSJhIiB4PSIwIiB5PSIwIj48ZmVUdXJidWxlbmNlIGJhc2VGcmVxdWVuY3k9Ii43NSIgc3RpdGNoVGlsZXM9InN0aXRjaCIgdHlwZT0iZnJhY3RhbE5vaXNlIi8+PGZlQ29sb3JNYXRyaXggdHlwZT0ic2F0dXJhdGUiIHZhbHVlcz0iMCIvPjwvZmlsdGVyPjxwYXRoIGQ9Ik0wIDBoMjAwdjIwMEgweiIgZmlsdGVyPSJ1cmwoI2EpIiBvcGFjaXR5PSIuMDUiLz48L3N2Zz4=')]"></div>
+
+                      {/* Premium border and accents */}
+                      <div
+                        className={`absolute top-0 left-0 right-0 h-2 bg-gradient-to-r ${
+                          feature.color || "from-indigo-500 to-purple-600"
+                        }`}
+                      ></div>
+                      <div
+                        className={`absolute left-0 top-2 bottom-0 w-2 bg-gradient-to-b ${
+                          feature.color || "from-indigo-500 to-purple-600"
+                        } opacity-10`}
+                      ></div>
+
+                      {/* Subtle curved accent in corner */}
+                      <div
+                        className={`absolute top-0 right-0 w-40 h-40 rounded-full opacity-5 bg-gradient-to-bl ${
+                          feature.color || "from-indigo-500 to-purple-600"
+                        }`}
+                        style={{ transform: "translate(50%, -50%)" }}
+                      ></div>
+
+                      {/* Content Container */}
+                      <div className="relative h-full flex flex-col p-6">
+                        {/* Premium Icon with 3D effect */}
+                        <div className="absolute top-3 right-4">
+                          <div
+                            className={`relative flex items-center justify-center w-10 h-10 rounded-2xl bg-gradient-to-br ${
+                              feature.color || "from-indigo-500 to-purple-600"
+                            } text-white shadow-lg border border-white/10`}
+                          >
+                            {React.createElement(feature.icon, {
+                              className: "w-5 h-5",
+                              strokeWidth: 1.5,
+                            })}
+                            {/* Subtle shadow for 3D effect */}
+                            <div
+                              className={`absolute -bottom-1.5 inset-x-1 h-2 bg-black/20 blur rounded-full`}
+                            ></div>
+                          </div>
+                        </div>
+
+                        {/* Title */}
+                        <div className="relative mb-6">
+                          <h3
+                            className={`text-xl font-bold mb-1 text-gray-800`}
+                          >
+                            {feature.title}
+                          </h3>
+                          <div
+                            className={`h-0.5 w-10 ${
+                              feature.accentColor || "bg-indigo-500"
+                            }`}
+                          ></div>
+                        </div>
+
+                        {/* Details List with staggered animation */}
+                        <ul className="space-y-3 flex-grow">
+                          {feature.details.map((detail, idx) => (
+                            <li
+                              key={idx}
+                              className="flex items-start text-gray-600 transition-colors duration-300"
+                              style={{
+                                opacity: 0,
+                                animation: `fadeIn 0.5s forwards ${
+                                  idx * 0.1 + 0.2
+                                }s`,
+                              }}
+                            >
+                              {/* Professional checkmark */}
+                              <div
+                                className={`flex-shrink-0 w-5 h-5 mr-3 rounded-full bg-gradient-to-br ${
+                                  feature.color ||
+                                  "from-indigo-500 to-purple-600"
+                                } flex items-center justify-center text-white`}
+                              >
+                                <svg
+                                  className="w-3 h-3"
+                                  fill="none"
+                                  stroke="currentColor"
+                                  viewBox="0 0 24 24"
+                                  xmlns="http://www.w3.org/2000/svg"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M5 13l4 4L19 7"
+                                  ></path>
+                                </svg>
+                              </div>
+
+                              {/* Text */}
+                              <span className="text-sm font-medium">
+                                {detail}
+                              </span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Add animation for staggered list items */}
+                  <style jsx>{`
+                    @keyframes fadeIn {
+                      from {
+                        opacity: 0;
+                        transform: translateY(10px);
+                      }
+                      to {
+                        opacity: 1;
+                        transform: translateY(0);
+                      }
+                    }
+                  `}</style>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      <section className="py-20 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800 to-dark-900">
+          {/* Radial gradient overlays */}
+          <div
+            className="absolute inset-0 opacity-70"
+            style={{
+              background:
+                "radial-gradient(circle at 20% 30%, rgba(136, 58, 234, 0.15) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(58, 136, 234, 0.15) 0%, transparent 50%)",
+            }}
+          ></div>
+
+          {/* Subtle grid pattern */}
+          <div
+            className="absolute inset-0 opacity-10"
+            style={{
+              backgroundImage:
+                "linear-gradient(rgba(255, 255, 255, 0.05) 1px, transparent 1px), linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px)",
+              backgroundSize: "40px 40px",
+            }}
+          ></div>
+
+          {/* Animated particles */}
+          <div className="absolute inset-0 overflow-hidden">
+            {[...Array(15)].map((_, i) => (
+              <div
+                key={i}
+                className="absolute rounded-full bg-white/5"
+                style={{
+                  top: `${Math.random() * 100}%`,
+                  left: `${Math.random() * 100}%`,
+                  width: `${Math.random() * 4 + 1}px`,
+                  height: `${Math.random() * 4 + 1}px`,
+                  boxShadow: "0 0 10px rgba(255, 255, 255, 0.3)",
+                  animation: `float-${i % 3} ${
+                    Math.random() * 20 + 10
+                  }s infinite ease-in-out`,
+                }}
+              ></div>
+            ))}
+          </div>
+        </div>
+
+        <div
+          className="container mx-auto max-w-screen-xl px-6 relative z-10"
+          id="sm"
+        >
+          {/* Header Section */}
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center mb-16"
+          >
+            <h2
+              className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent"
+              id="startfreetrialheader"
+            >
+              Start Your Free Trial
+            </h2>
+            <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
+              Try our comprehensive notification system risk-free for 15 days.
+            </p>
+          </motion.div>
+
+          {/* Premium Light-Themed Pricing Card with Prominent Glow */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.6, delay: 0.2 }}
+            className="max-w-lg mx-auto relative"
+          >
+            {/* Prominent outer glow effect */}
+            <div className="absolute -inset-3 bg-gradient-to-r from-accent-100/30 via-accent-200/20 to-accent-100/30 rounded-2xl blur-lg"></div>
+
+            {/* Card main container */}
+            <div
+              className="relative rounded-xl overflow-hidden border border-white/30 shadow-2xl"
+              style={{
+                boxShadow:
+                  "0 0 30px rgba(122, 162, 247, 0.3), 0 0 10px rgba(255, 255, 255, 0.2)",
+              }}
+            >
+              {/* Card background */}
+              <div className="absolute inset-0 bg-white"></div>
+
+              {/* Glowing border */}
+              <div className="absolute inset-0 rounded-xl overflow-hidden">
+                <div className="absolute inset-0 border-4 border-accent-100/20 rounded-xl"></div>
+                <div className="absolute top-0 right-0 bottom-0 left-0 border border-white/50 rounded-xl"></div>
+              </div>
+
+              {/* Prominent Badge - Positioned higher to be fully visible */}
+              <div className="absolute top-0 left-0 right-0 flex justify-center">
+                <div className="px-6 py-2 bg-gradient-to-r from-accent-100 to-accent-200 text-white font-bold rounded-b-lg shadow-lg transform translate-y-0">
+                  ELITE PLAN
+                </div>
+              </div>
+
+              {/* Card content with proper padding for badge */}
+              <div className="relative p-8 pt-10 z-10">
+                {/* Price Display */}
+                <div className="text-center mb-6 mt-2">
+                  <h3 className="text-2xl font-bold text-gray-800 mb-3">
+                    Smart Notifications
+                  </h3>
+                  <p className="text-gray-600 text-lg mb-4">
+                    Get premium notification services with advanced features.
+                  </p>
+                </div>
+
+                {/* Separator */}
+                <div className="w-full h-px bg-blue-500/20 my-6"></div>
+
+                {/* Features List */}
+                <div className="space-y-3 mb-8">
+                  {[
+                    "Store unlimited credentials",
+                    "Secure encryption",
+                    "Multi-factor authentication",
+                    "Mobile access",
+                    "Email support",
+                    "Regular security updates",
+                  ].map((feature, index) => (
+                    <div key={index} className="flex items-center py-2">
+                      <div className="flex-shrink-0 w-6 h-6 rounded-full bg-accent-100/10 flex items-center justify-center mr-3">
+                        <Check className="w-4 h-4 text-accent-100" />
+                      </div>
+                      <span className="text-gray-700">{feature}</span>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Subscription Plan Dropdown */}
+                <div className="mb-6 relative">
+                  <label className="block text-gray-700 text-sm font-medium mb-2">
+                    Select a subscription plan:
+                  </label>
+
+                  <div
+                    className="relative w-full p-3 rounded-lg bg-gray-50 border border-gray-200 text-gray-800 
+                       focus:border-accent-100 focus:ring-2 focus:ring-accent-100/50 transition-all 
+                       text-lg font-semibold cursor-pointer select-none flex justify-between items-center"
+                    onClick={() => setIsOpen(!isOpen)}
+                  >
+                    <span>{selectedPlan ? selectedPlan : "Choose a plan"}</span>
+
+                    <motion.div
+                      animate={{ rotate: isOpen ? 180 : 0 }}
+                      transition={{ duration: 0.3 }}
+                    >
+                      <ChevronDown className="w-5 h-5 text-blue-500" />
+                    </motion.div>
+                  </div>
+
+                  {/* Dropdown Options */}
+                  <AnimatePresence>
+                    {isOpen && (
+                      <motion.ul
+                        initial={{ opacity: 0, y: -5, scale: 0.95 }}
+                        animate={{ opacity: 1, y: 0, scale: 1 }}
+                        exit={{ opacity: 0, y: -5, scale: 0.95 }}
+                        transition={{ duration: 0.3 }}
+                        className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg z-20"
+                      >
+                        {[
+                          { value: "quarterly", label: "Quarterly - ₹200" },
+                          { value: "halfYearly", label: "Half-Yearly - ₹500" },
+                          { value: "yearly", label: "Yearly - ₹700" },
+                        ].map((option, index) => (
+                          <motion.li
+                            key={index}
+                            onClick={() => handlePlanChange(option.label)}
+                            whileHover={{
+                              backgroundColor: "rgba(59, 130, 246, 0.1)",
+                            }}
+                            className="px-4 py-3 text-gray-700 cursor-pointer transition-all hover:text-blue-500"
+                          >
+                            {option.label}
+                          </motion.li>
+                        ))}
+                      </motion.ul>
+                    )}
+                  </AnimatePresence>
+                </div>
+
+                {/* CTA Button with prominent glow */}
+                <div className="relative">
+                  {/* Button glow effect */}
+                  <div className="absolute -inset-1 bg-blue-500/40 rounded-lg blur-md"></div>
+
+                  <RazorpayPayment
+                    feature="SMART_NOTIFICATIONS"
+                    selectedPlan={selectedPlan}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                </div>
+
+                {/* Trust badge */}
+                <div className="mt-5 text-center">
+                  <span className="inline-flex items-center text-xs text-gray-500">
+                    <svg
+                      className="w-4 h-4 mr-1.5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
+                      />
+                    </svg>
+                    Secure & encrypted, 15-day free trial
+                  </span>
+                </div>
+              </div>
+
+              {/* Bottom glow effect */}
+              <div className="absolute bottom-0 left-0 right-0 h-10 bg-gradient-to-t from-blue-500/5 to-transparent"></div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Custom animations */}
+        <style jsx>{`
+          @keyframes float-0 {
+            0%,
+            100% {
+              transform: translateY(0) translateX(0);
+            }
+            50% {
+              transform: translateY(-30px) translateX(15px);
+            }
+          }
+          @keyframes float-1 {
+            0%,
+            100% {
+              transform: translateY(0) translateX(0);
+            }
+            50% {
+              transform: translateY(20px) translateX(-20px);
+            }
+          }
+          @keyframes float-2 {
+            0%,
+            100% {
+              transform: translateY(0) translateX(0);
+            }
+            50% {
+              transform: translateY(-15px) translateX(-25px);
+            }
+          }
+        `}</style>
+      </section>
 
       {/* FAQ Section */}
       <FAQ faqs={notificationFaqs} />

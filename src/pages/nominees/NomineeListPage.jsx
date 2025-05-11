@@ -19,6 +19,10 @@ import {
   Mail,
   MessageSquare,
   Briefcase,
+  Sparkles,
+  Gift,
+  CheckCircle,
+  ChevronRight,
 } from "lucide-react";
 import { toast } from "react-hot-toast";
 import { dummyBankingCredentials } from "../../data/dummyCredentials";
@@ -972,7 +976,9 @@ const CredentialDetailsCard = ({
                     </p>
                     <p className="text-lg font-bold text-accent-100">
                       {/* {resource.data.platformName} */}
-                      {type === 'investment' ? resource.data.accountType : resource.data.platformName}
+                      {type === "investment"
+                        ? resource.data.accountType
+                        : resource.data.platformName}
                     </p>
                   </div>
                   <div className="rounded-full p-2 bg-gradient-to-br from-accent-100 to-accent-200">
@@ -981,20 +987,26 @@ const CredentialDetailsCard = ({
                 </div>
 
                 {/* User ID */}
-                <div className="flex justify-between items-center border-b border-gray-700 pb-2">
-                  <p className="text-sm font-medium text-gray-400">User ID</p>
-                  <p className="text-white font-semibold">
-                    {resource.data.userId}
-                  </p>
-                </div>
+                {!(type === "banking" || type === "investment") && (
+                  <div className="flex justify-between items-center border-b border-gray-700 pb-2">
+                    <p className="text-sm font-medium text-gray-400">User ID</p>
+                    <p className="text-white font-semibold">
+                      {resource.data.userId}
+                    </p>
+                  </div>
+                )}
 
                 {/* Password */}
-                <div className="flex justify-between items-center border-b border-gray-700 pb-2">
-                  <p className="text-sm font-medium text-gray-400">Password</p>
-                  <p className="text-white font-semibold">
-                    {resource.data.password}
-                  </p>
-                </div>
+                {!(type === "banking" || type === "investment") && (
+                  <div className="flex justify-between items-center border-b border-gray-700 pb-2">
+                    <p className="text-sm font-medium text-gray-400">
+                      Password
+                    </p>
+                    <p className="text-white font-semibold">
+                      {resource.data.password}
+                    </p>
+                  </div>
+                )}
 
                 {/* Additional Info */}
                 <div className="border-b border-gray-700 pb-2">
@@ -1344,38 +1356,42 @@ const CredentialDetailsCard = ({
                       Credential Details
                     </h4>
                     <div className="space-y-4">
-                      <div>
-                        <label className="block text-sm text-gray-400">
-                          User ID
-                        </label>
-                        <input
-                          type="text"
-                          value={editedData.userId}
-                          onChange={(e) =>
-                            setEditedData((prevState) => ({
-                              ...prevState,
-                              userId: e.target.value,
-                            }))
-                          }
-                          className="input-primary"
-                        />
-                      </div>
-                      <div>
-                        <label className="block text-sm text-gray-400">
-                          Password
-                        </label>
-                        <input
-                          type="text"
-                          value={editedData.password}
-                          onChange={(e) =>
-                            setEditedData((prevState) => ({
-                              ...prevState,
-                              password: e.target.value,
-                            }))
-                          }
-                          className="input-primary"
-                        />
-                      </div>
+                      {!(type === "banking" || type === "investment") && (
+                        <div>
+                          <label className="block text-sm text-gray-400">
+                            User ID
+                          </label>
+                          <input
+                            type="text"
+                            value={editedData.userId}
+                            onChange={(e) =>
+                              setEditedData((prevState) => ({
+                                ...prevState,
+                                userId: e.target.value,
+                              }))
+                            }
+                            className="input-primary"
+                          />
+                        </div>
+                      )}
+                      {!(type === "banking" || type === "investment") && (
+                        <div>
+                          <label className="block text-sm text-gray-400">
+                            Password
+                          </label>
+                          <input
+                            type="text"
+                            value={editedData.password}
+                            onChange={(e) =>
+                              setEditedData((prevState) => ({
+                                ...prevState,
+                                password: e.target.value,
+                              }))
+                            }
+                            className="input-primary"
+                          />
+                        </div>
+                      )}
                       <div>
                         <label className="block text-sm text-gray-400">
                           Additional Info
@@ -1670,12 +1686,26 @@ const NomineeListPage = () => {
   const navigate = useNavigate();
   const { type } = useParams();
   const [searchQuery, setSearchQuery] = useState("");
-  // const [credentials] = useState(dummyBankingCredentials);
   const [showVerification, setShowVerification] = useState(false);
   const [showDetails, setShowDetails] = useState(false);
   const [selectedCredential, setSelectedCredential] = useState(null);
   const verificationData = useSelector((state) => state.auth.loginIdUsername);
-  const { data, isLoading, isError } = useGetAllNomineesQuery(type);
+
+  // Track feature access status
+  const [featureNotActive, setFeatureNotActive] = useState(false);
+
+  const { data, isLoading, isError, error } = useGetAllNomineesQuery(type, {
+    // Handle any error here
+    onError: (error) => {
+      // Check if it's a 403 with feature not active message
+      if (
+        error?.status === 403 &&
+        error?.data?.error?.includes('feature "nominee" is not active')
+      ) {
+        setFeatureNotActive(true);
+      }
+    },
+  });
 
   const [confirmDelete, setConfirmDelete] = useState(false);
   const [deleteCred, { isLoading: isDeleting }] = useDeleteCredMutation();
@@ -1690,10 +1720,15 @@ const NomineeListPage = () => {
   const [deleteAllCred, { isLoading: deleteLoading }] =
     useDeleteAllNomineeMutation();
 
-  // const openModal = (credential) => {
-  //   setSelectedCredential(credential);
-  //   setIsModalOpen(true);
-  // };
+  // Check for feature access when error occurs
+  useEffect(() => {
+    if (isError && error?.status === 403) {
+      const errorMessage = error?.data?.error || "";
+      if (errorMessage.includes('feature "nominee" is not active')) {
+        setFeatureNotActive(true);
+      }
+    }
+  }, [isError, error]);
 
   const closeModal = () => {
     setIsModalOpen(false);
@@ -1711,7 +1746,6 @@ const NomineeListPage = () => {
     }
   };
 
-  // Update state when API data changes
   // Dropdown options
   const dropdownOptions = {
     banking: ["State Bank of India (SBI)", "AXIS", "HDFC", "ICICI", "Others"],
@@ -1754,17 +1788,13 @@ const NomineeListPage = () => {
       const mappedCredentials = data.resources.map((nom) => ({
         id: nom.id,
         displayName: isBanking ? nom.bankName : nom.platformName,
-
         nomineeName: nom?.nominee?.name,
         nomineeEmail: nom?.nominee?.email,
         nomineePhone: nom?.nominee?.phone,
-        // ...(type === "emergencyContacts" && {
-        //   lastUpdated: new Date(nom.lastUpdated).toLocaleDateString(),
-        // }),
       }));
       setCredentials(mappedCredentials);
     }
-  }, [data]);
+  }, [data, isBanking]);
 
   const handleView = async (credential) => {
     const now = new Date().getTime();
@@ -1790,11 +1820,9 @@ const NomineeListPage = () => {
   const handleOtpMethodSelect = async (method) => {
     setOtpMethod(method);
     setShowOtpPrompt(false);
-    // console.log("OTP Method:", method);
     try {
       await sendCode({
         loginId: verificationData,
-
         service: method,
       }).unwrap();
       toast.success(`Verification code sent via ${method}`);
@@ -1803,12 +1831,6 @@ const NomineeListPage = () => {
       toast.error(`Failed to send verification code via ${method}`);
     }
   };
-
-  // const handleVerified = () => {
-  //   const now = new Date().getTime();
-  //   sessionStorage.setItem("lastVerifiedTime", now);
-  //   setShowDetails(true);
-  // };
 
   const handleVerified = () => {
     if (selectedCredential) {
@@ -1831,30 +1853,120 @@ const NomineeListPage = () => {
       .replace(/^./, (char) => char.toUpperCase());
   };
 
-  // const triggerDelete = () => {
-  //   setShowDetails(false); // Close the details modal
-  //   setConfirmDelete(true); // Open the confirm dialog
-  // };
-
   return (
     <div className="pt-24 min-h-screen bg-dark-100">
-      {/* {isLoading && (
+      {isLoading && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-black/70">
           <div className="w-12 h-12 border-4 border-accent-100 border-t-transparent rounded-full animate-spin"></div>
-
           <p className="mt-4 text-lg font-semibold text-gray-200 animate-pulse">
             Loading your credentials...
           </p>
         </div>
-      )} */}
+      )}
 
-      {isError && (
+      {/* FEATURE NOT ACTIVE UI */}
+      {featureNotActive && (
+        <div className="container mx-auto px-6 py-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="max-w-3xl mx-auto"
+          >
+            <button
+              onClick={() => navigate("/dashboard")}
+              className="flex items-center text-accent-100 hover:text-accent-200 transition-colors mb-8"
+            >
+              <ArrowLeft className="w-5 h-5 mr-2" />
+              Back to Dashboard
+            </button>
+
+            <div className="bg-dark-200 rounded-xl overflow-hidden border border-dark-300/50 shadow-xl">
+              {/* Header with gradient */}
+              <div className="bg-gradient-to-r from-dark-300 to-dark-400 p-6 border-b border-dark-300/50">
+                <div className="flex items-center gap-3">
+                  <div className="p-3 rounded-full bg-dark-100/20 backdrop-blur-md">
+                    <Sparkles className="w-6 h-6 text-accent-100" />
+                  </div>
+                  <h2 className="text-xl font-bold text-white">
+                    Premium Feature Required
+                  </h2>
+                </div>
+              </div>
+
+              {/* Main content area */}
+              <div className="p-6">
+                <div className="flex flex-col items-center text-center">
+                  <div className="w-24 h-24 rounded-full bg-dark-300/50 flex items-center justify-center mb-6">
+                    <Gift className="w-12 h-12 text-accent-100" />
+                  </div>
+
+                  <h3 className="text-xl font-semibold text-white mb-3">
+                    Nominee Feature is not active
+                  </h3>
+
+                  <p className="text-gray-400 mb-6 max-w-lg">
+                    The Nominee feature allows you to designate trusted contacts
+                    who can access your credentials in case of emergency.
+                    Upgrade your plan to access this premium feature.
+                  </p>
+
+                  <div className="bg-dark-300/30 p-5 rounded-lg border border-dark-300/50 w-full max-w-lg mb-6">
+                    <h4 className="text-white font-medium mb-3">
+                      With the Nominee Feature, you can:
+                    </h4>
+                    <ul className="space-y-2 text-left">
+                      <li className="flex items-start gap-2">
+                        <div className="min-w-5 pt-0.5">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                        </div>
+                        <span className="text-gray-300">
+                          Designate trusted nominees for your digital assets
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <div className="min-w-5 pt-0.5">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                        </div>
+                        <span className="text-gray-300">
+                          Control what credentials each nominee can access
+                        </span>
+                      </li>
+                      <li className="flex items-start gap-2">
+                        <div className="min-w-5 pt-0.5">
+                          <CheckCircle className="w-4 h-4 text-green-400" />
+                        </div>
+                        <span className="text-gray-300">
+                          Ensure your digital legacy is managed according to
+                          your wishes
+                        </span>
+                      </li>
+                    </ul>
+                  </div>
+
+                  <button
+                    onClick={() => navigate("/dashboard")}
+                    className="px-6 py-3 bg-gradient-to-r from-accent-100 to-accent-200 text-white rounded-lg font-semibold shadow-md hover:shadow-lg transition-all flex items-center gap-2"
+                  >
+                    <span>Upgrade Your Plan</span>
+                    <ChevronRight className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      )}
+
+      {/* Regular error handling (for errors other than feature not active) */}
+      {isError && !featureNotActive && (
         <div className="text-center py-12">
           <p className="text-red-400">
             Failed to load credentials. Please try again.
           </p>
         </div>
       )}
+
       {isSending && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
           <div className="flex flex-col items-center bg-dark-300 p-8 rounded-xl shadow-xl space-y-6">
@@ -1871,10 +1983,52 @@ const NomineeListPage = () => {
         </div>
       )}
 
-      {/* {!isLoading && !isError && ( */}
-      <div className="container mx-auto px-6 ">
-        {selectedCredential && showDetails ? (
-          <>
+      {/* Main content - only show if feature is active */}
+      {!featureNotActive && (
+        <div className="container mx-auto px-6">
+          {selectedCredential && showDetails ? (
+            <>
+              <div className="container mx-auto px-6 py-12">
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6 }}
+                  className="max-w-4xl mx-auto"
+                >
+                  {/* Back Button */}
+                  <button
+                    onClick={() => {
+                      setSelectedCredential(null);
+                      setShowDetails(false); // Reset details view
+                    }}
+                    className="flex items-center text-accent-100 hover:text-accent-200 transition-colors mb-8"
+                  >
+                    <ArrowLeft className="w-5 h-5 mr-2" />
+                    Back to Credentials
+                  </button>
+                  <div className="flex justify-between items-center mb-8">
+                    <h1 className="text-3xl font-bold text-white">
+                      {formatCamelCase(selectedCredential.displayName)}{" "}
+                      Credentials
+                    </h1>
+                  </div>
+
+                  {/* Credential Details Card */}
+                  <CredentialDetailsCard
+                    credential={
+                      type === "emergencyContactss"
+                        ? selectedCredential?.displayName
+                        : selectedCredential?.id
+                    }
+                    isOthers={selectedDropdownValue === "Others"}
+                    onEdit={(updatedCredential) => {
+                      // Handle edit callback if needed
+                    }}
+                  />
+                </motion.div>
+              </div>
+            </>
+          ) : (
             <div className="container mx-auto px-6 py-12">
               <motion.div
                 initial={{ opacity: 0, y: 20 }}
@@ -1882,308 +2036,225 @@ const NomineeListPage = () => {
                 transition={{ duration: 0.6 }}
                 className="max-w-4xl mx-auto"
               >
-                {/* Back Button */}
                 <button
-                  onClick={() => {
-                    setSelectedCredential(null);
-                    setShowDetails(false); // Reset details view
-                  }}
+                  onClick={() =>
+                    navigate("/dashboard", { state: { id: "nominee" } })
+                  }
                   className="flex items-center text-accent-100 hover:text-accent-200 transition-colors mb-8"
                 >
                   <ArrowLeft className="w-5 h-5 mr-2" />
-                  Back to Credentials
+                  Back
                 </button>
-                <div className="flex justify-between items-center mb-8">
-                  <h1 className="text-3xl font-bold text-white">
-                    {/* {type.charAt(0).toUpperCase() + type.slice(1)} Credentials */}
-                    {formatCamelCase(selectedCredential.displayName)}{" "}
-                    Credentials
-                  </h1>
-                  {/* <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      const displayName = formatCamelCase(
-                        selectedCredential.displayName
-                      );
 
-                      navigate(`./add`, {
-                        state: { displayName },
-                      });
-                    }}
-                
-                    className={`flex items-center px-4 py-2 rounded-lg 
-                     
-                          bg-accent-100 text-dark-100 hover:bg-accent-200 transition-colors
-                          
-                      `}
-                  >
-                    Add More
-                  </motion.button> */}
-                </div>
+                <div className="bg-dark-200 p-6 rounded-lg shadow-md text-center">
+                  <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-6 capitalize">
+                    {formatCamelCase(type)} Credentials
+                  </h2>
 
-                {/* Credential Details Card */}
+                  {dropdownOptions[type] ? (
+                    <div className="relative mb-6">
+                      <select
+                        value={selectedDropdownValue}
+                        onChange={handleDropdownChange}
+                        className="input-primary w-full"
+                      >
+                        {type === "banking" && (
+                          <option value="">Select Your Bank Name</option>
+                        )}
+                        {type === "investment" && (
+                          <option value="">Select Your Investment Type</option>
+                        )}
+                        {type === "emergencyContacts" && (
+                          <option value="">
+                            Select Your Emergency Contacts
+                          </option>
+                        )}
+                        {type === "socialMedia" && (
+                          <option value="">
+                            Select Your Social Media Platform
+                          </option>
+                        )}
+                        {type === "subscriptions" && (
+                          <option value="">
+                            Select Your Subscription Platform
+                          </option>
+                        )}
+                        {type === "others" && (
+                          <option value="">Select Your Platform Name</option>
+                        )}
+                        {dropdownOptions[type].map((option) => (
+                          <option key={option} value={option}>
+                            {option}
+                          </option>
+                        ))}
+                      </select>
 
-                <CredentialDetailsCard
-                  credential={
-                    type === "emergencyContactss"
-                      ? selectedCredential?.displayName
-                      : selectedCredential?.id
-                  }
-                  isOthers={selectedDropdownValue === "Others"}
-                  onEdit={(updatedCredential) => {
-                    // Handle edit callback if needed
-                  }}
-                  // triggerDelete={triggerDelete}
-                />
-              </motion.div>
-            </div>
-          </>
-        ) : (
-          <div className="container mx-auto px-6 py-12">
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              className="max-w-4xl mx-auto"
-            >
-              <button
-                onClick={() =>
-                  navigate("/dashboard", { state: { id: "nominee" } })
-                }
-                className="flex items-center text-accent-100 hover:text-accent-200 transition-colors mb-8"
-              >
-                <ArrowLeft className="w-5 h-5 mr-2" />
-                Back
-              </button>
-
-              <div className="bg-dark-200 p-6 rounded-lg shadow-md text-center">
-                <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-6 capitalize">
-                  {formatCamelCase(type)} Credentials
-                </h2>
-
-                {dropdownOptions[type] ? (
-                  <div className="relative mb-6">
-                    <select
-                      value={selectedDropdownValue}
-                      onChange={handleDropdownChange}
-                      className="input-primary w-full"
-                    >
-                      {type === "banking" && (
-                        <option value="">Select Your Bank Name</option>
+                      {showCustomField && (
+                        <input
+                          type="text"
+                          placeholder={
+                            type === "banking"
+                              ? "Enter Your Bank Name"
+                              : type === "investment"
+                              ? "Enter Your Investment Type"
+                              : type === "emergencyContacts"
+                              ? "Enter Your Emergency Contacts Name"
+                              : type === "socialMedia"
+                              ? "Enter Your Social Media Platform"
+                              : type === "subscriptions"
+                              ? "Enter Your Subscription Platform"
+                              : type === "others"
+                              ? "Enter Your Platform Name"
+                              : "Enter your Value"
+                          }
+                          value={customField}
+                          onChange={(e) => setCustomField(e.target.value)}
+                          className="input-primary w-full mt-4"
+                        />
                       )}
-                      {type === "investment" && (
-                        <option value="">Select Your Investment Type</option>
-                      )}
-                      {type === "emergencyContacts" && (
-                        <option value="">Select Your Emergency Contacts</option>
-                      )}
-                      {type === "socialMedia" && (
-                        <option value="">
-                          Select Your Social Media Platform
-                        </option>
-                      )}
-                      {type === "subscriptions" && (
-                        <option value="">
-                          Select Your Subscription Platform
-                        </option>
-                      )}
-                      {type === "others" && (
-                        <option value="">Select Your Platform Name</option>
-                      )}
-                      {dropdownOptions[type].map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-
-                    {showCustomField && (
-                      <input
-                        type="text"
-                        placeholder={
-                          type === "banking"
-                            ? "Enter Your Bank Name"
-                            : type === "investment"
-                            ? "Enter Your Investment Type"
-                            : type === "emergencyContacts"
-                            ? "Enter Your Emergency Contacts Name"
-                            : type === "socialMedia"
-                            ? "Enter Your Social Media Platform"
-                            : type === "subscriptions"
-                            ? "Enter Your Subscription Platform"
-                            : type === "others"
-                            ? "Enter Your Platform Name"
-                            : "Enter your Value"
-                        }
-                        value={customField}
-                        onChange={(e) => setCustomField(e.target.value)}
-                        className="input-primary w-full mt-4"
-                      />
-                    )}
-                  </div>
-                ) : (
-                  <p className="text-gray-400">
-                    No options available for this type.
-                  </p>
-                )}
-
-                {((selectedDropdownValue &&
-                  selectedDropdownValue !== "Others") ||
-                  customField !== "") && (
-                  <motion.button
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => {
-                      const displayName =
-                        selectedDropdownValue === "Others"
-                          ? customField
-                          : selectedDropdownValue;
-                      const isOthers = selectedDropdownValue === "Others";
-                      localStorage.setItem(
-                        "isOthers",
-                        JSON.stringify(isOthers)
-                      );
-                      localStorage.setItem("initialDisplayName", displayName);
-                      navigate(`/nominees/${type}/add`, {
-                        state: { displayName, isOthers },
-                      });
-                    }}
-                    className="btn-primary mt-6 w-full md:w-auto"
-                  >
-                    Click to Proceed
-                  </motion.button>
-                )}
-              </div>
-
-              <div className="flex flex-wrap gap-6 justify-left mt-12">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
-                  {filteredCredentials.map((credential) => (
-                    <div
-                      key={credential.id}
-                      className="relative group w-full h-32 glow-box rounded-xl [perspective:1000px] shadow-lg hover:shadow-xl transition-shadow"
-                    >
-                      {/* Card Container */}
-                      <div className="relative w-full h-full [transform-style:preserve-3d] transition-transform duration-700 group-hover:[transform:rotateY(180deg)]">
-                        {/* Front Side */}
-                        <div className="absolute inset-0 flex items-center justify-between bg-dark-200 p-6 rounded-xl [backface-visibility:hidden]">
-                          <div className="flex items-center gap-4">
-                            {/* Icon */}
-                            {/* <div className="w-10 h-10 flex items-center justify-center bg-accent-100 rounded-full text-dark-100 shadow-md">
-                                 <i className="fas fa-id-badge text-lg"></i>
-                               </div> */}
-                            {/* Text */}
-                            <div>
-                              <h4 className="text-xl font-semibold text-accent-100">
-                                {credential.displayName}
-                              </h4>
-                              {credential.nomineeName && (
-                                <p className="text-md text-gray-200">
-                                  Nominee Name: {credential.nomineeName}
-                                </p>
-                              )}
-                            </div>
-                          </div>
-                          {/* View Button */}
-                          <button
-                            className="px-4 py-2 border-2 border-accent-100 text-accent-100 rounded-lg font-semibold hover:bg-accent-100 hover:text-dark-100 transition-all duration-300 flex items-center gap-2"
-                            onClick={() => handleView(credential)}
-                          >
-                            <i className="fas fa-eye"></i> View
-                          </button>
-                        </div>
-
-                        {/* Back Side */}
-                        <div className="absolute inset-0 flex items-center justify-between bg-gradient-to-br from-dark-200 to-dark-300 p-6 rounded-xl [backface-visibility:hidden] [transform:rotateY(180deg)]">
-                          <div className="flex items-start gap-4">
-                            {/* Icon */}
-                            {/* <div className="w-10 h-10 flex items-center justify-center bg-accent-100 rounded-full text-dark-100 shadow-md">
-                                 <i className="fas fa-envelope text-lg"></i>
-                               </div> */}
-                            {/* Text */}
-                            <div>
-                              <h4 className="text-lg font-semibold text-accent-100">
-                                {credential.nomineeName}
-                              </h4>
-                              <p className="text-sm text-gray-200">
-                                Email:{" "}
-                                <span className="font-semibold text-accent-200">
-                                  {credential.nomineeEmail.replace(
-                                    /^(.{4,5})([^@]*)@/,
-                                    (match, p1, p2) =>
-                                      `${"X".repeat(p1.length)}${p2}@`
-                                  )}
-                                </span>
-                              </p>
-                              <p className="text-sm text-gray-200">
-                                Phone:{" "}
-                                <span className="font-semibold text-accent-200">
-                                  {credential.nomineePhone.replace(
-                                    /^(\d{3})(\d+)(\d{1})$/,
-                                    (match, p1, p2, p3) =>
-                                      `${p1}${"X".repeat(p2.length)}${p3}`
-                                  )}
-                                </span>
-                              </p>
-                            </div>
-                          </div>
-                          {/* View Button */}
-                          <button
-                            className="px-4 py-2 border-2 border-accent-100 text-accent-100 rounded-lg font-semibold hover:bg-accent-100 hover:text-dark-100 transition-all duration-300 flex items-center gap-2"
-                            onClick={() => handleView(credential)}
-                          >
-                            <i className="fas fa-eye"></i> View
-                          </button>
-                        </div>
-                      </div>
                     </div>
-                  ))}
+                  ) : (
+                    <p className="text-gray-400">
+                      No options available for this type.
+                    </p>
+                  )}
 
-                  {/* No Credentials Found */}
-                  {filteredCredentials.length === 0 && (
-                    <div className="text-center mx-auto py-12">
-                      <p className="text-gray-400">No credentials found</p>
-                    </div>
+                  {((selectedDropdownValue &&
+                    selectedDropdownValue !== "Others") ||
+                    customField !== "") && (
+                    <motion.button
+                      whileHover={{ scale: 1.05 }}
+                      whileTap={{ scale: 0.95 }}
+                      onClick={() => {
+                        const displayName =
+                          selectedDropdownValue === "Others"
+                            ? customField
+                            : selectedDropdownValue;
+                        const isOthers = selectedDropdownValue === "Others";
+                        localStorage.setItem(
+                          "isOthers",
+                          JSON.stringify(isOthers)
+                        );
+                        localStorage.setItem("initialDisplayName", displayName);
+                        navigate(`/nominees/${type}/add`, {
+                          state: { displayName, isOthers },
+                        });
+                      }}
+                      className="btn-primary mt-6 w-full md:w-auto"
+                    >
+                      Click to Proceed
+                    </motion.button>
                   )}
                 </div>
-              </div>
-            </motion.div>
-          </div>
-        )}
 
-        {/* Verification Modal */}
-        <VerificationModal
-          isOpen={showVerification}
-          onClose={() => setShowVerification(false)}
-          onVerified={handleVerified}
-          selectedCredential={selectedCredential}
-          otpMethod={otpMethod}
-        />
-        <OtpPromptModal
-          isOpen={showOtpPrompt}
-          onClose={() => setShowOtpPrompt(false)}
-          onSelect={handleOtpMethodSelect}
-        />
+                <div className="flex flex-wrap gap-6 justify-left mt-12">
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full">
+                    {filteredCredentials.map((credential) => (
+                      <div
+                        key={credential.id}
+                        className="relative group w-full h-32 glow-box rounded-xl [perspective:1000px] shadow-lg hover:shadow-xl transition-shadow"
+                      >
+                        {/* Card Container */}
+                        <div className="relative w-full h-full [transform-style:preserve-3d] transition-transform duration-700 group-hover:[transform:rotateY(180deg)]">
+                          {/* Front Side */}
+                          <div className="absolute inset-0 flex items-center justify-between bg-dark-200 p-6 rounded-xl [backface-visibility:hidden]">
+                            <div className="flex items-center gap-4">
+                              <div>
+                                <h4 className="text-xl font-semibold text-accent-100">
+                                  {credential.displayName}
+                                </h4>
+                                {credential.nomineeName && (
+                                  <p className="text-md text-gray-200">
+                                    Nominee Name: {credential.nomineeName}
+                                  </p>
+                                )}
+                              </div>
+                            </div>
+                            {/* View Button */}
+                            <button
+                              className="px-4 py-2 border-2 border-accent-100 text-accent-100 rounded-lg font-semibold hover:bg-accent-100 hover:text-dark-100 transition-all duration-300 flex items-center gap-2"
+                              onClick={() => handleView(credential)}
+                            >
+                              <i className="fas fa-eye"></i> View
+                            </button>
+                          </div>
 
-        <DeleteConfirmationModal
-          isOpen={isModalOpen}
-          onClose={closeModal}
-          onDelete={handleDelete}
-          displayName={selectedCredential?.displayName}
-          isLoading={deleteLoading}
-        />
+                          {/* Back Side */}
+                          <div className="absolute inset-0 flex items-center justify-between bg-gradient-to-br from-dark-200 to-dark-300 p-6 rounded-xl [backface-visibility:hidden] [transform:rotateY(180deg)]">
+                            <div className="flex items-start gap-4">
+                              <div>
+                                <h4 className="text-lg font-semibold text-accent-100">
+                                  {credential.nomineeName}
+                                </h4>
+                                <p className="text-sm text-gray-200">
+                                  Email:{" "}
+                                  <span className="font-semibold text-accent-200">
+                                    {credential.nomineeEmail.replace(
+                                      /^(.{4,5})([^@]*)@/,
+                                      (match, p1, p2) =>
+                                        `${"X".repeat(p1.length)}${p2}@`
+                                    )}
+                                  </span>
+                                </p>
+                                <p className="text-sm text-gray-200">
+                                  Phone:{" "}
+                                  <span className="font-semibold text-accent-200">
+                                    {credential.nomineePhone.replace(
+                                      /^(\d{3})(\d+)(\d{1})$/,
+                                      (match, p1, p2, p3) =>
+                                        `${p1}${"X".repeat(p2.length)}${p3}`
+                                    )}
+                                  </span>
+                                </p>
+                              </div>
+                            </div>
+                            {/* View Button */}
+                            <button
+                              className="px-4 py-2 border-2 border-accent-100 text-accent-100 rounded-lg font-semibold hover:bg-accent-100 hover:text-dark-100 transition-all duration-300 flex items-center gap-2"
+                              onClick={() => handleView(credential)}
+                            >
+                              <i className="fas fa-eye"></i> View
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    ))}
 
-        {/* Credential Details Modal */}
-        {/* {showDetails && (
-            <CredentialDetailsModel
-              credential={selectedCredential}
-              onClose={() => setShowDetails(false)}
-              // onDelete={handleDelete}
-              triggerDelete={triggerDelete}
-            />
-          )} */}
-      </div>
-      {/* )} */}
+                    {/* No Credentials Found */}
+                    {filteredCredentials.length === 0 && (
+                      <div className="text-center mx-auto py-12">
+                        <p className="text-gray-400">No credentials found</p>
+                      </div>
+                    )}
+                  </div>
+                </div>
+              </motion.div>
+            </div>
+          )}
+
+          {/* Verification Modal */}
+          <VerificationModal
+            isOpen={showVerification}
+            onClose={() => setShowVerification(false)}
+            onVerified={handleVerified}
+            selectedCredential={selectedCredential}
+            otpMethod={otpMethod}
+          />
+          <OtpPromptModal
+            isOpen={showOtpPrompt}
+            onClose={() => setShowOtpPrompt(false)}
+            onSelect={handleOtpMethodSelect}
+          />
+
+          <DeleteConfirmationModal
+            isOpen={isModalOpen}
+            onClose={closeModal}
+            onDelete={handleDelete}
+            displayName={selectedCredential?.displayName}
+            isLoading={deleteLoading}
+          />
+        </div>
+      )}
     </div>
   );
 };

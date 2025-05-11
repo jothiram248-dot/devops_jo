@@ -148,6 +148,20 @@ const CredentialFormPage = () => {
 
   const isBankingForm = type === "banking";
 
+  const getAdditionalInfoPlaceholder = () => {
+    if (type === "banking") {
+      return "Bank Account Number\nBank Branch\nIFSC Code\nDebit Card / Credit Card Details (PIN) Optional\nOnline Banking Details (Login ID & Password) Optional";
+    } else if (type === "investment") {
+      if (initialDisplayName === "Insurance") {
+        return "Policy number\nBank account details for claim settlement\nPolicy details\nPlatform's login id and password (optional)\nAdditional details";
+      } else {
+        return "Customer ID/Account ID\nAccount details\nPoint of contact (if any)\nPlatform's login id and password (optional)\nOffice address\nAdditional details";
+      }
+    } else {
+      return "Enter any additional information";
+    }
+  };
+
   return (
     <div className="pt-24 min-h-screen bg-dark-100">
       <div className="container mx-auto px-6 py-12">
@@ -307,77 +321,73 @@ const CredentialFormPage = () => {
               </div>
 
               {/* User ID */}
-              <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  {initialDisplayName === "Email Accounts" ? "" : "User ID"}
-                </label>
-                <input
-                  {...register("userId", {
-                    required:
+              {!(type === "banking" || type === "investment") && (
+                <div>
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    {initialDisplayName === "Email Accounts" ? "" : "User ID"}
+                  </label>
+                  <input
+                    {...register("userId", {
+                      required:
+                        initialDisplayName === "Email Accounts"
+                          ? "Email or Phone No is required"
+                          : "User ID is required",
+                    })}
+                    type="text"
+                    className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
+                    placeholder={
                       initialDisplayName === "Email Accounts"
-                        ? "Email or Phone No is required"
-                        : "User ID is required",
-                  })}
-                  type="text"
-                  className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
-                  placeholder={
-                    initialDisplayName === "Email Accounts"
-                      ? "Enter Email or Phone No"
-                      : "Enter User ID"
-                  }
-                />
-                {errors.userId && (
-                  <p className="mt-1 text-sm text-red-400">
-                    {errors.userId.message}
-                  </p>
-                )}
-              </div>
+                        ? "Enter Email or Phone No"
+                        : "Enter User ID"
+                    }
+                  />
+                  {errors.userId && (
+                    <p className="mt-1 text-sm text-red-400">
+                      {errors.userId.message}
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* Password */}
-              <div className="relative">
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Password
-                </label>
-                <input
-                  {...register("password", {
-                    required: "Password is required",
-                  })}
-                  type={showPassword ? "text" : "password"}
-                  className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
-                  placeholder="Enter password"
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-9 text-gray-400 hover:text-white"
-                >
-                  {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
-                </button>
-                {errors.password && (
-                  <p className="mt-1 text-sm text-red-400">
-                    {errors.password.message}
-                  </p>
-                )}
-              </div>
+              {!(type === "banking" || type === "investment") && (
+                <div className="relative">
+                  <label className="block text-sm font-medium text-gray-300 mb-1">
+                    Password
+                  </label>
+                  <input
+                    {...register("password", {
+                      required: "Password is required",
+                    })}
+                    type={showPassword ? "text" : "password"}
+                    className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
+                    placeholder="Enter password"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    className="absolute right-3 top-9 text-gray-400 hover:text-white"
+                  >
+                    {showPassword ? <EyeOff size={20} /> : <Eye size={20} />}
+                  </button>
+                  {errors.password && (
+                    <p className="mt-1 text-sm text-red-400">
+                      {errors.password.message}
+                    </p>
+                  )}
+                </div>
+              )}
 
               {/* Additional Information */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-1">
-                  {/* {isBankingForm
-                    ? "Other Information" */}
-                  {/* :  */}
                   Additional Information
-                  {/* } */}
                 </label>
                 <textarea
                   {...register("additionalInfo")}
-                  rows={4}
+                  rows={6}
                   className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
-                  placeholder={
-                    type === "banking"
-                      ? "Secondary Password / Profile Password / PIN / Bank Link etc"
-                      : "Enter any additional information"
-                  }
+                  placeholder={getAdditionalInfoPlaceholder()}
                 />
               </div>
 
