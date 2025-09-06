@@ -235,15 +235,23 @@ const Footer = () => {
               </h4>
               <ul className="space-y-5">
                 {[
-                  { icon: Mail, text: "contact@sacredsecret.com" },
-                  { icon: Phone, text: "+1 (555) 123-4567" },
-                  { icon: MapPin, text: "123 Security Ave, Digital City" },
+                  { icon: Mail, text: "support@sacredsecret.in" },
+                  { icon: Phone, text: "+91 8007774047" },
+                  {
+                    icon: MapPin,
+                    text: "301, Shiva Sai Enclave, 1st Cross, K Ramaiya Layout, Horamavu Agara, Bangalore 560043",
+                  },
                 ].map((item, index) => (
-                  <li key={index} className="flex items-center space-x-3 group">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-dark-100 to-dark-50/90 flex items-center justify-center shadow-inner group-hover:shadow-accent-100/10 transition-all duration-300">
+                  <li key={index} className="flex items-start space-x-3 group">
+                    {/* Icon container stays circular */}
+                    <div className="flex-shrink-0 w-9 h-9 rounded-full bg-gradient-to-br from-dark-100 to-dark-50/90 flex items-center justify-center shadow-inner group-hover:shadow-accent-100/10 transition-all duration-300">
                       <item.icon className="w-4 h-4 text-accent-100" />
                     </div>
-                    <span className="text-gray-300">{item.text}</span>
+
+                    {/* Text wraps nicely without pushing the circle */}
+                    <span className="text-gray-300 leading-relaxed">
+                      {item.text}
+                    </span>
                   </li>
                 ))}
               </ul>

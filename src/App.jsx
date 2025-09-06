@@ -723,7 +723,7 @@ function App() {
               <Route path="/about" element={<AboutPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
               <Route
-                path="/terms-and-conditions"
+                path="/terms-of-service"
                 element={<TermsAndConditions />}
               />
               <Route

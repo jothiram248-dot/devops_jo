@@ -262,8 +262,8 @@ const PrivacyPolicy = () => {
             <strong>Phone:</strong> +91 8007774047
           </p>
           <p className="mb-2">
-            <strong>Address:</strong> SacredSecret Pvt. Ltd., 994, 1# Block,
-            Koramangala, Bangalore, Bangalore South 560034, Karnataka
+            <strong>Address:</strong> 301, Shiva Sai Enclave, 1st Cross, K
+            Ramaiya Layout, Horamavu Agara, Bangalore 560043
           </p>
 
           <h2 className="text-xl font-semibold mt-8 mb-4 text-gray-900">
