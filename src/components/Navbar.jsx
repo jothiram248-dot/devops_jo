@@ -1,8 +1,16 @@
-
-
 import React, { useState, useEffect, useRef } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
-import { Bell, ChevronDown, Key, LayoutDashboard, LogOut, Menu, User, Users, X } from "lucide-react";
+import {
+  Bell,
+  ChevronDown,
+  Key,
+  LayoutDashboard,
+  LogOut,
+  Menu,
+  User,
+  Users,
+  X,
+} from "lucide-react";
 import { motion } from "framer-motion";
 import { useDispatch, useSelector } from "react-redux";
 import { logout, setloginId } from "@/features/auth/authSlice";
@@ -173,70 +181,71 @@ const Navbar = () => {
             Home
           </button>
           <div
-      // className="relative"
-      // ref={menuRef}
-      // onMouseEnter={() => setIsOpen(true)} 
-      // onMouseLeave={(e) => {
-      
-      //   if (!menuRef.current.contains(e.relatedTarget)) {
-      //     setIsOpen(false);
-      //   }
-      // }}
-    >
-      {/* Features Button - Click to Scroll */}
-      <button
-        onClick={() => scrollToSection("features")}
-        className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:text-accent-100 transition-all"
-      >
-        Features
-        {/* <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180 text-accent-100" : ""}`} /> */}
-      </button>
+          // className="relative"
+          // ref={menuRef}
+          // onMouseEnter={() => setIsOpen(true)}
+          // onMouseLeave={(e) => {
 
-      {/* Dropdown Menu - Now Stays Open While Hovering Over Options */}
-      {isOpen && (
-        <div
-          className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-dark-200/90 backdrop-blur-lg border border-dark-300 rounded-xl shadow-2xl z-50 transition-all duration-300"
-          onMouseEnter={() => setIsOpen(true)} // Keep dropdown open when mouse is inside
-          onMouseLeave={() => setIsOpen(false)} // Close when mouse leaves dropdown
-        >
-          <div className="py-2">
-            {/* Manage Credentials */}
+          //   if (!menuRef.current.contains(e.relatedTarget)) {
+          //     setIsOpen(false);
+          //   }
+          // }}
+          >
+            {/* Features Button - Click to Scroll */}
             <button
-              onClick={() => navigate("/manage-credentials")}
-              className="flex items-center gap-3 w-full text-left px-5 py-3 text-sm font-medium text-gray-300 hover:bg-dark-300 hover:text-white transition-all"
+              onClick={() => scrollToSection("features")}
+              className="flex items-center gap-2 px-4 py-2 text-white rounded-lg hover:text-accent-100 transition-all"
             >
-              <Key className="w-5 h-5 text-accent-100" />
-              Manage Credentials
+              Features
+              {/* <ChevronDown className={`w-4 h-4 transition-transform ${isOpen ? "rotate-180 text-accent-100" : ""}`} /> */}
             </button>
 
-            {/* Smart Notifications */}
-            <button
-              onClick={() => navigate("/smart-notifications")}
-              className="flex items-center gap-3 w-full text-left px-5 py-3 text-sm font-medium text-gray-300 hover:bg-dark-300 hover:text-white transition-all"
-            >
-              <Bell className="w-5 h-5 text-accent-100" />
-              Smart Notifications
-            </button>
+            {/* Dropdown Menu - Now Stays Open While Hovering Over Options */}
+            {isOpen && (
+              <div
+                className="absolute left-1/2 transform -translate-x-1/2 mt-2 w-64 bg-dark-200/90 backdrop-blur-lg border border-dark-300 rounded-xl shadow-2xl z-50 transition-all duration-300"
+                onMouseEnter={() => setIsOpen(true)} // Keep dropdown open when mouse is inside
+                onMouseLeave={() => setIsOpen(false)} // Close when mouse leaves dropdown
+              >
+                <div className="py-2">
+                  {/* Manage Credentials */}
+                  <button
+                    onClick={() => navigate("/manage-credentials")}
+                    className="flex items-center gap-3 w-full text-left px-5 py-3 text-sm font-medium text-gray-300 hover:bg-dark-300 hover:text-white transition-all"
+                  >
+                    <Key className="w-5 h-5 text-accent-100" />
+                    Manage Credentials
+                  </button>
 
-            {/* Choose Your Nominee */}
-            <button
-              onClick={() => navigate("/choose-nominee")}
-              className="flex items-center gap-3 w-full text-left px-5 py-3 text-sm font-medium text-gray-300 hover:bg-dark-300 hover:text-white transition-all"
-            >
-              <Users className="w-5 h-5 text-accent-100" />
-              Choose Your Nominee
-            </button>
+                  {/* Smart Notifications */}
+                  <button
+                    onClick={() => navigate("/smart-notifications")}
+                    className="flex items-center gap-3 w-full text-left px-5 py-3 text-sm font-medium text-gray-300 hover:bg-dark-300 hover:text-white transition-all"
+                  >
+                    <Bell className="w-5 h-5 text-accent-100" />
+                    Smart Notifications
+                  </button>
+
+                  {/* Choose Your Nominee */}
+                  <button
+                    onClick={() => navigate("/choose-nominee")}
+                    className="flex items-center gap-3 w-full text-left px-5 py-3 text-sm font-medium text-gray-300 hover:bg-dark-300 hover:text-white transition-all"
+                  >
+                    <Users className="w-5 h-5 text-accent-100" />
+                    Choose Your Nominee
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        </div>
-      )}
-    </div>
           <button
-            onClick={() => scrollToSection("about")}
+            // onClick={() => scrollToSection("about")}
+            onClick={() => navigate("/about")}
             className="text-white hover:text-accent-100 transition-colors"
           >
             About Us
           </button>
-        
+
           <Link
             to="/contact"
             className="text-white hover:text-accent-100 transition-colors"
@@ -244,8 +253,6 @@ const Navbar = () => {
             Contact
           </Link>
         </div>
-
-    
 
         {/* Mobile Menu Button */}
         <button
@@ -278,140 +285,152 @@ const Navbar = () => {
             </>
           ) : (
             <div className="hidden md:flex items-center space-x-6">
-            {/* Dashboard (Enhanced Premium Animated Button) */}
-            {isAuthenticated && (
-              <Link
-                to="/dashboard"
-                className="relative flex items-center px-5 py-2.5 rounded-lg text-gray-200 transition-all duration-300 shadow-lg overflow-hidden group"
-              >
-                {/* Multi-layered background with premium gradient */}
-                <span className="absolute inset-0 bg-gradient-to-r from-dark-300 to-dark-400 opacity-100"></span>
-                <span className="absolute inset-0 bg-gradient-to-r from-accent-100/80 to-accent-200/80 opacity-0 group-hover:opacity-100 transition-all duration-500"></span>
-                
-                {/* Subtle border glow effect */}
-                <span className="absolute inset-0 border border-accent-100/30 rounded-lg group-hover:border-accent-100/60 transition-all duration-300"></span>
-                
-                {/* Shine effect animation on hover */}
-                <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out"></span>
-                
-                {/* Content with subtle icon animation */}
-                <span className="relative flex items-center gap-2.5">
-                  <LayoutDashboard className="w-5 h-5 text-accent-100 group-hover:text-white transition-all duration-300 transform group-hover:scale-110" />
-                  <span className="text-sm font-medium tracking-wide group-hover:translate-x-0.5 transition-transform duration-300">Dashboard</span>
-                </span>
-              </Link>
-            )}
-          
-            {/* Profile Avatar & Dropdown - Enhanced Premium Version */}
-            <div className="relative" ref={profileMenuRef}>
-  <button
-    onClick={() => setShowProfileMenu(!showProfileMenu)}
-    className="relative w-10 h-10 rounded-full overflow-hidden transition-all duration-300 hover:scale-105 group"
-  >
-    {/* Compact multi-layered border effect */}
-    <span className="absolute inset-0 rounded-full bg-gradient-to-br from-accent-100 to-accent-200 opacity-80 shadow-md"></span>
-    <span className="absolute inset-0.5 rounded-full bg-dark-200"></span>
-    <span className="absolute inset-1 rounded-full bg-gradient-to-br from-accent-100 to-accent-200 p-0.5"></span>
-    
-    {/* Avatar content */}
-    <div className="absolute inset-0 rounded-full flex items-center justify-center overflow-hidden">
-      {user?.me?.profileImgUrl ? (
-        <img
-          src={encodeURI(user.me.profileImgUrl)}
-          alt={`${user.me.firstName} ${user.me.lastName}`}
-          crossOrigin="anonymous"
-          className="w-full h-full object-cover"
-        />
-      ) : (
-        <div className="w-full h-full bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center text-dark-100 font-semibold text-base">
-          {`${user?.me?.firstName?.charAt(0) || ""}${user?.me?.lastName?.charAt(0) || ""}`}
-        </div>
-      )}
-    </div>
-    
-    {/* Compact hover glow effect */}
-    <span className="absolute -inset-1 rounded-full bg-accent-100/0 group-hover:bg-accent-100/20 blur-sm transition-all duration-300"></span>
-  </button>
+              {/* Dashboard (Enhanced Premium Animated Button) */}
+              {isAuthenticated && (
+                <Link
+                  to="/dashboard"
+                  className="relative flex items-center px-5 py-2.5 rounded-lg text-gray-200 transition-all duration-300 shadow-lg overflow-hidden group"
+                >
+                  {/* Multi-layered background with premium gradient */}
+                  <span className="absolute inset-0 bg-gradient-to-r from-dark-300 to-dark-400 opacity-100"></span>
+                  <span className="absolute inset-0 bg-gradient-to-r from-accent-100/80 to-accent-200/80 opacity-0 group-hover:opacity-100 transition-all duration-500"></span>
 
-  {/* Compact Profile Dropdown Menu */}
-  {showProfileMenu && (
-    <div className="absolute right-0 mt-2 w-64 overflow-hidden rounded-xl shadow-xl z-50 transition-all duration-300 animate-fadeIn">
-      {/* Glassmorphism background */}
-      <div className="absolute inset-0 bg-dark-200/90 backdrop-blur-lg border border-dark-300 rounded-xl"></div>
-      
-      {/* Top accent line */}
-      <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-accent-100/70 via-accent-200/70 to-accent-100/70"></div>
-      
-      {/* User Info Header */}
-      <div className="relative p-4 border-b border-dark-300/70">
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-accent-100/50 bg-gradient-to-br from-accent-100/30 to-accent-200/30 flex items-center justify-center">
-            {user?.me?.profileImgUrl ? (
-              <img
-                src={encodeURI(user.me.profileImgUrl)}
-                alt={`${user.me.firstName} ${user.me.lastName}`}
-                crossOrigin="anonymous"
-                className="w-full h-full object-cover"
-              />
-            ) : (
-              <div className="w-full h-full bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center text-dark-100 font-semibold text-base">
-                {`${user?.me?.firstName?.charAt(0) || ""}${user?.me?.lastName?.charAt(0) || ""}`}
+                  {/* Subtle border glow effect */}
+                  <span className="absolute inset-0 border border-accent-100/30 rounded-lg group-hover:border-accent-100/60 transition-all duration-300"></span>
+
+                  {/* Shine effect animation on hover */}
+                  <span className="absolute inset-0 w-full h-full bg-gradient-to-r from-transparent via-white/10 to-transparent -translate-x-full group-hover:translate-x-full transition-all duration-1000 ease-in-out"></span>
+
+                  {/* Content with subtle icon animation */}
+                  <span className="relative flex items-center gap-2.5">
+                    <LayoutDashboard className="w-5 h-5 text-accent-100 group-hover:text-white transition-all duration-300 transform group-hover:scale-110" />
+                    <span className="text-sm font-medium tracking-wide group-hover:translate-x-0.5 transition-transform duration-300">
+                      Dashboard
+                    </span>
+                  </span>
+                </Link>
+              )}
+
+              {/* Profile Avatar & Dropdown - Enhanced Premium Version */}
+              <div className="relative" ref={profileMenuRef}>
+                <button
+                  onClick={() => setShowProfileMenu(!showProfileMenu)}
+                  className="relative w-10 h-10 rounded-full overflow-hidden transition-all duration-300 hover:scale-105 group"
+                >
+                  {/* Compact multi-layered border effect */}
+                  <span className="absolute inset-0 rounded-full bg-gradient-to-br from-accent-100 to-accent-200 opacity-80 shadow-md"></span>
+                  <span className="absolute inset-0.5 rounded-full bg-dark-200"></span>
+                  <span className="absolute inset-1 rounded-full bg-gradient-to-br from-accent-100 to-accent-200 p-0.5"></span>
+
+                  {/* Avatar content */}
+                  <div className="absolute inset-0 rounded-full flex items-center justify-center overflow-hidden">
+                    {user?.me?.profileImgUrl ? (
+                      <img
+                        src={encodeURI(user.me.profileImgUrl)}
+                        alt={`${user.me.firstName} ${user.me.lastName}`}
+                        crossOrigin="anonymous"
+                        className="w-full h-full object-cover"
+                      />
+                    ) : (
+                      <div className="w-full h-full bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center text-dark-100 font-semibold text-base">
+                        {`${user?.me?.firstName?.charAt(0) || ""}${
+                          user?.me?.lastName?.charAt(0) || ""
+                        }`}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* Compact hover glow effect */}
+                  <span className="absolute -inset-1 rounded-full bg-accent-100/0 group-hover:bg-accent-100/20 blur-sm transition-all duration-300"></span>
+                </button>
+
+                {/* Compact Profile Dropdown Menu */}
+                {showProfileMenu && (
+                  <div className="absolute right-0 mt-2 w-64 overflow-hidden rounded-xl shadow-xl z-50 transition-all duration-300 animate-fadeIn">
+                    {/* Glassmorphism background */}
+                    <div className="absolute inset-0 bg-dark-200/90 backdrop-blur-lg border border-dark-300 rounded-xl"></div>
+
+                    {/* Top accent line */}
+                    <div className="absolute top-0 inset-x-0 h-0.5 bg-gradient-to-r from-accent-100/70 via-accent-200/70 to-accent-100/70"></div>
+
+                    {/* User Info Header */}
+                    <div className="relative p-4 border-b border-dark-300/70">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-accent-100/50 bg-gradient-to-br from-accent-100/30 to-accent-200/30 flex items-center justify-center">
+                          {user?.me?.profileImgUrl ? (
+                            <img
+                              src={encodeURI(user.me.profileImgUrl)}
+                              alt={`${user.me.firstName} ${user.me.lastName}`}
+                              crossOrigin="anonymous"
+                              className="w-full h-full object-cover"
+                            />
+                          ) : (
+                            <div className="w-full h-full bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center text-dark-100 font-semibold text-base">
+                              {`${user?.me?.firstName?.charAt(0) || ""}${
+                                user?.me?.lastName?.charAt(0) || ""
+                              }`}
+                            </div>
+                          )}
+                        </div>
+                        <div>
+                          <p className="text-sm font-semibold text-white tracking-wide">
+                            {user?.me?.firstName || ""}{" "}
+                            {user?.me?.lastName || "User"}
+                          </p>
+                          <div className="flex items-center mt-1 gap-2">
+                            <p className="text-xs text-gray-400">
+                              ID: {user?.me?.displayId || "N/A"}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    {/* Menu Items */}
+                    <div className="relative py-1">
+                      <button
+                        onClick={() => {
+                          navigate("/profile");
+                          setShowProfileMenu(false);
+                        }}
+                        className="flex items-center gap-3 w-full text-left px-4 py-3 text-xs font-medium text-gray-200 hover:bg-gradient-to-r hover:from-dark-300 hover:to-dark-300/50 hover:text-white transition-all duration-300 relative group/item"
+                      >
+                        <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-accent-100/0 group-hover/item:bg-accent-100/80 transition-all duration-300"></span>
+                        <User className="w-4 h-4 text-accent-100 group-hover/item:scale-110 transition-transform duration-300" />
+                        <span className="group-hover/item:translate-x-0.5 transition-transform duration-300">
+                          Profile Settings
+                        </span>
+                      </button>
+
+                      <button
+                        onClick={() => {
+                          navigate("/dashboard");
+                          setShowProfileMenu(false);
+                        }}
+                        className="flex items-center gap-3 w-full text-left px-4 py-3 text-xs font-medium text-gray-200 hover:bg-gradient-to-r hover:from-dark-300 hover:to-dark-300/50 hover:text-white transition-all duration-300 relative group/item"
+                      >
+                        <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-accent-100/0 group-hover/item:bg-accent-100/80 transition-all duration-300"></span>
+                        <LayoutDashboard className="w-4 h-4 text-accent-100 group-hover/item:scale-110 transition-transform duration-300" />
+                        <span className="group-hover/item:translate-x-0.5 transition-transform duration-300">
+                          Dashboard
+                        </span>
+                      </button>
+
+                      <button
+                        onClick={handleLogout}
+                        className="flex items-center gap-3 w-full text-left px-4 py-3 text-xs font-medium text-red-400 hover:bg-gradient-to-r hover:from-red-500/30 hover:to-red-500/10 hover:text-white transition-all duration-300 relative group/item"
+                      >
+                        <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-red-400/0 group-hover/item:bg-red-400/80 transition-all duration-300"></span>
+                        <LogOut className="w-4 h-4 text-red-400 group-hover/item:text-white group-hover/item:scale-110 transition-all duration-300" />
+                        <span className="group-hover/item:translate-x-0.5 transition-transform duration-300">
+                          Log Out
+                        </span>
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
-            )}
-          </div>
-          <div>
-            <p className="text-sm font-semibold text-white tracking-wide">
-              {user?.me?.firstName || ""} {user?.me?.lastName || "User"}
-            </p>
-            <div className="flex items-center mt-1 gap-2">
-              <p className="text-xs text-gray-400">ID: {user?.me?.displayId || "N/A"}</p>
             </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Menu Items */}
-      <div className="relative py-1">
-        <button
-          onClick={() => {
-            navigate("/profile");
-            setShowProfileMenu(false);
-          }}
-          className="flex items-center gap-3 w-full text-left px-4 py-3 text-xs font-medium text-gray-200 hover:bg-gradient-to-r hover:from-dark-300 hover:to-dark-300/50 hover:text-white transition-all duration-300 relative group/item"
-        >
-          <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-accent-100/0 group-hover/item:bg-accent-100/80 transition-all duration-300"></span>
-          <User className="w-4 h-4 text-accent-100 group-hover/item:scale-110 transition-transform duration-300" />
-          <span className="group-hover/item:translate-x-0.5 transition-transform duration-300">Profile Settings</span>
-        </button>
-        
-        <button
-          onClick={() => {
-            navigate("/dashboard");
-            setShowProfileMenu(false);
-          }}
-          className="flex items-center gap-3 w-full text-left px-4 py-3 text-xs font-medium text-gray-200 hover:bg-gradient-to-r hover:from-dark-300 hover:to-dark-300/50 hover:text-white transition-all duration-300 relative group/item"
-        >
-          <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-accent-100/0 group-hover/item:bg-accent-100/80 transition-all duration-300"></span>
-          <LayoutDashboard className="w-4 h-4 text-accent-100 group-hover/item:scale-110 transition-transform duration-300" />
-          <span className="group-hover/item:translate-x-0.5 transition-transform duration-300">Dashboard</span>
-        </button>
-        
-        <button
-          onClick={handleLogout}
-          className="flex items-center gap-3 w-full text-left px-4 py-3 text-xs font-medium text-red-400 hover:bg-gradient-to-r hover:from-red-500/30 hover:to-red-500/10 hover:text-white transition-all duration-300 relative group/item"
-        >
-          <span className="absolute left-0 top-0 bottom-0 w-0.5 bg-red-400/0 group-hover/item:bg-red-400/80 transition-all duration-300"></span>
-          <LogOut className="w-4 h-4 text-red-400 group-hover/item:text-white group-hover/item:scale-110 transition-all duration-300" />
-          <span className="group-hover/item:translate-x-0.5 transition-transform duration-300">Log Out</span>
-        </button>
-      </div>
-    </div>
-  )}
-</div>
-          </div>
-          
-          
-
           )}
         </div>
       </div>
@@ -527,8 +546,6 @@ const Navbar = () => {
           </div>
         </motion.div>
       )}
-
-      
     </nav>
   );
 };

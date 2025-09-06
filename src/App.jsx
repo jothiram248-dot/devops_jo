@@ -638,6 +638,7 @@ const ResetPasswordPage = lazy(() => import("./pages/ResetPasswordPage"));
 const ProfilePage = lazy(() => import("./pages/ProfilePage"));
 const DashboardPage = lazy(() => import("./pages/DashboardPage"));
 const ContactPage = lazy(() => import("./pages/ContactPage"));
+
 const FeaturesPage = lazy(() => import("./pages/FeaturesPage"));
 const AboutPage = lazy(() => import("./pages/AboutPage"));
 const ManageCredentialsPage = lazy(() =>
