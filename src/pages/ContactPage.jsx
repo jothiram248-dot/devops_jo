@@ -42,15 +42,15 @@ const ContactPage = () => {
                 <div className="space-y-4">
                   <div className="flex items-center space-x-4">
                     <Mail className="w-6 h-6 text-accent-100" />
-                    <p className="text-gray-300">contact@sacredsecret.com</p>
+                    <p className="text-gray-300">support@sacredsecret.com</p>
                   </div>
                   <div className="flex items-center space-x-4">
                     <Phone className="w-6 h-6 text-accent-100" />
-                    <p className="text-gray-300">+1 (555) 123-4567</p>
+                    <p className="text-gray-300">+91 8007774047</p>
                   </div>
                   <div className="flex items-center space-x-4">
                     <MapPin className="w-6 h-6 text-accent-100" />
-                    <p className="text-gray-300">123 Security Ave, Digital City</p>
+                    <p className="text-gray-300">301, Shiva Sai Enclave, 1st Cross, K Ramaiya Layout, Horamavu Agara, Bangalore 560043</p>
                   </div>
                 </div>
               </div>
