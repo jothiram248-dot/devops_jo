@@ -1182,9 +1182,9 @@ const ChooseNomineePage = () => {
 
   const getPlanPrice = () => {
     const prices = {
-      quarterly: 500,
-      halfYearly: 1000,
-      yearly: 2000,
+      quarterly: 250,
+      halfYearly: 500,
+      yearly: 1000,
     };
     return subscriptionPlan ? prices[subscriptionPlan] : 0;
   };
