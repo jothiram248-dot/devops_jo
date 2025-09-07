@@ -1382,9 +1382,9 @@ const SmartNotificationsPage = () => {
                         className="absolute w-full mt-2 bg-white border border-gray-200 rounded-lg overflow-hidden shadow-lg z-20"
                       >
                         {[
-                          { value: "quarterly", label: "Quarterly - ₹200" },
+                          { value: "quarterly", label: "Quarterly - ₹250" },
                           { value: "halfYearly", label: "Half-Yearly - ₹500" },
-                          { value: "yearly", label: "Yearly - ₹700" },
+                          { value: "yearly", label: "Yearly - ₹1000" },
                         ].map((option, index) => (
                           <motion.li
                             key={index}
