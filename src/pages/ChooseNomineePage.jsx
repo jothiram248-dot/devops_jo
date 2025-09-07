@@ -1239,11 +1239,11 @@ const ChooseNomineePage = () => {
 
     switch (subscriptionPlan) {
       case "quarterly":
-        return "Quarterly - ₹500";
+        return "Quarterly - ₹250";
       case "halfYearly":
-        return "Half-Yearly - ₹1000";
+        return "Half-Yearly - ₹500";
       case "yearly":
-        return "Yearly - ₹2000";
+        return "Yearly - ₹1000";
       default:
         return "";
     }
@@ -1777,9 +1777,9 @@ const ChooseNomineePage = () => {
                    transition-all cursor-pointer appearance-none"
                   >
                     <option value="">Select a plan</option>
-                    <option value="quarterly">Quarterly - ₹500</option>
-                    <option value="halfYearly">Half-Yearly - ₹1000</option>
-                    <option value="yearly">Yearly - ₹2000</option>
+                    <option value="quarterly">Quarterly - ₹250</option>
+                    <option value="halfYearly">Half-Yearly - ₹500</option>
+                    <option value="yearly">Yearly - ₹1000</option>
                   </select>
 
                   {/* Dropdown Arrow */}
