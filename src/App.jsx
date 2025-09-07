@@ -619,6 +619,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import FeatureProtectedRoute from "./utils/FeatureProtectedRoute";
 import OrderDetailPage from "./pages/OrderDetailPage";
 import OrderHistory from "./pages/OrderHistory";
+import RefundPolicy from "./pages/RefundPolicy";
 
 // import OrderHistory from "./pages/OrderHistory";
 // import OrderDetailPage from "./pages/OrderDetailPage";
@@ -723,6 +724,8 @@ function App() {
               <Route path="/features" element={<FeaturesPage />} />
               <Route path="/about" element={<AboutPage />} />
               <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+              <Route path="/refund-policy" element={<RefundPolicy />} />
+
               <Route
                 path="/terms-of-service"
                 element={<TermsAndConditions />}

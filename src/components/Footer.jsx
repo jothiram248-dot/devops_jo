@@ -269,21 +269,24 @@ const Footer = () => {
 
             {/* Social links */}
             <div className="flex space-x-6 mt-4 md:mt-0">
-              {["Privacy Policy", "Terms of Service", "FAQ"].map(
-                (item, index) => (
-                  <button
-                    key={index}
-                    onClick={() =>
-                      handleNavigation(
-                        `/${item.toLowerCase().replace(/\s+/g, "-")}`
-                      )
-                    }
-                    className="text-sm text-gray-400 hover:text-accent-100 transition-colors"
-                  >
-                    {item}
-                  </button>
-                )
-              )}
+              {[
+                "Privacy Policy",
+                "Refund Policy",
+                "Terms of Service",
+                "FAQ",
+              ].map((item, index) => (
+                <button
+                  key={index}
+                  onClick={() =>
+                    handleNavigation(
+                      `/${item.toLowerCase().replace(/\s+/g, "-")}`
+                    )
+                  }
+                  className="text-sm text-gray-400 hover:text-accent-100 transition-colors"
+                >
+                  {item}
+                </button>
+              ))}
             </div>
           </div>
         </div>
