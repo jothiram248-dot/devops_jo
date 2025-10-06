@@ -21,8 +21,8 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logout } from "../auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-  // baseUrl: "http://13.202.217.5:4010/",
-  baseUrl: "http://localhost:4010/",
+  baseUrl: "https://backend.sacredsecret.in",
+  // baseUrl: "http://localhost:4010/",
 
   prepareHeaders: (headers, { getState, endpoint }) => {
     // If this request is for the S3 upload endpoint,

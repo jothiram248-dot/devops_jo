@@ -82,13 +82,34 @@ export const nomineeApiSlice = apiSlice.injectEndpoints({
       ],
     }),
 
-    adhaarKyc: builder.mutation({
+    // adhaarKyc: builder.mutation({
+    //   query: (body) => ({
+    //     url: `${NOMINEE_URL}/kyc/aadhaar`,
+    //     method: "POST",
+    //     body: body,
+    //   }),
+    //   invalidatesTags: [{ type: "User", id: "ME" }], // Invalidate `me` query
+    // }),
+
+    // ✅ NEW: Aadhaar 2-step KYC
+    aadhaarInitiate: builder.mutation({
+      // POST {{baseUrl}}/api/users/nominees/kyc/aadhaar/initiate
       query: (body) => ({
-        url: `${NOMINEE_URL}/kyc/aadhaar`,
+        url: `${NOMINEE_URL}/kyc/aadhaar/initiate`,
         method: "POST",
-        body: body,
+        body, // { aadhaar_number: "7177..." }
       }),
-      invalidatesTags: [{ type: "User", id: "ME" }], // Invalidate `me` query
+      invalidatesTags: [{ type: "User", id: "ME" }],
+    }),
+
+    aadhaarVerify: builder.mutation({
+      // POST {{baseUrl}}/api/users/nominees/kyc/aadhaar/verify
+      query: (body) => ({
+        url: `${NOMINEE_URL}/kyc/aadhaar/verify`,
+        method: "POST",
+        body, // { reference_id: "63904139", otp: "257263" }
+      }),
+      invalidatesTags: [{ type: "User", id: "ME" }],
     }),
 
     addEmergencyContact: builder.mutation({
@@ -99,6 +120,8 @@ export const nomineeApiSlice = apiSlice.injectEndpoints({
       }),
       invalidatesTags: [{ type: "User", id: "ME" }], // Invalidate `me` query
     }),
+
+    
   }),
 });
 
@@ -110,6 +133,9 @@ export const {
   useUpdateNomineeMutation,
   useDeleteNomineeMutation,
   useDeleteAllNomineeMutation,
-  useAdhaarKycMutation,
+  // useAdhaarKycMutation,
+
+  useAadhaarInitiateMutation,
+  useAadhaarVerifyMutation,
   useAddEmergencyContactMutation,
 } = nomineeApiSlice;
