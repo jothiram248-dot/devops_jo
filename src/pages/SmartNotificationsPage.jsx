@@ -38,6 +38,7 @@ import VideoPlayer from "../components/VideoPlayer";
 import NotificationGrid from "./NotificationGrid";
 import RazorpayPayment from "@/utils/RazorpayPayment";
 import toast from "react-hot-toast";
+import { useActivateSmartNotificationsTrialMutation, useMeQuery } from "@/features/api/userApiSlice";
 
 export const notificationFaqs = [
   {
@@ -186,6 +187,28 @@ const SmartNotificationsPage = () => {
   const videoRef = useRef(null);
   const [selectedPlan, setSelectedPlan] = useState("");
   const [isOpen, setIsOpen] = useState(false);
+
+  // Read current user + trial state
+const { data: meData, refetch: refetchMe } = useMeQuery();
+const [activateTrial, { isLoading: activatingTrial }] = useActivateSmartNotificationsTrialMutation();
+
+const smartTrial = meData?.me?.features?.trials?.smartNotifications;
+const paidActive = !!meData?.me?.features?.smartNotifications;
+const trialActive = smartTrial?.hasAccess && smartTrial?.status === "trial-active";
+const trialEligible =
+  smartTrial?.status === "trial-eligible" || smartTrial?.trial?.eligible === true;
+const trialRemaining = smartTrial?.trial?.remainingHuman;
+
+const startTrial = async () => {
+  try {
+    const res = await activateTrial().unwrap();
+    toast.success(res?.message || "Trial activated!");
+    await refetchMe(); // refresh UI immediately
+  } catch (e) {
+    toast.error(e?.data?.message || "Couldn’t start trial, please try again.");
+  }
+};
+
 
   const handlePlanChange = (value) => {
     setSelectedPlan(value);
@@ -1403,17 +1426,36 @@ const SmartNotificationsPage = () => {
                 </div>
 
                 {/* CTA Button with prominent glow */}
-                <div className="relative">
-                  {/* Button glow effect */}
-                  <div className="absolute -inset-1 bg-blue-500/40 rounded-lg blur-md"></div>
+                <div className="relative space-y-3">
+  <div className="absolute -inset-1 bg-blue-500/40 rounded-lg blur-md"></div>
 
-                  <RazorpayPayment
-                    feature="SMART_NOTIFICATIONS"
-                    selectedPlan={selectedPlan}
-                    onSuccess={handlePaymentSuccess}
-                    onError={handlePaymentError}
-                  />
-                </div>
+  {/* Start 15-day Trial (only when eligible and not already paid/trial) */}
+  {trialEligible && !paidActive && !trialActive && (
+    <button
+      onClick={startTrial}
+      disabled={activatingTrial}
+      className="relative w-full py-3.5 rounded-lg font-bold text-lg border border-indigo-300/70 bg-white text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-60"
+    >
+      {activatingTrial ? "Activating trial…" : "Start 15-day free trial"}
+    </button>
+  )}
+
+  {/* Trial status badge (only when trial is running and not paid) */}
+  {trialActive && !paidActive && (
+    <div className="relative w-full text-center text-sm text-emerald-500">
+      Trial active — {trialRemaining || "time remaining"} • Upgrade anytime
+    </div>
+  )}
+
+  {/* Existing paid subscription CTA (unchanged) */}
+  <RazorpayPayment
+    feature="SMART_NOTIFICATIONS"
+    selectedPlan={selectedPlan}
+    onSuccess={handlePaymentSuccess}
+    onError={handlePaymentError}
+  />
+</div>
+
 
                 {/* Trust badge */}
                 <div className="mt-5 text-center">

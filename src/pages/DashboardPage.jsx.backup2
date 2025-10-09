@@ -2226,37 +2226,6 @@ const DashboardPage = () => {
     // Force refetch on mount
     refetchOnMountOrArgChange: true,
   });
-
- // ---- Smart Notifications trial-aware flags ----
-const userFeatures = meData?.me?.features || {};
-const smartTrial = userFeatures?.trials?.smartNotifications;
-const smartIsPaid = userFeatures?.smartNotifications === true;
-
-const smartIsTrialActive =
-  !!smartTrial?.hasAccess &&
-  smartTrial?.status === "trial-active" &&
-  !!smartTrial?.trial?.enabled;
-
-const smartIsTrialExpired = smartTrial?.status === "trial-expired";
-
-const smartStatus = smartIsPaid
-  ? "Active"
-  : smartIsTrialActive
-    ? `Trial${smartTrial?.trial?.remainingHuman ? ` (${smartTrial.trial.remainingHuman} left)` : ""}`
-    : smartIsTrialExpired
-      ? "Trial Expired"
-      : (smartTrial?.trial?.eligible ? "Trial Eligible" : "Inactive");
-
-// Active service keys for the stat card (treat trial as active)
-const activeKeys = useMemo(() => {
-  const base = Object.keys(userFeatures).filter((k) => userFeatures[k] === true);
-  if ((smartIsPaid || smartIsTrialActive) && !base.includes("smartNotifications")) {
-    base.push("smartNotifications");
-  }
-  return base;
-}, [userFeatures, smartIsPaid, smartIsTrialActive]);
-
-
   // const [adhaarKyc, { isLoading: kycLoading }] = useAdhaarKycMutation();
   const { data: metricsData, isLoading } = useGetMatricsDataQuery();
   const [rotatingIndex, setRotatingIndex] = useState(0);
@@ -2269,39 +2238,22 @@ const activeKeys = useMemo(() => {
   const { id } = location.state || {};
 
   // Get user active features from API response
-  // const userFeatures = meData?.me?.features || {};
-
-  // Smart Notifications trial-aware status
-// const smartTrial = userFeatures?.trials?.smartNotifications;
-// const smartIsPaid = userFeatures?.smartNotifications === true;
-// const smartIsTrialActive =
-//   smartTrial?.hasAccess && smartTrial?.status === "trial-active";
-
-// const smartStatus = smartIsPaid
-//   ? "Active"
-//   : smartIsTrialActive
-//     ? `Trial${smartTrial?.trial?.remainingHuman ? ` (${smartTrial.trial.remainingHuman} left)` : ""}`
-//     : (smartTrial?.trial?.eligible ? "Trial Eligible" : "Inactive");
-
+  const userFeatures = meData?.me?.features || {};
 
   // Update features status based on API response
-
   const updatedFeatures = features.map((feature) => {
     // Credentials is always Active (free)
-    if (feature.isFree) return { ...feature, status: "Active" };
-  
-    // Only Smart Notifications uses trial-aware status
-    if (feature.id === "smartNotifications") {
-      return { ...feature, status: smartStatus };
+    if (feature.isFree) {
+      return { ...feature, status: "Active" };
     }
-  
-    // Others use paid flag
-    const isActive = userFeatures[feature.id] === true;
-    return { ...feature, status: isActive ? "Active" : "Inactive" };
-  });
-  
 
-  
+    // For premium features, check if user has active subscription
+    const isActive = userFeatures[feature.id] === true;
+    return {
+      ...feature,
+      status: isActive ? "Active" : "Inactive",
+    };
+  });
 
   useEffect(() => {
     if (id) {
@@ -2322,42 +2274,9 @@ const activeKeys = useMemo(() => {
   const [showDate, setShowDate] = useState(true);
 
   const lastLogin = useMemo(() => {
-    if (!metricsData?.lastLogin) {
-      const createdAt = meData?.me?.createdAt;
-    
-      if (createdAt) {
-        const d = new Date(createdAt);
-        const dateStr = d.toLocaleDateString(undefined, {
-          month: "short",
-          day: "numeric",
-          year: "numeric",
-        });
-        // Show “Joined <date>” for first-time users
-        return { date: `Joined ${dateStr}`, time: "" };
-      }
-    
-      // Fallback if createdAt isn’t available for some reason
-      return { date: "Welcome 👋", time: "" };
-    }
-    
+    if (!metricsData?.lastLogin) return { date: "No Login", time: "" };
     const parsedDate = new Date(metricsData.lastLogin);
     if (isNaN(parsedDate.getTime())) return { date: "Invalid Date", time: "" };
-
-    const smartTrial = meData?.me?.features?.trials?.smartNotifications;
-const smartIsPaid = meData?.me?.features?.smartNotifications === true;
-const smartIsTrialActive =
-  !!smartTrial?.hasAccess &&
-  smartTrial?.status === "trial-active" &&
-  !!smartTrial?.trial?.enabled;
-
-const activeKeys = useMemo(() => {
-  const base = Object.keys(userFeatures).filter((k) => userFeatures[k] === true);
-  if ((smartIsPaid || smartIsTrialActive) && !base.includes("smartNotifications")) {
-    base.push("smartNotifications");
-  }
-  return base;
-}, [userFeatures, smartIsPaid, smartIsTrialActive]);
-
 
     return {
       date: parsedDate.toLocaleDateString("en-US", {
@@ -2389,15 +2308,9 @@ const activeKeys = useMemo(() => {
 
   // Check if a feature is active/unlocked based on API response
   const isFeatureActive = (featureId) => {
-    if (featureId === "credentials") return true; // free feature
-    if (featureId === "smartNotifications") {
-      return smartIsPaid || smartIsTrialActive; // NOT expired
-    }
+    if (featureId === "credentials") return true; // Credentials is always active (free)
     return userFeatures[featureId] === true;
   };
-  
-
-
 
   const handleFeatureClick = (feature) => {
     // If feature is free or active, open it
@@ -2628,9 +2541,12 @@ const activeKeys = useMemo(() => {
           <style>{glowEffect}</style>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
             <SlidingStats counts={counts} isLoading={isLoading} />
-            <ActiveServicesStat features={activeKeys} isLoading={isLoading} />
-
-
+            <ActiveServicesStat
+              features={Object.keys(userFeatures).filter(
+                (key) => userFeatures[key]
+              )}
+              isLoading={isLoading}
+            />
             <LastLoginStat lastLogin={lastLogin} isLoading={isLoading} />
             <StatCard
               icon={CheckCircle}
@@ -2644,33 +2560,19 @@ const activeKeys = useMemo(() => {
           {!activeFeature ? (
             /* Main Features Grid */
             <div className="grid md:grid-cols-3 gap-8">
-            {updatedFeatures.map((feature) => {
-              const isSmart = feature.id === "smartNotifications";
-              const showTrialExpired = isSmart && smartIsTrialExpired && !smartIsPaid;
-          
-              return (
-                <div key={feature.id} className="relative">
-                  {/* visible above the lock overlay */}
-                  {showTrialExpired && (
-                    <span className="pointer-events-none absolute right-3 top-3 z-[60] rounded-full border border-amber-500/35 bg-amber-500/15 px-2.5 py-1 text-[11px] font-semibold tracking-wide text-amber-300 shadow-[0_0_20px_rgba(255,184,77,0.25)]">
-                      Trial expired
-                    </span>
-                  )}
-          
-                  <FeatureCard
-                    feature={feature}
-                    isActive={activeFeature === feature.id}
-                    isAadhaarVerified={isAadhaarVerified}
-                    setShowAadhaarModal={setShowAadhaarModal}
-                    isLocked={!feature.isFree && !isFeatureActive(feature.id)}
-                    onClick={() => handleFeatureClick(feature)}
-                    navigate={navigate}
-                  />
-                </div>
-              );
-            })}
-          </div>
-          
+              {updatedFeatures.map((feature) => (
+                <FeatureCard
+                  key={feature.id}
+                  feature={feature}
+                  isActive={activeFeature === feature.id}
+                  isAadhaarVerified={isAadhaarVerified}
+                  setShowAadhaarModal={setShowAadhaarModal}
+                  isLocked={!feature.isFree && !isFeatureActive(feature.id)}
+                  onClick={() => handleFeatureClick(feature)}
+                  navigate={navigate}
+                />
+              ))}
+            </div>
           ) : (
             /* Active Feature Component */
             <div className="mb-12">

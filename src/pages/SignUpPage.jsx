@@ -505,25 +505,70 @@ const SignUpPage = () => {
     },
   ];
 
-  const handleRegistrationError = (errorMessage) => {
-    let formattedMessage = "Registration failed. Please try again.";
+  const normalizeErrorMessage = (err) => {
+    if (!err) return null;
+  
+    // If it's already a string, try to parse JSON first, else return as-is
+    if (typeof err === "string") {
+      try {
+        const parsed = JSON.parse(err);
+        if (parsed?.message) return parsed.message;
+        if (parsed?.error) return parsed.error;
+      } catch {
+        // not JSON, use raw string
+      }
+      return err;
+    }
+  
+    // Prefer message fields commonly returned by APIs/RTK Query
+    return (
+      err?.message ||
+      err?.error ||
+      err?.data?.message ||
+      err?.data?.error ||
+      null
+    );
+  };
+  
 
-    if (errorMessage?.includes("E11000 duplicate key error")) {
-      const duplicateField = errorMessage.match(/index:\s(.*?)\sdup key/);
-      const duplicateValue = errorMessage.match(/dup key:\s\{.*"(.*)".*\}/);
+  // const handleRegistrationError = (errorMessage) => {
+  //   let formattedMessage = "Registration failed. Please try again.";
 
+  //   if (errorMessage?.includes("E11000 duplicate key error")) {
+  //     const duplicateField = errorMessage.match(/index:\s(.*?)\sdup key/);
+  //     const duplicateValue = errorMessage.match(/dup key:\s\{.*"(.*)".*\}/);
+
+  //     if (duplicateField && duplicateValue) {
+  //       const fieldName = duplicateField[1].split("_")[0];
+  //       const value = duplicateValue[1];
+  //       const fieldNameData = fieldName === "phone" ? "phone number" : fieldName;
+
+  //       formattedMessage = `The ${fieldName} "${value}" is already registered. Please use a different ${fieldNameData}.`;
+  //     }
+  //   }
+
+  //   setToastData({ message: formattedMessage, type: "error" });
+  // };
+  
+  const handleRegistrationError = (err) => {
+    const msg = normalizeErrorMessage(err);
+    let formattedMessage = msg || "Registration failed. Please try againn.";
+  
+    // Mongo duplicate key (if your backend passes raw error)
+    if (typeof formattedMessage === "string" && formattedMessage.includes("E11000 duplicate key error")) {
+      const duplicateField = formattedMessage.match(/index:\s(.*?)\sdup key/);
+      const duplicateValue = formattedMessage.match(/dup key:\s\{.*"(.*)".*\}/);
       if (duplicateField && duplicateValue) {
         const fieldName = duplicateField[1].split("_")[0];
         const value = duplicateValue[1];
         const fieldNameData = fieldName === "phone" ? "phone number" : fieldName;
-
         formattedMessage = `The ${fieldName} "${value}" is already registered. Please use a different ${fieldNameData}.`;
       }
     }
-
+  
     setToastData({ message: formattedMessage, type: "error" });
   };
-
+  
   const onSubmit = async (data) => {
     try {
       const userData = {
@@ -564,11 +609,11 @@ const SignUpPage = () => {
         navigate(`/verify/${encodedEmail}`);
       } else {
         console.log("Registration failed:", response.error);
-        handleRegistrationError(response.error);
+        handleRegistrationError(response);
       }
     } catch (error) {
       console.error("Registration error:", error);
-      handleRegistrationError(error?.data?.error || error?.message);
+      handleRegistrationError(error);
     }
   };
 

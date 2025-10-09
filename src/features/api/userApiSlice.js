@@ -190,6 +190,15 @@ export const usersApiSlice = apiSlice.injectEndpoints({
         method: "POST", // Use POST instead of GET for security reasons
       }),
     }),
+
+    activateSmartNotificationsTrial: builder.mutation({
+            query: () => ({
+              url: `${USERS_URL}/activate/trial`,
+              method: "POST",
+            }),
+            // refresh user, metrics after activation so UI updates everywhere
+            invalidatesTags: [{ type: "User", id: "ME" }, "Metrics"],
+          }),
     
   }),
 });
@@ -212,5 +221,6 @@ export const {
   useResetPasswordMutation,
   useDeleteAccountMutation,
   useLogoutUserMutation,
+  useActivateSmartNotificationsTrialMutation,
 } = usersApiSlice;
 usersApiSlice;
