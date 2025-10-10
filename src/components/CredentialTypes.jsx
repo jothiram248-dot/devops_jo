@@ -13,38 +13,38 @@ const credentialTypes = [
   {
     title: "Banking Credentials",
     icon: CreditCard,
-    image: "/assets/Images/Banking_credentials.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg`,
     description:
       "Securely Manage your Banking User Id/Password and other Credentials",
   },
   {
     title: "Investment Credentials",
     icon: TrendingUp,
-    image: "/assets/Images/Investment_credneitals.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credneitals.jpg`,
     description: "Keep your Investment Platform access Secure",
   },
   {
     title: "Entertainment Platform Credentials",
     icon: Tv,
-    image: "/assets/Images/Entertainment.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Entertainment.jpg`,
     description: "Store your Streaming and Entertainment Login details",
   },
   {
     title: "Social Media Credentials",
     icon: Share2,
-    image: "/assets/Images/SocialMedia.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg`,
     description: "Manage your Social Media account access",
   },
   {
     title: "Gaming Platform Credentials",
     icon: Gamepad2,
-    image: "/assets/Images/gaming_credentials.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/gaming_credentials.jpg`,
     description: "Keep your Gaming Accounts secure",
   },
   {
     title: "Others",
     icon: FolderLock,
-    image: "/assets/Images/others.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/others.jpg`,
     description:
       "Store and Manage Credentials for any other Platforms and Portals",
   },

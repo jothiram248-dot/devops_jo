@@ -328,7 +328,7 @@ const NomineeFormPage = () => {
 
     console.log("Agreement Data:", agreementData);
 
-    const secretKey = "1234567890abcdef";
+    const secretKey = import.meta.env.VITE_AES_SECRET_KEY;
     const encryptedData = CryptoJS.AES.encrypt(
       JSON.stringify(agreementData),
       secretKey

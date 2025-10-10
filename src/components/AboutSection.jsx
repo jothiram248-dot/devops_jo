@@ -329,7 +329,7 @@ const AboutSection = () => {
               {/* image with decorative elements */}
               <div className="relative z-10 overflow-hidden rounded-xl shadow-xl">
                 <img
-                  src="/assets/Images/AboutUs (2).jpg"
+                  src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/AboutUs (2).jpg`}
                   alt="Digital Future"
                   className="w-full h-[500px] object-cover transition-transform duration-700 hover:scale-105"
                 />
@@ -384,7 +384,7 @@ const AboutSection = () => {
                 icon: Shield,
                 color: "indigo",
                 title: "Security First",
-                image: "/assets/Images/security_first.jpg",
+                image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/security_first.jpg`,
                 description:
                   "Your digital legacy deserves the highest level of protection.",
                 items: [
@@ -406,7 +406,7 @@ const AboutSection = () => {
                 icon: Globe,
                 color: "purple",
                 title: "Global Reach",
-                image: "/assets/Images/global_reach.jpg",
+                image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/global_reach.jpg`,
                 description:
                   "Available anywhere, anytime, for everyone who needs it.",
                 items: [
@@ -428,7 +428,7 @@ const AboutSection = () => {
                 icon: Sparkles,
                 color: "blue",
                 title: "Innovation",
-                image: "/assets/Images/Innovation.jpg",
+                image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Innovation.jpg`,
                 description:
                   "Constantly evolving to meet tomorrow's challenges.",
                 items: [

@@ -102,7 +102,7 @@ const ManageCredentialsPage = () => {
             className="absolute inset-0 w-full h-auto object-cover opacity-60"
           >
             <source
-              src="/assets/Images/managecredentials.mp4"
+              src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials.mp4`}
               type="video/mp4"
             />
           </video>
@@ -240,8 +240,8 @@ const ManageCredentialsPage = () => {
                         style={{ aspectRatio: "16/9" }}
                       >
                         <VideoPlayer
-                          videoUrl="/assets/Images/managecredentials.mp4"
-                          thumbnailUrl="/assets/Images/managecredentials_thumbnail.jpg"
+                          videoUrl={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials.mp4`}
+                          thumbnailUrl={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials_thumbnail.jpg`}
                           title="Manage Your Credentials"
                         />
 

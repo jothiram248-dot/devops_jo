@@ -1,12 +1,8 @@
 import CryptoJS from "crypto-js";
 
 // Encryption constants
-const key = CryptoJS.enc.Hex.parse(
-  "978b17160c0e727abb9c5fbf237f2cc18a7529463e0c8804f88f483d90610f0c"
-);
-const hmacKey = CryptoJS.enc.Hex.parse(
-  "c48a3de8a20059adbca108dbeb465796ab831be49e67f165a724e689f0e9a358"
-);
+const key = CryptoJS.enc.Hex.parse(import.meta.env.VITE_CRYPTO_KEY);
+const hmacKey = CryptoJS.enc.Hex.parse(import.meta.env.VITE_HMAC_KEY);
 
 /**
  * Decrypts encrypted string using AES-256-CBC algorithm

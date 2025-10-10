@@ -62,7 +62,7 @@ const AgreementPage = () => {
     window.addEventListener("message", messageHandler);
 
     if (encryptedData) {
-      const secretKey = "1234567890abcdef";
+      const secretKey = import.meta.env.VITE_AES_SECRET_KEY; 
       try {
         const bytes = CryptoJS.AES.decrypt(encryptedData, secretKey);
         const decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));

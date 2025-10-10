@@ -106,7 +106,7 @@ const notificationTypes = [
     id: "socialMedia",
     title: "Social Media Subscriptions",
     icon: Bell,
-    image: "/assets/Images/smart_notification/social_Media_Subscription.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/social_Media_Subscription.jpg`,
     color: "from-pink-400 to-pink-600",
     count: 4,
     description: "Track your social media subscriptions.",
@@ -115,7 +115,7 @@ const notificationTypes = [
     id: "businessTools",
     title: "Business Tools Subscriptions",
     icon: Briefcase,
-    image: "/assets/Images/smart_notification/Business_Tool.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Business_Tool.jpg`,
     color: "from-yellow-400 to-yellow-600",
     count: 2,
     description: "Manage your business tools subscriptions.",
@@ -124,7 +124,7 @@ const notificationTypes = [
     id: "entertainmentPlatform",
     title: "Entertainment Platform Subscriptions",
     icon: Monitor,
-    image: "/assets/Images/smart_notification/Entertainment.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Entertainment.jpg`,
     color: "from-purple-400 to-purple-600",
     count: 3,
     description:
@@ -134,7 +134,7 @@ const notificationTypes = [
     id: "onlineGiftVoucher",
     title: "Online Gift Voucher",
     icon: Gift,
-    image: "/assets/Images/smart_notification/gift_voucher.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/gift_voucher.jpg`,
     color: "from-green-400 to-green-600",
     count: 1,
     description: "Never let your gift vouchers expire",
@@ -143,12 +143,13 @@ const notificationTypes = [
     id: "otherAutoPay",
     title: "Others Auto Payment",
     icon: FileText,
-    image: "/assets/Images/smart_notification/Auto_payment.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Auto_payment.jpg`,
     color: "from-blue-400 to-blue-600",
     count: 5,
     description: "Manage all your payments and billing cycle",
   },
 ];
+
 
 const DashboardNotifications = () => {
   const navigate = useNavigate();

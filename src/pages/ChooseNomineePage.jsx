@@ -174,13 +174,7 @@ import {
   Users,
 } from "lucide-react";
 
-// Import your images (make sure these paths match your actual structure):
-import BankingCredentialsImg from "/assets/Images/Banking_credentials.jpg";
-import InvestmentCredentialsImg from "/assets/Images/Investment_credneitals.jpg";
-import EntertainmentImg from "/assets/Images/Entertainment.jpg";
-import SocialMediaImg from "/assets/Images/SocialMedia.jpg";
-import GamingImg from "/assets/Images/gaming_credentials.jpg";
-import OthersImg from "/assets/Images/others.jpg";
+
 import FAQ from "@/components/FAQ";
 import { useInView } from "react-intersection-observer";
 import RazorpayPayment from "@/utils/RazorpayPayment";
@@ -244,7 +238,7 @@ const UncompromisingSecurity = () => {
     {
       title: "Advanced Protection",
       icon: Shield,
-      image: "/assets/Images/advanced-protection.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/advanced-protection.jpg`,
       description: "Best-in-class security to safeguard your digital assets",
       color: "from-green-400 to-green-600",
       bgColor: "bg-green-50",
@@ -261,7 +255,7 @@ const UncompromisingSecurity = () => {
     {
       title: "Smart Authentication",
       icon: Lock,
-      image: "/assets/Images/smart-authentication.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart-authentication.jpg`,
       description: "Multiple layers of security for your peace of mind",
       color: "from-blue-400 to-blue-600",
       bgColor: "bg-blue-50",
@@ -278,7 +272,7 @@ const UncompromisingSecurity = () => {
     {
       title: "Privacy Controls",
       icon: Key,
-      image: "/assets/Images/privacy-controls.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/privacy-controls.jpg`,
       description: "You have complete control over your data",
       color: "from-purple-400 to-purple-600",
       bgColor: "bg-purple-50",
@@ -295,7 +289,7 @@ const UncompromisingSecurity = () => {
     {
       title: "Data Protection",
       icon: Database,
-      image: "/assets/Images/data-protection.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/data-protection.jpg`,
       description: "Your information is always protected and available",
       color: "from-amber-400 to-amber-600",
       bgColor: "bg-amber-50",
@@ -312,7 +306,7 @@ const UncompromisingSecurity = () => {
     {
       title: "Smart Alerts",
       icon: Bell,
-      image: "/assets/Images/smart-alerts.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart-alerts.jpg`,
       description: "Stay informed about your digital assets",
       color: "from-red-400 to-red-600",
       bgColor: "bg-red-50",
@@ -329,7 +323,7 @@ const UncompromisingSecurity = () => {
     {
       title: "Nominee Management",
       icon: Users,
-      image: "/assets/Images/nominee-management.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/nominee-management.jpg`,
       description: "Securely delegate access to your trusted nominees",
       color: "from-cyan-400 to-cyan-600",
       bgColor: "bg-cyan-50",
@@ -817,7 +811,7 @@ const DelegateCredentials = () => {
           <line x1="2" x2="22" y1="10" y2="10" />
         </svg>
       ),
-      image: "/assets/Images/Banking_credentials.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg`,
       description:
         "Securely delegate your banking user ID/password and other credentials to trusted nominees.",
       color: "from-accent-100 to-accent-200",
@@ -842,7 +836,7 @@ const DelegateCredentials = () => {
           <polyline points="16 7 22 7 22 13" />
         </svg>
       ),
-      image: "/assets/Images/Investment_credneitals.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credneitals.jpg`,
       description:
         "Ensure your investment platforms remain accessible to your nominees when needed.",
       color: "from-purple-500 to-indigo-500",
@@ -868,7 +862,7 @@ const DelegateCredentials = () => {
           <line x1="12" x2="12" y1="17" y2="21" />
         </svg>
       ),
-      image: "/assets/Images/Entertainment.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Entertainment.jpg`,
       description:
         "Safely share your streaming and entertainment login details with family members.",
       color: "from-blue-500 to-cyan-400",
@@ -896,7 +890,7 @@ const DelegateCredentials = () => {
           <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
         </svg>
       ),
-      image: "/assets/Images/SocialMedia.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg`,
       description:
         "Grant access to your social media accounts to trusted individuals when needed.",
       color: "from-pink-500 to-rose-400",
@@ -924,7 +918,7 @@ const DelegateCredentials = () => {
           <rect width="20" height="12" x="2" y="6" rx="2" />
         </svg>
       ),
-      image: "/assets/Images/gaming_credentials.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/gaming_credentials.jpg`,
       description:
         "Ensure your gaming accounts remain secure and accessible to your nominees.",
       color: "from-green-500 to-emerald-400",
@@ -950,7 +944,7 @@ const DelegateCredentials = () => {
           <path d="M8 11V7a4 4 0 0 1 8 0v4" />
         </svg>
       ),
-      image: "/assets/Images/others.jpg",
+      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/others.jpg`,
       description:
         "Delegate credentials for any other platforms and portals to your trusted nominees.",
       color: "from-amber-500 to-orange-400",
@@ -1276,7 +1270,7 @@ const ChooseNomineePage = () => {
             className="absolute inset-0 w-full h-auto object-cover opacity-60"
           >
             <source
-              src="/assets/Images/managecredentials.mp4"
+              src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials.mp4`}
               type="video/mp4"
             />
           </video>
@@ -1408,8 +1402,8 @@ const ChooseNomineePage = () => {
                         style={{ aspectRatio: "16/9" }}
                       >
                         <VideoPlayer
-                          videoUrl="/assets/Images/managecredentials.mp4"
-                          thumbnailUrl="/assets/Images/managecredentials_thumbnail.jpg"
+                          videoUrl={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials.mp4`}
+                          thumbnailUrl="${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials_thumbnail.jpg"
                           title="Nominee Overview"
                         />
 

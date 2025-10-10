@@ -64,52 +64,52 @@ export const notificationFaqs = [
   },
 ];
 
-const notificationTypes = [
-  {
-    title: "Social Media Subscriptions",
-    icon: CreditCard,
-    // image: '/images/banking.jpg',
-    image: "/assets/Images/Banking_credentials.jpg",
-    description:
-      "Track your social media platform subscriptions and premium features.",
-  },
-  {
-    title: "Business Tools Subscriptions",
-    icon: TrendingUp,
-    // image: "/images/investment.jpg",
-    image: "/assets/Images/Investment_credneitals.jpg",
+// const notificationTypes = [
+//   {
+//     title: "Social Media Subscriptions",
+//     icon: CreditCard,
+//     // image: '/images/banking.jpg',
+//     image: "${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg",
+//     description:
+//       "Track your social media platform subscriptions and premium features.",
+//   },
+//   {
+//     title: "Business Tools Subscriptions",
+//     icon: TrendingUp,
+//     // image: "/images/investment.jpg",
+//     image: "${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credneitals.jpg",
 
-    description:
-      "Manage your business software and tool subscriptions efficiently.",
-  },
-  {
-    title: "Entertainment Platform Subscriptions",
-    icon: Tv,
-    // image: "/images/entertainment.jpg",
-    image: "/assets/Images/Entertainment.jpg",
+//     description:
+//       "Manage your business software and tool subscriptions efficiently.",
+//   },
+//   {
+//     title: "Entertainment Platform Subscriptions",
+//     icon: Tv,
+//     // image: "/images/entertainment.jpg",
+//     image: "${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Entertainment.jpg",
 
-    description: "Keep track of your streaming and entertainment subscriptions",
-  },
-  {
-    title: "Online Gift Voucher",
-    icon: Share2,
-    image: "/assets/Images/SocialMedia.jpg",
-    description: "Never let your gift cards and vouchers expire",
-  },
-  {
-    title: "Auto Payment Tracking",
-    icon: Gamepad2,
-    image: "/assets/Images/gaming_credentials.jpg",
-    description: "Monitor all your automated payments and subscriptions",
-  },
-];
+//     description: "Keep track of your streaming and entertainment subscriptions",
+//   },
+//   {
+//     title: "Online Gift Voucher",
+//     icon: Share2,
+//     image: "${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg",
+//     description: "Never let your gift cards and vouchers expire",
+//   },
+//   {
+//     title: "Auto Payment Tracking",
+//     icon: Gamepad2,
+//     image: "${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/gaming_credentials.jpg",
+//     description: "Monitor all your automated payments and subscriptions",
+//   },
+// ];
 const features = [
   {
     title: "Secure Delivery",
     icon: ShieldCheck,
     description:
       "State-of-the-art security measures to protect your notifications.",
-    image: "/assets/Images/smart_notification/Secure_Delivery.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Secure_Delivery.jpg`,
     details: [
       "End-to-end encrypted notification delivery system",
       "TLS 1.3 for all data in transit",
@@ -121,7 +121,7 @@ const features = [
     title: "Private Data",
     icon: Lock,
     description: "Ensuring that your data remains confidential and protected.",
-    image: "/assets/Images/smart_notification/Private_data.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Private_data.jpg`,
     details: [
       "Your subscription details are kept completely private",
       "Data anonymization techniques applied",
@@ -134,7 +134,7 @@ const features = [
     icon: BellRing,
     description:
       "Ensuring that your notifications always reach their destination.",
-    image: "/assets/Images/smart_notification/Reliable_Alerts.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Reliable_Alerts.jpg`,
     details: [
       "Multiple notification channels ensure delivery",
       "Automatic failover to secondary delivery methods",
@@ -146,7 +146,7 @@ const features = [
     title: "Real-time Updates",
     icon: Clock,
     description: "Lightning-fast delivery of time-sensitive information.",
-    image: "/assets/Images/smart_notification/Real-time_Updates.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Real-time_Updates.jpg`,
     details: [
       "Instant notifications for important events",
       "Low-latency push notification system",
@@ -159,7 +159,7 @@ const features = [
     icon: BarChart,
     description:
       "Powerful tools to understand and optimize your notification strategy.",
-    image: "/assets/Images/smart_notification/Analytics_and_Insights.jpg",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Analytics_and_Insights.jpg`,
     details: [
       "Advanced analytics dashboard for user engagement tracking",
       "Predictive analysis for optimal notification timing",
@@ -171,7 +171,7 @@ const features = [
     title: "Customization Options",
     icon: Sliders,
     description: "Tailor the system to fit your unique requirements.",
-    image: "/assets/Images/smart_notification/Customization_Options.png",
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Customization_Options.png`,
     details: [
       "Fully customizable notification templates",
       "Branding options for white-label solutions",
@@ -336,7 +336,7 @@ const startTrial = async () => {
             className="absolute inset-0 w-full h-auto object-cover opacity-60"
           >
             <source
-              src="/assets/Images/smart_notifications.mp4"
+              src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notifications.mp4`}
               type="video/mp4"
             />
           </video>
@@ -475,7 +475,7 @@ const startTrial = async () => {
                         style={{ aspectRatio: "16/9" }}
                       >
                         <img
-                          src="/assets/Images/Smart_notifications_thumblin.jpg"
+                          src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Smart_notifications_thumblin.jpg`}
                           alt="Smart Notifications"
                           className="w-full h-full object-cover"
                         />

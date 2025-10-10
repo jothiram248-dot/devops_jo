@@ -2350,13 +2350,13 @@ const smartIsTrialActive =
   smartTrial?.status === "trial-active" &&
   !!smartTrial?.trial?.enabled;
 
-const activeKeys = useMemo(() => {
-  const base = Object.keys(userFeatures).filter((k) => userFeatures[k] === true);
-  if ((smartIsPaid || smartIsTrialActive) && !base.includes("smartNotifications")) {
-    base.push("smartNotifications");
-  }
-  return base;
-}, [userFeatures, smartIsPaid, smartIsTrialActive]);
+// const activeKeys = useMemo(() => {
+//   const base = Object.keys(userFeatures).filter((k) => userFeatures[k] === true);
+//   if ((smartIsPaid || smartIsTrialActive) && !base.includes("smartNotifications")) {
+//     base.push("smartNotifications");
+//   }
+//   return base;
+// }, [userFeatures, smartIsPaid, smartIsTrialActive]);
 
 
     return {

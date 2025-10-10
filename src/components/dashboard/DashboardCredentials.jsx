@@ -144,12 +144,13 @@ import {
   ArrowLeft,
 } from "lucide-react";
 
-import BankingCredentialsImg from "/assets/Images/Banking_credentials.jpg";
-import InvestmentCredentialsImg from "/assets/Images/Investment_credneitals.jpg";
-import EntertainmentImg from "/assets/Images/Entertainment.jpg";
-import SocialMediaImg from "/assets/Images/SocialMedia.jpg";
-import GamingImg from "/assets/Images/gaming_credentials.jpg";
-import OthersImg from "/assets/Images/others.jpg";
+const BankingCredentialsImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg`;
+const InvestmentCredentialsImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credentials.jpg`;
+const EntertainmentImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Entertainment.jpg`;
+const SocialMediaImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg`;
+const GamingImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/gaming_credentials.jpg`;
+const OthersImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/others.jpg`;
+
 
 const credentialTypes = [
   {

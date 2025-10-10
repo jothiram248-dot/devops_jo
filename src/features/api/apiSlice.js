@@ -21,7 +21,7 @@ import { createApi, fetchBaseQuery } from "@reduxjs/toolkit/query/react";
 import { logout } from "../auth/authSlice";
 
 const baseQuery = fetchBaseQuery({
-  baseUrl: "https://backend.sacredsecret.in",
+  baseUrl: import.meta.env.VITE_API_BASE_URL,
   // baseUrl: "http://localhost:4010/",
 
   prepareHeaders: (headers, { getState, endpoint }) => {

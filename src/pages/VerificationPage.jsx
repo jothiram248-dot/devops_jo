@@ -276,7 +276,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { toast } from "react-hot-toast";
 import { setCredentials } from "@/features/auth/authSlice";
 import CryptoJS from "crypto-js";
-const secretKey = "YOUR_SECRET_KEY";
+const secretKey = import.meta.env.VITE_AES_SECRET_KEY;
 
 const VerificationPage = () => {
   const navigate = useNavigate();
