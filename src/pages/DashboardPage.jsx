@@ -2247,14 +2247,37 @@ const smartStatus = smartIsPaid
       ? "Trial Expired"
       : (smartTrial?.trial?.eligible ? "Trial Eligible" : "Inactive");
 
+      // --- Nominee trial flags (same pattern as Smart) ---
+const nomineeTrial = meData?.me?.features?.trials?.nominee;
+const nomineeIsPaid = meData?.me?.features?.nominee === true;
+const nomineeIsTrialActive =
+  !!nomineeTrial?.hasAccess &&
+  nomineeTrial?.status === "trial-active" &&
+  !!nomineeTrial?.trial?.enabled;
+
+// For the status label shown on the card
+const nomineeStatus = nomineeIsPaid
+  ? "Active"
+  : nomineeIsTrialActive
+  ? `Trial${nomineeTrial?.trial?.remainingHuman ? ` (${nomineeTrial.trial.remainingHuman} left)` : ""}`
+  : (nomineeTrial?.trial?.eligible ? "Trial Eligible" : "Inactive");
+
+
 // Active service keys for the stat card (treat trial as active)
 const activeKeys = useMemo(() => {
   const base = Object.keys(userFeatures).filter((k) => userFeatures[k] === true);
+
   if ((smartIsPaid || smartIsTrialActive) && !base.includes("smartNotifications")) {
     base.push("smartNotifications");
   }
+
+  if ((nomineeIsPaid || nomineeIsTrialActive) && !base.includes("nominee")) {
+    base.push("nominee");
+  }
+
   return base;
-}, [userFeatures, smartIsPaid, smartIsTrialActive]);
+}, [userFeatures, smartIsPaid, smartIsTrialActive, nomineeIsPaid, nomineeIsTrialActive]);
+
 
 
   // const [adhaarKyc, { isLoading: kycLoading }] = useAdhaarKycMutation();
@@ -2287,18 +2310,22 @@ const activeKeys = useMemo(() => {
   // Update features status based on API response
 
   const updatedFeatures = features.map((feature) => {
-    // Credentials is always Active (free)
-    if (feature.isFree) return { ...feature, status: "Active" };
+    if (feature.isFree) {
+      return { ...feature, status: "Active" };
+    }
   
-    // Only Smart Notifications uses trial-aware status
     if (feature.id === "smartNotifications") {
       return { ...feature, status: smartStatus };
     }
   
-    // Others use paid flag
+    if (feature.id === "nominee") {
+      return { ...feature, status: nomineeStatus };
+    }
+  
     const isActive = userFeatures[feature.id] === true;
     return { ...feature, status: isActive ? "Active" : "Inactive" };
   });
+  
   
 
   
@@ -2389,12 +2416,19 @@ const smartIsTrialActive =
 
   // Check if a feature is active/unlocked based on API response
   const isFeatureActive = (featureId) => {
-    if (featureId === "credentials") return true; // free feature
+    if (featureId === "credentials") return true;
+  
     if (featureId === "smartNotifications") {
-      return smartIsPaid || smartIsTrialActive; // NOT expired
+      return smartIsPaid || smartIsTrialActive;
     }
+  
+    if (featureId === "nominee") {
+      return nomineeIsPaid || nomineeIsTrialActive;
+    }
+  
     return userFeatures[featureId] === true;
   };
+  
   
 
 

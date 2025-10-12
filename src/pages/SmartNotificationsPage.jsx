@@ -103,6 +103,7 @@ export const notificationFaqs = [
 //     description: "Monitor all your automated payments and subscriptions",
 //   },
 // ];
+const TRIAL_DAYS = 30;
 const features = [
   {
     title: "Secure Delivery",
@@ -200,12 +201,22 @@ const trialEligible =
 const trialRemaining = smartTrial?.trial?.remainingHuman;
 
 const startTrial = async () => {
+  if (!isAuthenticated) {
+    navigate("/signin", { state: { from: window.location.pathname } });
+    return;
+  }
+
   try {
-    const res = await activateTrial().unwrap();
+    const res = await activateTrial({ featureKey: "smartNotifications" }).unwrap();
     toast.success(res?.message || "Trial activated!");
     await refetchMe(); // refresh UI immediately
   } catch (e) {
-    toast.error(e?.data?.message || "Couldn’t start trial, please try again.");
+    const msg =
+      e?.data?.message ||
+      e?.data?.error ||
+      e?.message ||
+      "Couldn’t start trial, please try again.";
+    toast.error(msg);
   }
 };
 
@@ -1300,8 +1311,9 @@ const startTrial = async () => {
               Start Your Free Trial
             </h2>
             <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-              Try our comprehensive notification system risk-free for 15 days.
-            </p>
+  Try our comprehensive notification system risk-free for {TRIAL_DAYS} days.
+</p>
+
           </motion.div>
 
           {/* Premium Light-Themed Pricing Card with Prominent Glow */}
@@ -1436,7 +1448,8 @@ const startTrial = async () => {
       disabled={activatingTrial}
       className="relative w-full py-3.5 rounded-lg font-bold text-lg border border-indigo-300/70 bg-white text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-60"
     >
-      {activatingTrial ? "Activating trial…" : "Start 15-day free trial"}
+      {activatingTrial ? "Activating trial…" : `Start ${TRIAL_DAYS}-day free trial`}
+
     </button>
   )}
 
@@ -1459,7 +1472,7 @@ const startTrial = async () => {
 
                 {/* Trust badge */}
                 <div className="mt-5 text-center">
-                  <span className="inline-flex items-center text-xs text-gray-500">
+                  {/* <span className="inline-flex items-center text-xs text-gray-500">
                     <svg
                       className="w-4 h-4 mr-1.5"
                       fill="none"
@@ -1473,8 +1486,8 @@ const startTrial = async () => {
                         d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
                       />
                     </svg>
-                    Secure & encrypted, 15-day free trial
-                  </span>
+                    Secure & encrypted, {TRIAL_DAYS}-day free trial
+                  </span> */}
                 </div>
               </div>
 

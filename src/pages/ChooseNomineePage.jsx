@@ -180,6 +180,8 @@ import { useInView } from "react-intersection-observer";
 import RazorpayPayment from "@/utils/RazorpayPayment";
 import toast from "react-hot-toast";
 
+import { useMeQuery, useActivateSmartNotificationsTrialMutation } from "@/features/api/userApiSlice";
+
 // 3) FAQ Data
 const faqs = [
   {
@@ -1174,6 +1176,39 @@ const ChooseNomineePage = () => {
     { id: "6", name: "Others", selected: false, plan: null },
   ]);
 
+  // Trial length (single source of truth for labels)
+const TRIAL_DAYS = 30;
+
+// Read current user + nominee trial state
+const { data: meData, refetch: refetchMe } = useMeQuery();
+const [activateTrial, { isLoading: activatingTrial }] =
+  useActivateSmartNotificationsTrialMutation();
+
+// derive nominee trial/paid state
+const nomineeTrial = meData?.me?.features?.trials?.nominee;
+const paidActive  = !!meData?.me?.features?.nominee;
+
+const trialActive =
+  nomineeTrial?.hasAccess && nomineeTrial?.status === "trial-active";
+
+const trialEligible =
+  nomineeTrial?.status === "trial-eligible" ||
+  nomineeTrial?.trial?.eligible === true;
+
+const trialRemaining = nomineeTrial?.trial?.remainingHuman;
+
+// start trial handler (featureKey=nominee)
+const startNomineeTrial = async () => {
+  try {
+    const res = await activateTrial({ featureKey: "nominee" }).unwrap();
+    toast.success(res?.message || "Trial activated!");
+    await refetchMe();
+  } catch (e) {
+    toast.error(e?.data?.message || "Couldn’t start trial, please try again.");
+  }
+};
+
+
   const getPlanPrice = () => {
     const prices = {
       quarterly: 250,
@@ -1792,17 +1827,37 @@ const ChooseNomineePage = () => {
                   </div>
                 </div>
 
-                <div className="relative mt-6">
-                  {/* Button glow effect */}
-                  <div className="absolute -inset-1 bg-accent-100/40 rounded-lg blur-md opacity-75"></div>
+                <div className="relative mt-6 space-y-3">
+  {/* glow */}
+  <div className="absolute -inset-1 bg-accent-100/40 rounded-lg blur-md opacity-75"></div>
 
-                  <RazorpayPayment
-                    feature="NOMINEE"
-                    selectedPlan={getFormattedPlan()}
-                    onSuccess={handlePaymentSuccess}
-                    onError={handlePaymentError}
-                  />
-                </div>
+  {/* Start 30-day trial CTA (only when eligible and not already paid/trial) */}
+  {trialEligible && !paidActive && !trialActive && (
+    <button
+      onClick={startNomineeTrial}
+      disabled={activatingTrial}
+      className="relative w-full py-3.5 rounded-lg font-bold text-lg border border-indigo-300/70 bg-white text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-60"
+    >
+      {activatingTrial ? "Activating trial…" : `Start ${TRIAL_DAYS}-day free trial`}
+    </button>
+  )}
+
+  {/* Trial status badge (when trial running and not paid) */}
+  {trialActive && !paidActive && (
+    <div className="relative w-full text-center text-sm text-emerald-500">
+      Trial active — {trialRemaining || "time remaining"} • Upgrade anytime
+    </div>
+  )}
+
+  {/* Paid flow (or fallback after trial) */}
+  <RazorpayPayment
+    feature="NOMINEE"
+    selectedPlan={getFormattedPlan()}
+    onSuccess={handlePaymentSuccess}
+    onError={handlePaymentError}
+  />
+</div>
+
 
                 {/* Trust badge */}
                 <div className="mt-5 text-center">

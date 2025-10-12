@@ -192,13 +192,15 @@ export const usersApiSlice = apiSlice.injectEndpoints({
     }),
 
     activateSmartNotificationsTrial: builder.mutation({
-            query: () => ({
-              url: `${USERS_URL}/activate/trial`,
-              method: "POST",
-            }),
-            // refresh user, metrics after activation so UI updates everywhere
-            invalidatesTags: [{ type: "User", id: "ME" }, "Metrics"],
-          }),
+      // pass { featureKey: 'smartNotifications' } or { featureKey: 'nominee' }
+      query: ({ featureKey }) => ({
+        url: `${USERS_URL}/activate/trial?featureKey=${encodeURIComponent(featureKey)}`,
+        method: "POST",
+      }),
+      // refresh user & metrics so UI updates everywhere
+      invalidatesTags: [{ type: "User", id: "ME" }, "Metrics"],
+    }),
+    
     
   }),
 });
