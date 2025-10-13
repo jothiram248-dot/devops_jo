@@ -173,15 +173,18 @@ const DashboardNominee = ({
 
   const handleCredentialClick = (type) => {
     // gate 1: Aadhaar
-    if (!isAadhaarVerified) {
-      openAadhaarModal?.();       // show Aadhaar modal from DashboardPage
-      return;
-    }
-    // gate 2: Emergency contacts
-    if (!contactCount || contactCount <= 0) {
-      openEmergencyContactModal?.(); // show Emergency Contact modal from DashboardPage
-      return;
-    }
+    // if (!isAadhaarVerified) {
+    //   openAadhaarModal?.();       // show Aadhaar modal from DashboardPage
+    //   console.log("Opening Aadhaar Modal", isAadhaarVerified);
+    //   return;
+    // }
+    // // gate 2: Emergency contacts
+    // if (!contactCount || contactCount <= 0) {
+    //   openEmergencyContactModal?.(); // show Emergency Contact modal from DashboardPage
+    //   console.log("Opening Emergency Contact Modal");
+    //   return;
+    // }
+    console.log("Navigating to:", `/nominees/${type.id}`);
     // all good → navigate
     navigate(`/nominees/${type.id}`);
   };

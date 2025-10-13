@@ -49,16 +49,16 @@ const ManageCredentialsPage = () => {
     }
   }, []);
 
-// Replace this function
-const handleGetStarted = () => {
-  if (!isAuthenticated) {
-    // not logged in → send to signin, then come back to dashboard
-    navigate("/signin", { state: { from: "/dashboard" } });
-    return;
-  }
-  // logged in → go straight to dashboard
-  navigate("/dashboard");
-};
+  // Replace this function
+  const handleGetStarted = () => {
+    if (!isAuthenticated) {
+      // not logged in → send to signin, then come back to dashboard
+      navigate("/signin", { state: { from: "/dashboard" } });
+      return;
+    }
+    // logged in → go straight to dashboard
+    navigate("/dashboard");
+  };
 
   const y = useTransform(scrollY, [0, 300], [0, 100]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
@@ -88,7 +88,9 @@ const handleGetStarted = () => {
             className="absolute inset-0 w-full h-auto object-cover opacity-60"
           >
             <source
-              src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials.mp4`}
+              src={`${
+                import.meta.env.VITE_DO_BUCKET_URL
+              }/assets/Images/managecredentials.mp4`}
               type="video/mp4"
             />
           </video>
@@ -225,11 +227,10 @@ const handleGetStarted = () => {
                         className="relative z-10"
                         style={{ aspectRatio: "16/9" }}
                       >
-                      <VideoPlayer
-  videoUrl="https://www.youtube.com/watch?v=ziQqSngFjxY"
-  title="Manage Your Credentials"
-/>
-
+                        <VideoPlayer
+                          videoUrl="https://www.youtube.com/watch?v=ziQqSngFjxY"
+                          title="Manage Your Credentials"
+                        />
 
                         {/* Video Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
@@ -242,39 +243,7 @@ const handleGetStarted = () => {
                 </motion.div>
               </div>
 
-              {/* Clean Scroll Indicator */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2, duration: 0.8 }}
-                className="mt-12 transform"
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="w-8 h-14 rounded-full border-2 border-cyan-400/50 flex items-center justify-center cursor-pointer glow-pulse"
-                    onClick={handleGoToDown}
-                  >
-                    <motion.div
-                      animate={{ y: [0, 6, 0] }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                      className="w-1.5 h-3 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full neon-glow"
-                    ></motion.div>
-                  </motion.div>
-                  <span className="text-xs text-cyan-400/80 uppercase tracking-widest font-medium letter-spacing-wide">
-                    Explore
-                  </span>
-                </div>
-              </motion.div>
+             
             </div>
           </div>
         </div>

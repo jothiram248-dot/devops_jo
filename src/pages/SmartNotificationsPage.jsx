@@ -559,39 +559,7 @@ const SmartNotificationsPage = () => {
                 </motion.div>
               </div>
 
-              {/* Clean Scroll Indicator */}
-              <motion.div
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 1.2, duration: 0.8 }}
-                className="mt-12 transform"
-              >
-                <div className="flex flex-col items-center gap-2">
-                  <motion.div
-                    animate={{ y: [0, 8, 0] }}
-                    transition={{
-                      duration: 1.5,
-                      repeat: Infinity,
-                      ease: "easeInOut",
-                    }}
-                    className="w-8 h-14 rounded-full border-2 border-cyan-400/50 flex items-center justify-center cursor-pointer glow-pulse"
-                    onClick={handleGoToDown}
-                  >
-                    <motion.div
-                      animate={{ y: [0, 6, 0] }}
-                      transition={{
-                        duration: 1.5,
-                        repeat: Infinity,
-                        ease: "easeInOut",
-                      }}
-                      className="w-1.5 h-3 bg-gradient-to-b from-cyan-400 to-purple-500 rounded-full neon-glow"
-                    ></motion.div>
-                  </motion.div>
-                  <span className="text-xs text-cyan-400/80 uppercase tracking-widest font-medium letter-spacing-wide">
-                    Explore
-                  </span>
-                </div>
-              </motion.div>
+            
             </div>
           </div>
         </div>
