@@ -326,7 +326,7 @@ const Navbar = () => {
                   <div className="absolute inset-0 rounded-full flex items-center justify-center overflow-hidden">
                     {user?.me?.profileImgUrl ? (
                       <img
-                        src={encodeURI(user.me.profileImgUrl)}
+                        src={user.me.profileImgUrl}
                         alt={`${user.me.firstName} ${user.me.lastName}`}
                         crossOrigin="anonymous"
                         className="w-full h-full object-cover"
@@ -359,7 +359,7 @@ const Navbar = () => {
                         <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-accent-100/50 bg-gradient-to-br from-accent-100/30 to-accent-200/30 flex items-center justify-center">
                           {user?.me?.profileImgUrl ? (
                             <img
-                              src={encodeURI(user.me.profileImgUrl)}
+                              src={user.me.profileImgUrl}
                               alt={`${user.me.firstName} ${user.me.lastName}`}
                               crossOrigin="anonymous"
                               className="w-full h-full object-cover"

@@ -505,69 +505,103 @@ const SignUpPage = () => {
     },
   ];
 
-  const normalizeErrorMessage = (err) => {
-    if (!err) return null;
-  
-    // If it's already a string, try to parse JSON first, else return as-is
-    if (typeof err === "string") {
-      try {
-        const parsed = JSON.parse(err);
-        if (parsed?.message) return parsed.message;
-        if (parsed?.error) return parsed.error;
-      } catch {
-        // not JSON, use raw string
-      }
+// --- Error helpers (replace your existing versions) ---
+const normalizeErrorMessage = (err) => {
+  if (!err) return null;
+
+  // RTK Query style
+  if (err?.data?.message) return err.data.message;
+  if (err?.data?.error) return err.data.error;
+
+  // Plain object
+  if (err?.message) return err.message;
+  if (err?.error) return err.error;
+
+  // Raw response as string (try JSON parse)
+  if (typeof err === "string") {
+    try {
+      const parsed = JSON.parse(err);
+      return parsed?.message || parsed?.error || err;
+    } catch {
       return err;
     }
-  
-    // Prefer message fields commonly returned by APIs/RTK Query
-    return (
-      err?.message ||
-      err?.error ||
-      err?.data?.message ||
-      err?.data?.error ||
-      null
-    );
-  };
-  
+  }
 
-  // const handleRegistrationError = (errorMessage) => {
-  //   let formattedMessage = "Registration failed. Please try again.";
+  return null;
+};
 
-  //   if (errorMessage?.includes("E11000 duplicate key error")) {
-  //     const duplicateField = errorMessage.match(/index:\s(.*?)\sdup key/);
-  //     const duplicateValue = errorMessage.match(/dup key:\s\{.*"(.*)".*\}/);
+const extractValidationDetails = (err) => {
+  // Supports Joi-like: { message: "...", details: [{ message, path, context }] }
+  const details =
+    err?.data?.details ||
+    err?.details ||
+    (typeof err === "string"
+      ? (() => {
+          try {
+            const parsed = JSON.parse(err);
+            return parsed?.details || null;
+          } catch {
+            return null;
+          }
+        })()
+      : null);
 
-  //     if (duplicateField && duplicateValue) {
-  //       const fieldName = duplicateField[1].split("_")[0];
-  //       const value = duplicateValue[1];
-  //       const fieldNameData = fieldName === "phone" ? "phone number" : fieldName;
+  if (!Array.isArray(details) || details.length === 0) return [];
 
-  //       formattedMessage = `The ${fieldName} "${value}" is already registered. Please use a different ${fieldNameData}.`;
-  //     }
-  //   }
+  const cap = (s) => (typeof s === "string" && s.length ? s[0].toUpperCase() + s.slice(1) : s);
+  const tidy = (s) => (typeof s === "string" ? s.replace(/"/g, "").trim() : s);
 
-  //   setToastData({ message: formattedMessage, type: "error" });
-  // };
-  
-  const handleRegistrationError = (err) => {
-    const msg = normalizeErrorMessage(err);
-    let formattedMessage = msg || "Registration failed. Please try againn.";
-  
-    // Mongo duplicate key (if your backend passes raw error)
-    if (typeof formattedMessage === "string" && formattedMessage.includes("E11000 duplicate key error")) {
-      const duplicateField = formattedMessage.match(/index:\s(.*?)\sdup key/);
-      const duplicateValue = formattedMessage.match(/dup key:\s\{.*"(.*)".*\}/);
-      if (duplicateField && duplicateValue) {
-        const fieldName = duplicateField[1].split("_")[0];
-        const value = duplicateValue[1];
-        const fieldNameData = fieldName === "phone" ? "phone number" : fieldName;
-        formattedMessage = `The ${fieldName} "${value}" is already registered. Please use a different ${fieldNameData}.`;
-      }
+  return details.map((d) => {
+    const field =
+      d?.context?.label ||
+      (Array.isArray(d?.path) ? d.path.filter(Boolean).join(".") : d?.path) ||
+      "";
+    let msg = tidy(d?.message || "");
+
+    // If Joi prefixes the field name in the message, strip it for readability
+    if (field && msg.toLowerCase().startsWith(field.toLowerCase())) {
+      msg = msg.slice(field.length).trim();
+      // Remove leading words like "must", punctuation duplication, etc.
+      msg = msg.replace(/^[:\-–]\s*/, "");
     }
-  
-    setToastData({ message: formattedMessage, type: "error" });
-  };
+
+    // Examples:
+    // field: "username", msg: "must only contain alpha-numeric characters"
+    return field ? `${cap(field)}: ${msg}` : msg;
+  });
+};
+
+const handleRegistrationError = (err) => {
+  // Base message
+  let base = normalizeErrorMessage(err);
+
+  // Prefer validation details when present
+  const lines = extractValidationDetails(err);
+
+  // Mongo duplicate key (raw error string from backend)
+  const raw = base || (typeof err === "string" ? err : "");
+  if (typeof raw === "string" && raw.includes("E11000 duplicate key error")) {
+    const duplicateField = raw.match(/index:\s(.*?)\sdup key/);
+    const duplicateValue = raw.match(/dup key:\s\{.*"(.*)".*\}/);
+    if (duplicateField && duplicateValue) {
+      const fieldName = duplicateField[1].split("_")[0];
+      const value = duplicateValue[1];
+      const fieldNameData = fieldName === "phone" ? "phone number" : fieldName;
+      base = `The ${fieldName} "${value}" is already registered. Please use a different ${fieldNameData}.`;
+    }
+  }
+
+  // Final formatted message
+  let formatted = base || "Registration failed. Please try again.";
+  if (lines.length) {
+    // Show a clean, readable list (new lines will render if your toast allows)
+    formatted = `Please fix the following:\n• ${lines.join("\n• ")}`;
+  }
+
+  setToastData({ message: formatted, type: "error" });
+};
+// --- end helpers ---
+
   
   const onSubmit = async (data) => {
     try {

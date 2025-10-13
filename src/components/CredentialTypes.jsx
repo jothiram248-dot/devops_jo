@@ -8,6 +8,7 @@ import {
   Gamepad2,
   FolderLock,
 } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const credentialTypes = [
   {
@@ -51,15 +52,16 @@ const credentialTypes = [
 ];
 
 // card component
-const PremiumCredentialCard = ({ feature, index }) => {
+const PremiumCredentialCard = ({ feature, index, onClick  }) => {
   return (
     <motion.div
-      whileHover={{
-        scale: 1.03,
-        y: -5,
-      }}
+      whileHover={{ scale: 1.03, y: -5 }}
       whileTap={{ scale: 0.98 }}
-      className="relative h-full rounded-2xl overflow-hidden shadow-xl group will-change-transform"
+      className="relative h-full rounded-2xl overflow-hidden shadow-xl group will-change-transform cursor-pointer"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClick?.()}
     >
       {/* Image container - moved to ensure it's visible */}
       <div className="relative h-64 overflow-hidden rounded-t-2xl">
@@ -137,7 +139,12 @@ const PremiumCredentialCard = ({ feature, index }) => {
 
 const CredentialTypes = () => {
   const [isInView, setIsInView] = useState(false);
+  const navigate = useNavigate();
 
+  const goToDashboardCredentials = () => {
+    navigate("/dashboard", { state: { id: "credentials" } });
+  };
+  
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -242,7 +249,11 @@ const CredentialTypes = () => {
                 }}
                 className="h-full"
               >
-                <PremiumCredentialCard feature={feature} index={index} />
+                 <PremiumCredentialCard
+              feature={feature}
+              index={index}
+              onClick={goToDashboardCredentials}
+            />
               </motion.div>
             ))}
           </div>

@@ -49,31 +49,17 @@ const ManageCredentialsPage = () => {
     }
   }, []);
 
-  const handleGetStarted = () => {
-    if (!isAuthenticated) {
-      navigate("/signin", { state: { from: "/payment" } });
-      return;
-    }
+// Replace this function
+const handleGetStarted = () => {
+  if (!isAuthenticated) {
+    // not logged in → send to signin, then come back to dashboard
+    navigate("/signin", { state: { from: "/dashboard" } });
+    return;
+  }
+  // logged in → go straight to dashboard
+  navigate("/dashboard");
+};
 
-    navigate("/payment/success", {
-      state: {
-        subscription: {
-          id: "starter",
-          title: "Free Forever Plan",
-          price: 0,
-          features: [
-            "Store unlimited credentials",
-            "Secure encryption",
-            "Multi-factor authentication",
-            "Mobile access",
-            "Email support",
-            "Regular security updates",
-          ],
-        },
-        orderId: "free_" + Math.random().toString(36).substr(2, 9),
-      },
-    });
-  };
   const y = useTransform(scrollY, [0, 300], [0, 100]);
   const opacity = useTransform(scrollY, [0, 300], [1, 0]);
   return (

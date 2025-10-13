@@ -163,8 +163,29 @@ const credentialTypes = [
   },
 ];
 
-const DashboardNominee = ({ isAadhaarVerified, setModalStep }) => {
+const DashboardNominee = ({
+  isAadhaarVerified,
+  contactCount = 0,
+  openAadhaarModal,
+  openEmergencyContactModal,
+}) => {
   const navigate = useNavigate();
+
+  const handleCredentialClick = (type) => {
+    // gate 1: Aadhaar
+    if (!isAadhaarVerified) {
+      openAadhaarModal?.();       // show Aadhaar modal from DashboardPage
+      return;
+    }
+    // gate 2: Emergency contacts
+    if (!contactCount || contactCount <= 0) {
+      openEmergencyContactModal?.(); // show Emergency Contact modal from DashboardPage
+      return;
+    }
+    // all good → navigate
+    navigate(`/nominees/${type.id}`);
+  };
+
   const [loadedImages, setLoadedImages] = useState({});
 
   const handleImageLoad = (id) => {
@@ -189,7 +210,7 @@ const DashboardNominee = ({ isAadhaarVerified, setModalStep }) => {
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.98 }}
             transition={{ duration: 0.2 }}
-            onClick={() => navigate(`/nominees/${type.id}`)}
+            onClick={() => handleCredentialClick(type)}
             className="relative p-4 rounded-xl bg-dark-200 hover:bg-dark-300 transition-all duration-300 cursor-pointer"
           >
             {/* Lazy Loaded Background */}

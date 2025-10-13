@@ -28,6 +28,7 @@ import {
   TrendingUp,
   Tv,
   Users,
+  CheckCircle2,
 } from "lucide-react";
 import { useSelector } from "react-redux";
 import FAQ from "../components/FAQ";
@@ -106,7 +107,7 @@ export const notificationFaqs = [
 //     description: "Monitor all your automated payments and subscriptions",
 //   },
 // ];
-const TRIAL_DAYS = 30;
+// const TRIAL_DAYS = 30;
 const features = [
   {
     title: "Secure Delivery",
@@ -202,6 +203,7 @@ const SmartNotificationsPage = () => {
   const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
   const videoRef = useRef(null);
   const [selectedPlan, setSelectedPlan] = useState("");
+  const [showTrialModal, setShowTrialModal] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
   // Read current user + trial state
@@ -218,6 +220,37 @@ const SmartNotificationsPage = () => {
     smartTrial?.trial?.eligible === true;
   const trialRemaining = smartTrial?.trial?.remainingHuman;
 
+  // --- add below trial flags ---
+  const TRIAL_DAYS = 30;
+
+  const goToSubscription = () => {
+    const el = document.getElementById("sm"); // subscription section container
+    if (el) el.scrollIntoView({ behavior: "smooth" });
+  };
+
+  const handleCardClick = () => {
+    // If not paid and no active trial => scroll to subscription
+    if (!paidActive && !trialActive) {
+      goToSubscription();
+      return;
+    }
+    // Otherwise go straight to dashboard notifications tab
+    navigate("/dashboard", { state: { id: "smartNotifications" } });
+  };
+
+  const ctaLabel =
+    paidActive || trialActive
+      ? "Go to Dashboard"
+      : `Start ${TRIAL_DAYS} days free trial`;
+
+  const handleHeroCta = () => {
+    if (paidActive || trialActive) {
+      navigate("/dashboard", { state: { id: "smartNotifications" } });
+    } else {
+      goToSubscription();
+    }
+  };
+
   const startTrial = async () => {
     if (!isAuthenticated) {
       navigate("/signin", { state: { from: window.location.pathname } });
@@ -229,6 +262,7 @@ const SmartNotificationsPage = () => {
         featureKey: "smartNotifications",
       }).unwrap();
       toast.success(res?.message || "Trial activated!");
+      setShowTrialModal(true);
       await refetchMe(); // refresh UI immediately
     } catch (e) {
       const msg =
@@ -473,14 +507,12 @@ const SmartNotificationsPage = () => {
                         boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)",
                       }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={handleGoToDown}
+                      onClick={handleHeroCta}
                       className="px-8 py-3 md:px-10 md:py-4 text-base md:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
                     >
-                      {/* Light Effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                       <span className="relative z-10 flex items-center font-bold">
-                        Start For Free{" "}
-                        <span className="ml-2 arrow-icon">→</span>
+                        {ctaLabel} <span className="ml-2 arrow-icon">→</span>
                       </span>
                     </motion.button>
                   </div>
@@ -830,7 +862,7 @@ const SmartNotificationsPage = () => {
       </section>
 
       {/* Notification Types Section */}
-      <NotificationGrid />
+      <NotificationGrid onCardClick={handleCardClick} />
 
       {/*  Features Section - Premium Style */}
       <section className="relative py-20 overflow-hidden">
@@ -1560,6 +1592,53 @@ const SmartNotificationsPage = () => {
 
       {/* Footer */}
       <Footer />
+      {showTrialModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setShowTrialModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative z-[101] w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+          >
+            <div className="flex items-start space-x-3">
+              <div className="mt-1">
+                <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Trial activated!
+                </h3>
+                <p className="mt-1 text-gray-600">
+                  Your {TRIAL_DAYS}-day Smart Notifications trial is now active.
+                  You can start setting reminders right away.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3 justify-end">
+              <button
+                onClick={() => setShowTrialModal(false)}
+                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <button
+                onClick={() =>
+                  navigate("/dashboard", {
+                    state: { id: "smartNotifications" },
+                  })
+                }
+                className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+              >
+                Go to Dashboard
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };

@@ -1,12 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import {
-  CreditCard,
-  BarChart2,
-  Tv,
-  Gift,
-  Repeat,
-} from "lucide-react";
+import { CreditCard, BarChart2, Tv, Gift, Repeat } from "lucide-react";
+import { useNavigate } from "react-router-dom";
 
 const notificationTypes = [
   {
@@ -43,15 +38,16 @@ const notificationTypes = [
 ];
 
 // Premium Notification Card component
-const PremiumNotificationCard = ({ feature, index }) => {
+const PremiumNotificationCard = ({ feature, index, onClick }) => {
   return (
     <motion.div
-      whileHover={{
-        scale: 1.03,
-        y: -5,
-      }}
+      whileHover={{ scale: 1.03, y: -5 }}
       whileTap={{ scale: 0.98 }}
-      className="relative h-full rounded-2xl overflow-hidden shadow-xl group will-change-transform flex flex-col"
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClick?.()}
+      className="relative h-full rounded-2xl overflow-hidden shadow-xl group will-change-transform flex flex-col cursor-pointer"
     >
       {/* Image container */}
       <div className="relative h-64 overflow-hidden rounded-t-2xl">
@@ -64,16 +60,16 @@ const PremiumNotificationCard = ({ feature, index }) => {
           loading={index < 3 ? "eager" : "lazy"}
           style={{ aspectRatio: "400/256" }}
         />
-        
+
         {/* Overlay */}
         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/30"></div>
       </div>
-      
+
       {/* Card border and accent */}
       <div className="absolute inset-0 rounded-2xl overflow-hidden border border-gray-800/50 group-hover:border-accent-100/30 transition-colors duration-300">
         {/* Top border accent with glow */}
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-        
+
         {/* Subtle gradient overlay */}
         <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-black via-black/80 to-transparent">
           {/* Animated gradient shimmer */}
@@ -91,12 +87,12 @@ const PremiumNotificationCard = ({ feature, index }) => {
             {/* Decorative element */}
             <div className="h-0.5 w-full bg-accent-100/50 rounded-full"></div>
           </div>
-          
+
           {/* Premium icon */}
           <div className="relative">
             {/* Animated ring */}
             <div className="absolute -inset-1 rounded-full border border-accent-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-ping-slow"></div>
-            
+
             {/* Icon container with glow */}
             <div className="relative flex items-center justify-center w-14 h-14 bg-gradient-to-br from-gray-900 to-black rounded-full shadow-lg border border-gray-700 group-hover:border-accent-100/50 group-hover:bg-gradient-to-br group-hover:from-accent-100 group-hover:to-accent-200 transition-all duration-500">
               <div className="absolute inset-0 rounded-full bg-accent-100/20 blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -104,7 +100,7 @@ const PremiumNotificationCard = ({ feature, index }) => {
             </div>
           </div>
         </div>
-        
+
         {/* Content area with fixed spacing */}
         <div className="mt-auto">
           {/* Title with consistent height */}
@@ -112,11 +108,11 @@ const PremiumNotificationCard = ({ feature, index }) => {
             <h3 className="text-2xl font-bold text-white group-hover:text-accent-100 transition-colors duration-300">
               {feature.title}
             </h3>
-            
+
             {/* Animated underline */}
             <div className="h-0.5 w-0 bg-gradient-to-r from-accent-100 to-accent-200 mt-2 rounded-full group-hover:w-24 transition-all duration-500 ease-out"></div>
           </div>
-          
+
           {/* Description */}
           <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-light">
             {feature.description}
@@ -127,9 +123,15 @@ const PremiumNotificationCard = ({ feature, index }) => {
   );
 };
 
-const NotificationHub = () => {
+const NotificationHub = ({onCardClick} ) => {
   const [isInView, setIsInView] = useState(false);
-  
+  const navigate = useNavigate();
+
+  const goToDashboardNotifications = () =>
+    onCardClick
+      ? onCardClick()
+      : navigate("/dashboard", { state: { id: "smartNotifications" } });
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -137,12 +139,12 @@ const NotificationHub = () => {
       },
       { threshold: 0.1 }
     );
-    
-    const section = document.getElementById('notification-hub-section');
+
+    const section = document.getElementById("notification-hub-section");
     if (section) {
       observer.observe(section);
     }
-    
+
     return () => {
       if (section) {
         observer.unobserve(section);
@@ -156,35 +158,38 @@ const NotificationHub = () => {
       <div className="relative w-full h-px">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-100 to-transparent"></div>
       </div>
-      
-      <section id="notification-hub-section" className="relative py-20 overflow-hidden">
+
+      <section
+        id="notification-hub-section"
+        className="relative py-20 overflow-hidden"
+      >
         {/* Premium background */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/95 via-white to-gray-50/95 z-0"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/90 via-white/95 to-gray-100/90 z-0"></div>
-        
+
         {/* Ambient gradient overlays */}
         <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-200/30 to-transparent opacity-60 z-0"></div>
         <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-tr from-purple-200/30 to-transparent opacity-50 z-0"></div>
-        
+
         {/* Floating gradient spheres */}
         <div className="absolute top-40 right-20 w-80 h-80 bg-indigo-300 rounded-full filter blur-3xl opacity-30 animate-float-slow"></div>
         <div className="absolute bottom-20 left-10 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl opacity-30 animate-float-slow-reverse"></div>
         <div className="absolute top-10 left-1/4 w-64 h-64 bg-blue-300 rounded-full filter blur-3xl opacity-30 animate-float-medium"></div>
         <div className="absolute bottom-40 right-1/4 w-72 h-72 bg-violet-300 rounded-full filter blur-3xl opacity-30 animate-float-medium-reverse"></div>
-        
+
         {/* Mesh gradient overlay */}
         <div className="absolute inset-0 opacity-40 z-0 bg-[radial-gradient(circle_at_top_right,_rgba(129,140,248,0.3),_transparent_70%),radial-gradient(circle_at_bottom_left,_rgba(167,139,250,0.3),_transparent_70%)]"></div>
-        
+
         {/* Diagonal gradient */}
         <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/20 via-transparent to-purple-100/20 z-0"></div>
-        
+
         {/* Subtle pattern overlay */}
         <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iLjAyIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTRtMC0xN2MwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNG0tMTcgMGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNG0wIDE3YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00Ii8+PC9nPjwvZz48L3N2Zz4=')] z-0"></div>
-        
+
         {/* Premium gradient overlays */}
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-accent-100/10 via-transparent to-transparent opacity-60 z-0"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_bottom_left,_var(--tw-gradient-stops))] from-purple-200/10 via-transparent to-transparent opacity-40 z-0"></div>
-        
+
         {/* Floating gradient spheres */}
         <div className="absolute top-20 right-10 w-96 h-96 bg-accent-100/20 rounded-full filter blur-3xl opacity-20"></div>
         <div className="absolute -bottom-20 -left-20 w-96 h-96 bg-purple-300/20 rounded-full filter blur-3xl opacity-20"></div>
@@ -202,13 +207,17 @@ const NotificationHub = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full blur-sm opacity-70"></div>
             </div>
-            
+
             <h2 className="text-5xl md:text-6xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
               Your Complete Notification Hub
             </h2>
-            
+
             <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light">
-              Take control of your <span className="text-accent-100 font-medium">subscription renewals</span> and payment cycles with our advanced notification system.
+              Take control of your{" "}
+              <span className="text-accent-100 font-medium">
+                subscription renewals
+              </span>{" "}
+              and payment cycles with our advanced notification system.
             </p>
           </motion.div>
 
@@ -218,39 +227,45 @@ const NotificationHub = () => {
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ 
-                  duration: 0.5, 
+                animate={
+                  isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
+                }
+                transition={{
+                  duration: 0.5,
                   delay: index * 0.1,
-                  ease: "easeOut"
+                  ease: "easeOut",
                 }}
                 className="h-full"
               >
-                <PremiumNotificationCard 
-                  feature={feature} 
+                <PremiumNotificationCard
+                  feature={feature}
                   index={index}
+                  onClick={goToDashboardNotifications}
                 />
               </motion.div>
             ))}
           </div>
-          
+
           {/* Second row - 2 cards centered */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 relative z-10 max-w-4xl mx-auto">
             {notificationTypes.slice(3, 5).map((feature, index) => (
               <motion.div
                 key={feature.title}
                 initial={{ opacity: 0, y: 50 }}
-                animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
-                transition={{ 
-                  duration: 0.5, 
+                animate={
+                  isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
+                }
+                transition={{
+                  duration: 0.5,
                   delay: (index + 3) * 0.1,
-                  ease: "easeOut"
+                  ease: "easeOut",
                 }}
                 className="h-full"
               >
-                <PremiumNotificationCard 
-                  feature={feature} 
+                <PremiumNotificationCard
+                  feature={feature}
                   index={index + 3}
+                  onClick={goToDashboardNotifications}
                 />
               </motion.div>
             ))}
@@ -265,7 +280,7 @@ const NotificationHub = () => {
             transform: translateX(100%) skewX(-12deg);
           }
         }
-        
+
         @keyframes ping-slow {
           0% {
             transform: scale(1);
@@ -280,63 +295,67 @@ const NotificationHub = () => {
             opacity: 0.3;
           }
         }
-        
+
         @keyframes float-slow {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {
             transform: translateY(-15px);
           }
         }
-        
+
         @keyframes float-slow-reverse {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {
             transform: translateY(15px);
           }
         }
-        
+
         @keyframes float-medium {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {
             transform: translateY(-10px);
           }
         }
-        
+
         @keyframes float-medium-reverse {
-          0%, 100% {
+          0%,
+          100% {
             transform: translateY(0);
           }
           50% {
             transform: translateY(10px);
           }
         }
-        
+
         .animate-shimmer {
           animation: shimmer 2s infinite;
         }
-        
+
         .animate-ping-slow {
           animation: ping-slow 3s infinite;
         }
-        
+
         .animate-float-slow {
           animation: float-slow 10s ease-in-out infinite;
         }
-        
+
         .animate-float-slow-reverse {
           animation: float-slow-reverse 13s ease-in-out infinite;
         }
-        
+
         .animate-float-medium {
           animation: float-medium 7s ease-in-out infinite;
         }
-        
+
         .animate-float-medium-reverse {
           animation: float-medium-reverse 9s ease-in-out infinite;
         }

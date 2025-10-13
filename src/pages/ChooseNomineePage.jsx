@@ -172,15 +172,18 @@ import {
   Database,
   Bell,
   Users,
+  CheckCircle2,
 } from "lucide-react";
-
 
 import FAQ from "@/components/FAQ";
 import { useInView } from "react-intersection-observer";
 import RazorpayPayment from "@/utils/RazorpayPayment";
 import toast from "react-hot-toast";
 
-import { useMeQuery, useActivateSmartNotificationsTrialMutation } from "@/features/api/userApiSlice";
+import {
+  useMeQuery,
+  useActivateSmartNotificationsTrialMutation,
+} from "@/features/api/userApiSlice";
 
 // 3) FAQ Data
 const faqs = [
@@ -240,7 +243,9 @@ const UncompromisingSecurity = () => {
     {
       title: "Advanced Protection",
       icon: Shield,
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/advanced-protection.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/advanced-protection.jpg`,
       description: "Best-in-class security to safeguard your digital assets",
       color: "from-green-400 to-green-600",
       bgColor: "bg-green-50",
@@ -257,7 +262,9 @@ const UncompromisingSecurity = () => {
     {
       title: "Smart Authentication",
       icon: Lock,
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart-authentication.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/smart-authentication.jpg`,
       description: "Multiple layers of security for your peace of mind",
       color: "from-blue-400 to-blue-600",
       bgColor: "bg-blue-50",
@@ -274,7 +281,9 @@ const UncompromisingSecurity = () => {
     {
       title: "Privacy Controls",
       icon: Key,
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/privacy-controls.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/privacy-controls.jpg`,
       description: "You have complete control over your data",
       color: "from-purple-400 to-purple-600",
       bgColor: "bg-purple-50",
@@ -291,7 +300,9 @@ const UncompromisingSecurity = () => {
     {
       title: "Data Protection",
       icon: Database,
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/data-protection.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/data-protection.jpg`,
       description: "Your information is always protected and available",
       color: "from-amber-400 to-amber-600",
       bgColor: "bg-amber-50",
@@ -308,7 +319,9 @@ const UncompromisingSecurity = () => {
     {
       title: "Smart Alerts",
       icon: Bell,
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart-alerts.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/smart-alerts.jpg`,
       description: "Stay informed about your digital assets",
       color: "from-red-400 to-red-600",
       bgColor: "bg-red-50",
@@ -325,7 +338,9 @@ const UncompromisingSecurity = () => {
     {
       title: "Nominee Management",
       icon: Users,
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/nominee-management.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/nominee-management.jpg`,
       description: "Securely delegate access to your trusted nominees",
       color: "from-cyan-400 to-cyan-600",
       bgColor: "bg-cyan-50",
@@ -705,15 +720,18 @@ const UncompromisingSecurity = () => {
   );
 };
 
-const NomineeCredentialCard = ({ feature, index }) => {
+const NomineeCredentialCard = ({ feature, index, onClick }) => {
   return (
     <motion.div
-      whileHover={{
-        scale: 1.03,
-        y: -5,
+      onClick={onClick}
+      role="button"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (e.key === "Enter" || e.key === " ") onClick?.();
       }}
+      whileHover={{ scale: 1.03, y: -5 }}
       whileTap={{ scale: 0.98 }}
-      className="relative h-full rounded-2xl overflow-hidden shadow-xl group will-change-transform"
+      className="relative h-full rounded-2xl overflow-hidden shadow-xl group will-change-transform cursor-pointer"
     >
       {/* Image container */}
       <div className="relative h-64 overflow-hidden rounded-t-2xl">
@@ -788,7 +806,9 @@ const NomineeCredentialCard = ({ feature, index }) => {
   );
 };
 
-const DelegateCredentials = () => {
+const DelegateCredentials = ({ onCardClick }) => {
+  const navigate = useNavigate();
+
   const [isInView, setIsInView] = useState(false);
 
   // Example data - replace with your actual nomineeCredentialTypes data
@@ -813,7 +833,9 @@ const DelegateCredentials = () => {
           <line x1="2" x2="22" y1="10" y2="10" />
         </svg>
       ),
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/Banking_credentials.jpg`,
       description:
         "Securely delegate your banking user ID/password and other credentials to trusted nominees.",
       color: "from-accent-100 to-accent-200",
@@ -838,7 +860,9 @@ const DelegateCredentials = () => {
           <polyline points="16 7 22 7 22 13" />
         </svg>
       ),
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credneitals.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/Investment_credneitals.jpg`,
       description:
         "Ensure your investment platforms remain accessible to your nominees when needed.",
       color: "from-purple-500 to-indigo-500",
@@ -864,7 +888,9 @@ const DelegateCredentials = () => {
           <line x1="12" x2="12" y1="17" y2="21" />
         </svg>
       ),
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Entertainment.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/Entertainment.jpg`,
       description:
         "Safely share your streaming and entertainment login details with family members.",
       color: "from-blue-500 to-cyan-400",
@@ -892,7 +918,9 @@ const DelegateCredentials = () => {
           <line x1="15.41" x2="8.59" y1="6.51" y2="10.49" />
         </svg>
       ),
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/SocialMedia.jpg`,
       description:
         "Grant access to your social media accounts to trusted individuals when needed.",
       color: "from-pink-500 to-rose-400",
@@ -920,7 +948,9 @@ const DelegateCredentials = () => {
           <rect width="20" height="12" x="2" y="6" rx="2" />
         </svg>
       ),
-      image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/gaming_credentials.jpg`,
+      image: `${
+        import.meta.env.VITE_DO_BUCKET_URL
+      }/assets/Images/gaming_credentials.jpg`,
       description:
         "Ensure your gaming accounts remain secure and accessible to your nominees.",
       color: "from-green-500 to-emerald-400",
@@ -1058,7 +1088,11 @@ const DelegateCredentials = () => {
                 }}
                 className="h-full"
               >
-                <NomineeCredentialCard feature={feature} index={index} />
+                <NomineeCredentialCard
+                  feature={feature}
+                  index={index}
+                  onClick={onCardClick} // ⬅️ forward click
+                />
               </motion.div>
             ))}
           </div>
@@ -1177,37 +1211,70 @@ const ChooseNomineePage = () => {
   ]);
 
   // Trial length (single source of truth for labels)
-const TRIAL_DAYS = 30;
+  const TRIAL_DAYS = 30;
+  const [showTrialModal, setShowTrialModal] = useState(false);
 
-// Read current user + nominee trial state
-const { data: meData, refetch: refetchMe } = useMeQuery();
-const [activateTrial, { isLoading: activatingTrial }] =
-  useActivateSmartNotificationsTrialMutation();
+  // Read current user + nominee trial state
+  const { data: meData, refetch: refetchMe } = useMeQuery();
+  const [activateTrial, { isLoading: activatingTrial }] =
+    useActivateSmartNotificationsTrialMutation();
 
-// derive nominee trial/paid state
-const nomineeTrial = meData?.me?.features?.trials?.nominee;
-const paidActive  = !!meData?.me?.features?.nominee;
+  // derive nominee trial/paid state
+  const nomineeTrial = meData?.me?.features?.trials?.nominee;
+  const paidActive = !!meData?.me?.features?.nominee;
 
-const trialActive =
-  nomineeTrial?.hasAccess && nomineeTrial?.status === "trial-active";
+  const trialActive =
+    nomineeTrial?.hasAccess && nomineeTrial?.status === "trial-active";
 
-const trialEligible =
-  nomineeTrial?.status === "trial-eligible" ||
-  nomineeTrial?.trial?.eligible === true;
+  const trialEligible =
+    nomineeTrial?.status === "trial-eligible" ||
+    nomineeTrial?.trial?.eligible === true;
 
-const trialRemaining = nomineeTrial?.trial?.remainingHuman;
+  const trialRemaining = nomineeTrial?.trial?.remainingHuman;
 
-// start trial handler (featureKey=nominee)
-const startNomineeTrial = async () => {
-  try {
-    const res = await activateTrial({ featureKey: "nominee" }).unwrap();
-    toast.success(res?.message || "Trial activated!");
-    await refetchMe();
-  } catch (e) {
-    toast.error(e?.data?.message || "Couldn’t start trial, please try again.");
-  }
-};
+  // Dynamic CTA label for hero button
+  const heroCtaLabel =
+    trialEligible && !paidActive && !trialActive
+      ? `Start ${TRIAL_DAYS} days free trial`
+      : paidActive || trialActive
+      ? "Open Nominee"
+      : "Get Started";
 
+  // One handler used by hero button AND cards
+  const goToNomineeOrScroll = useCallback(() => {
+    if (paidActive || trialActive) {
+      navigate("/dashboard", { state: { id: "nominee" } });
+      return;
+    }
+    const target =
+      document.getElementById("gotostartforfree") ||
+      document.getElementById("cyn"); // fallback if you kept 'cyn'
+    if (target) target.scrollIntoView({ behavior: "smooth" });
+  }, [paidActive, trialActive, navigate]);
+
+  // Auto-scroll on load if NOT active
+  useEffect(() => {
+    if (!paidActive && !trialActive) {
+      const target =
+        document.getElementById("gotostartforfree") ||
+        document.getElementById("cyn");
+      if (target) target.scrollIntoView({ behavior: "smooth" });
+    }
+  }, [paidActive, trialActive]);
+
+  // start trial handler (featureKey=nominee)
+  const startNomineeTrial = async () => {
+    try {
+      const res = await activateTrial({ featureKey: "nominee" }).unwrap();
+      toast.success(res?.message || "Trial activated!");
+      setShowTrialModal(true);
+      await refetchMe();
+    } catch (e) {
+      toast.error(
+        e?.data?.message || "Couldn’t start trial, please try again."
+      );
+    }
+  };
 
   const getPlanPrice = () => {
     const prices = {
@@ -1305,7 +1372,9 @@ const startNomineeTrial = async () => {
             className="absolute inset-0 w-full h-auto object-cover opacity-60"
           >
             <source
-              src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials.mp4`}
+              src={`${
+                import.meta.env.VITE_DO_BUCKET_URL
+              }/assets/Images/managecredentials.mp4`}
               type="video/mp4"
             />
           </video>
@@ -1403,14 +1472,14 @@ const startNomineeTrial = async () => {
                         boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)",
                       }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={handleGoToDown}
+                      onClick={goToNomineeOrScroll} // ⬅️ use the new handler
                       className="px-8 py-3 md:px-10 md:py-4 text-base md:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
                     >
-                      {/* Light Effect */}
                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                       <span className="relative z-10 flex items-center font-bold">
-                        Start For Free{" "}
-                        <span className="ml-2 arrow-icon">→</span>
+                        {heroCtaLabel}{" "}
+                        <span className="ml-2 arrow-icon">→</span>{" "}
+                        {/* ⬅️ dynamic text */}
                       </span>
                     </motion.button>
                   </div>
@@ -1442,10 +1511,10 @@ const startNomineeTrial = async () => {
                           title="Nominee Overview"
                         /> */}
 
-<VideoPlayer
-                  videoUrl="https://www.youtube.com/watch?v=upbr_i9Xooc"
-                  title="Choose Your Nominee"
-                />
+                        <VideoPlayer
+                          videoUrl="https://www.youtube.com/watch?v=upbr_i9Xooc"
+                          title="Choose Your Nominee"
+                        />
 
                         {/* Video Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
@@ -1663,7 +1732,7 @@ const startNomineeTrial = async () => {
       {/* ─────────────────────────────────────────
           NOMINEE CREDENTIAL TYPES (Fade Overlay)
       ───────────────────────────────────────── */}
-      <DelegateCredentials />
+      <DelegateCredentials onCardClick={goToNomineeOrScroll} />
 
       {/* ─────────────────────────────────────────
           ADVANCED NOMINEE FEATURES (Flipping Cards)
@@ -1673,7 +1742,7 @@ const startNomineeTrial = async () => {
       {/* ─────────────────────────────────────────
           CTA SECTION (Pricing Card)
       ───────────────────────────────────────── */}
-      <section className="py-20 relative overflow-hidden">
+      <section id="gotostartforfree" className="py-20 relative overflow-hidden">
         {/* Enhanced background with multiple gradient effects */}
         <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800 to-dark-900">
           {/* Radial gradient overlays */}
@@ -1833,36 +1902,38 @@ const startNomineeTrial = async () => {
                 </div>
 
                 <div className="relative mt-6 space-y-3">
-  {/* glow */}
-  <div className="absolute -inset-1 bg-accent-100/40 rounded-lg blur-md opacity-75"></div>
+                  {/* glow */}
+                  <div className="absolute -inset-1 bg-accent-100/40 rounded-lg blur-md opacity-75"></div>
 
-  {/* Start 30-day trial CTA (only when eligible and not already paid/trial) */}
-  {trialEligible && !paidActive && !trialActive && (
-    <button
-      onClick={startNomineeTrial}
-      disabled={activatingTrial}
-      className="relative w-full py-3.5 rounded-lg font-bold text-lg border border-indigo-300/70 bg-white text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-60"
-    >
-      {activatingTrial ? "Activating trial…" : `Start ${TRIAL_DAYS}-day free trial`}
-    </button>
-  )}
+                  {/* Start 30-day trial CTA (only when eligible and not already paid/trial) */}
+                  {trialEligible && !paidActive && !trialActive && (
+                    <button
+                      onClick={startNomineeTrial}
+                      disabled={activatingTrial}
+                      className="relative w-full py-3.5 rounded-lg font-bold text-lg border border-indigo-300/70 bg-white text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-60"
+                    >
+                      {activatingTrial
+                        ? "Activating trial…"
+                        : `Start ${TRIAL_DAYS}-day free trial`}
+                    </button>
+                  )}
 
-  {/* Trial status badge (when trial running and not paid) */}
-  {trialActive && !paidActive && (
-    <div className="relative w-full text-center text-sm text-emerald-500">
-      Trial active — {trialRemaining || "time remaining"} • Upgrade anytime
-    </div>
-  )}
+                  {/* Trial status badge (when trial running and not paid) */}
+                  {trialActive && !paidActive && (
+                    <div className="relative w-full text-center text-sm text-emerald-500">
+                      Trial active — {trialRemaining || "time remaining"} •
+                      Upgrade anytime
+                    </div>
+                  )}
 
-  {/* Paid flow (or fallback after trial) */}
-  <RazorpayPayment
-    feature="NOMINEE"
-    selectedPlan={getFormattedPlan()}
-    onSuccess={handlePaymentSuccess}
-    onError={handlePaymentError}
-  />
-</div>
-
+                  {/* Paid flow (or fallback after trial) */}
+                  <RazorpayPayment
+                    feature="NOMINEE"
+                    selectedPlan={getFormattedPlan()}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                </div>
 
                 {/* Trust badge */}
                 <div className="mt-5 text-center">
@@ -1966,6 +2037,51 @@ const startNomineeTrial = async () => {
 
       {/* FOOTER */}
       <Footer />
+      {showTrialModal && (
+        <div className="fixed inset-0 z-[100] flex items-center justify-center">
+          <div
+            className="absolute inset-0 bg-black/60"
+            onClick={() => setShowTrialModal(false)}
+          />
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            className="relative z-[101] w-full max-w-md rounded-2xl bg-white p-6 shadow-xl"
+          >
+            <div className="flex items-start space-x-3">
+              <div className="mt-1">
+                <CheckCircle2 className="w-8 h-8 text-emerald-500" />
+              </div>
+              <div>
+                <h3 className="text-xl font-semibold text-gray-900">
+                  Trial activated!
+                </h3>
+                <p className="mt-1 text-gray-600">
+                  Your {TRIAL_DAYS}-day Nominee trial is now active. You can
+                  start delegating credentials right away.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex gap-3 justify-end">
+              <button
+                onClick={() => setShowTrialModal(false)}
+                className="px-4 py-2 rounded-lg border border-gray-300 text-gray-700 hover:bg-gray-50"
+              >
+                Close
+              </button>
+              <button
+                onClick={() =>
+                  navigate("/dashboard", { state: { id: "nominee" } })
+                }
+                className="px-4 py-2 rounded-lg bg-indigo-600 text-white hover:bg-indigo-700"
+              >
+                Go to Dashboard
+              </button>
+            </div>
+          </motion.div>
+        </div>
+      )}
     </div>
   );
 };
