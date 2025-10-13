@@ -38,7 +38,10 @@ import VideoPlayer from "../components/VideoPlayer";
 import NotificationGrid from "./NotificationGrid";
 import RazorpayPayment from "@/utils/RazorpayPayment";
 import toast from "react-hot-toast";
-import { useActivateSmartNotificationsTrialMutation, useMeQuery } from "@/features/api/userApiSlice";
+import {
+  useActivateSmartNotificationsTrialMutation,
+  useMeQuery,
+} from "@/features/api/userApiSlice";
 
 export const notificationFaqs = [
   {
@@ -110,7 +113,9 @@ const features = [
     icon: ShieldCheck,
     description:
       "State-of-the-art security measures to protect your notifications.",
-    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Secure_Delivery.jpg`,
+    image: `${
+      import.meta.env.VITE_DO_BUCKET_URL
+    }/assets/Images/smart_notification/Secure_Delivery.jpg`,
     details: [
       "End-to-end encrypted notification delivery system",
       "TLS 1.3 for all data in transit",
@@ -122,7 +127,9 @@ const features = [
     title: "Private Data",
     icon: Lock,
     description: "Ensuring that your data remains confidential and protected.",
-    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Private_data.jpg`,
+    image: `${
+      import.meta.env.VITE_DO_BUCKET_URL
+    }/assets/Images/smart_notification/Private_data.jpg`,
     details: [
       "Your subscription details are kept completely private",
       "Data anonymization techniques applied",
@@ -135,7 +142,9 @@ const features = [
     icon: BellRing,
     description:
       "Ensuring that your notifications always reach their destination.",
-    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Reliable_Alerts.jpg`,
+    image: `${
+      import.meta.env.VITE_DO_BUCKET_URL
+    }/assets/Images/smart_notification/Reliable_Alerts.jpg`,
     details: [
       "Multiple notification channels ensure delivery",
       "Automatic failover to secondary delivery methods",
@@ -147,7 +156,9 @@ const features = [
     title: "Real-time Updates",
     icon: Clock,
     description: "Lightning-fast delivery of time-sensitive information.",
-    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Real-time_Updates.jpg`,
+    image: `${
+      import.meta.env.VITE_DO_BUCKET_URL
+    }/assets/Images/smart_notification/Real-time_Updates.jpg`,
     details: [
       "Instant notifications for important events",
       "Low-latency push notification system",
@@ -160,7 +171,9 @@ const features = [
     icon: BarChart,
     description:
       "Powerful tools to understand and optimize your notification strategy.",
-    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Analytics_and_Insights.jpg`,
+    image: `${
+      import.meta.env.VITE_DO_BUCKET_URL
+    }/assets/Images/smart_notification/Analytics_and_Insights.jpg`,
     details: [
       "Advanced analytics dashboard for user engagement tracking",
       "Predictive analysis for optimal notification timing",
@@ -172,7 +185,9 @@ const features = [
     title: "Customization Options",
     icon: Sliders,
     description: "Tailor the system to fit your unique requirements.",
-    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notification/Customization_Options.png`,
+    image: `${
+      import.meta.env.VITE_DO_BUCKET_URL
+    }/assets/Images/smart_notification/Customization_Options.png`,
     details: [
       "Fully customizable notification templates",
       "Branding options for white-label solutions",
@@ -190,36 +205,40 @@ const SmartNotificationsPage = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   // Read current user + trial state
-const { data: meData, refetch: refetchMe } = useMeQuery();
-const [activateTrial, { isLoading: activatingTrial }] = useActivateSmartNotificationsTrialMutation();
+  const { data: meData, refetch: refetchMe } = useMeQuery();
+  const [activateTrial, { isLoading: activatingTrial }] =
+    useActivateSmartNotificationsTrialMutation();
 
-const smartTrial = meData?.me?.features?.trials?.smartNotifications;
-const paidActive = !!meData?.me?.features?.smartNotifications;
-const trialActive = smartTrial?.hasAccess && smartTrial?.status === "trial-active";
-const trialEligible =
-  smartTrial?.status === "trial-eligible" || smartTrial?.trial?.eligible === true;
-const trialRemaining = smartTrial?.trial?.remainingHuman;
+  const smartTrial = meData?.me?.features?.trials?.smartNotifications;
+  const paidActive = !!meData?.me?.features?.smartNotifications;
+  const trialActive =
+    smartTrial?.hasAccess && smartTrial?.status === "trial-active";
+  const trialEligible =
+    smartTrial?.status === "trial-eligible" ||
+    smartTrial?.trial?.eligible === true;
+  const trialRemaining = smartTrial?.trial?.remainingHuman;
 
-const startTrial = async () => {
-  if (!isAuthenticated) {
-    navigate("/signin", { state: { from: window.location.pathname } });
-    return;
-  }
+  const startTrial = async () => {
+    if (!isAuthenticated) {
+      navigate("/signin", { state: { from: window.location.pathname } });
+      return;
+    }
 
-  try {
-    const res = await activateTrial({ featureKey: "smartNotifications" }).unwrap();
-    toast.success(res?.message || "Trial activated!");
-    await refetchMe(); // refresh UI immediately
-  } catch (e) {
-    const msg =
-      e?.data?.message ||
-      e?.data?.error ||
-      e?.message ||
-      "Couldn’t start trial, please try again.";
-    toast.error(msg);
-  }
-};
-
+    try {
+      const res = await activateTrial({
+        featureKey: "smartNotifications",
+      }).unwrap();
+      toast.success(res?.message || "Trial activated!");
+      await refetchMe(); // refresh UI immediately
+    } catch (e) {
+      const msg =
+        e?.data?.message ||
+        e?.data?.error ||
+        e?.message ||
+        "Couldn’t start trial, please try again.";
+      toast.error(msg);
+    }
+  };
 
   const handlePlanChange = (value) => {
     setSelectedPlan(value);
@@ -347,7 +366,9 @@ const startTrial = async () => {
             className="absolute inset-0 w-full h-auto object-cover opacity-60"
           >
             <source
-              src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/smart_notifications.mp4`}
+              src={`${
+                import.meta.env.VITE_DO_BUCKET_URL
+              }/assets/Images/smart_notifications.mp4`}
               type="video/mp4"
             />
           </video>
@@ -485,10 +506,14 @@ const startTrial = async () => {
                         className="relative z-10"
                         style={{ aspectRatio: "16/9" }}
                       >
-                        <img
+                        {/* <img
                           src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Smart_notifications_thumblin.jpg`}
                           alt="Smart Notifications"
                           className="w-full h-full object-cover"
+                        /> */}
+                        <VideoPlayer
+                          videoUrl="https://www.youtube.com/watch?v=I-720U4Iur0"
+                          title="Smart Notifications"
                         />
 
                         {/* Overlay */}
@@ -1311,9 +1336,9 @@ const startTrial = async () => {
               Start Your Free Trial
             </h2>
             <p className="text-lg md:text-xl text-gray-300 max-w-3xl mx-auto leading-relaxed">
-  Try our comprehensive notification system risk-free for {TRIAL_DAYS} days.
-</p>
-
+              Try our comprehensive notification system risk-free for{" "}
+              {TRIAL_DAYS} days.
+            </p>
           </motion.div>
 
           {/* Premium Light-Themed Pricing Card with Prominent Glow */}
@@ -1439,36 +1464,37 @@ const startTrial = async () => {
 
                 {/* CTA Button with prominent glow */}
                 <div className="relative space-y-3">
-  <div className="absolute -inset-1 bg-blue-500/40 rounded-lg blur-md"></div>
+                  <div className="absolute -inset-1 bg-blue-500/40 rounded-lg blur-md"></div>
 
-  {/* Start 15-day Trial (only when eligible and not already paid/trial) */}
-  {trialEligible && !paidActive && !trialActive && (
-    <button
-      onClick={startTrial}
-      disabled={activatingTrial}
-      className="relative w-full py-3.5 rounded-lg font-bold text-lg border border-indigo-300/70 bg-white text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-60"
-    >
-      {activatingTrial ? "Activating trial…" : `Start ${TRIAL_DAYS}-day free trial`}
+                  {/* Start 15-day Trial (only when eligible and not already paid/trial) */}
+                  {trialEligible && !paidActive && !trialActive && (
+                    <button
+                      onClick={startTrial}
+                      disabled={activatingTrial}
+                      className="relative w-full py-3.5 rounded-lg font-bold text-lg border border-indigo-300/70 bg-white text-indigo-600 hover:bg-indigo-50 transition-all disabled:opacity-60"
+                    >
+                      {activatingTrial
+                        ? "Activating trial…"
+                        : `Start ${TRIAL_DAYS}-day free trial`}
+                    </button>
+                  )}
 
-    </button>
-  )}
+                  {/* Trial status badge (only when trial is running and not paid) */}
+                  {trialActive && !paidActive && (
+                    <div className="relative w-full text-center text-sm text-emerald-500">
+                      Trial active — {trialRemaining || "time remaining"} •
+                      Upgrade anytime
+                    </div>
+                  )}
 
-  {/* Trial status badge (only when trial is running and not paid) */}
-  {trialActive && !paidActive && (
-    <div className="relative w-full text-center text-sm text-emerald-500">
-      Trial active — {trialRemaining || "time remaining"} • Upgrade anytime
-    </div>
-  )}
-
-  {/* Existing paid subscription CTA (unchanged) */}
-  <RazorpayPayment
-    feature="SMART_NOTIFICATIONS"
-    selectedPlan={selectedPlan}
-    onSuccess={handlePaymentSuccess}
-    onError={handlePaymentError}
-  />
-</div>
-
+                  {/* Existing paid subscription CTA (unchanged) */}
+                  <RazorpayPayment
+                    feature="SMART_NOTIFICATIONS"
+                    selectedPlan={selectedPlan}
+                    onSuccess={handlePaymentSuccess}
+                    onError={handlePaymentError}
+                  />
+                </div>
 
                 {/* Trust badge */}
                 <div className="mt-5 text-center">

@@ -315,7 +315,9 @@ const Hero = () => {
             }}
           >
             <source
-              src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Grandpa_Gathering.mp4`}
+              src={`${
+                import.meta.env.VITE_DO_BUCKET_URL
+              }/assets/Images/Grandpa_Gathering.mp4`}
               type="video/mp4"
             />
           </video>
@@ -409,10 +411,14 @@ const Hero = () => {
             {/* Video container with optimized playback */}
             <div className="relative w-full pt-[56.25%]">
               <div className="absolute inset-0">
-                <VideoPlayer
+                {/* <VideoPlayer
                   videoUrl={`${import.meta.env.VITE_DO_BUCKET_URL}/invideo-ai-720 Manage Your Credentials with Ease! 2024-12-02.mp4`}
                   thumbnailUrl="/thumbnail1.jpeg"
                   playbackQuality={isMobile ? "low" : "high"} // Optional prop to control video quality
+                /> */}
+                <VideoPlayer
+                  videoUrl="https://www.youtube.com/watch?v=ryETI3NMTMw"
+                  title="SacredSecret"
                 />
               </div>
             </div>

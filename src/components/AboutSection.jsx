@@ -342,7 +342,7 @@ const AboutSection = () => {
 
               {/* floating badge */}
               <div className="absolute top-8 -right-4 bg-white/90 backdrop-blur-md px-4 py-2 rounded-lg border border-indigo-200/40 shadow-lg z-20">
-                <span className="text-indigo-700 font-medium">Est. 2022</span>
+                <span className="text-indigo-700 font-medium">Est. 2025</span>
               </div>
             </motion.div>
 

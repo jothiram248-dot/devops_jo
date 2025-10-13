@@ -1436,11 +1436,16 @@ const startNomineeTrial = async () => {
                         className="relative z-10"
                         style={{ aspectRatio: "16/9" }}
                       >
-                        <VideoPlayer
+                        {/* <VideoPlayer
                           videoUrl={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials.mp4`}
                           thumbnailUrl="${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/managecredentials_thumbnail.jpg"
                           title="Nominee Overview"
-                        />
+                        /> */}
+
+<VideoPlayer
+                  videoUrl="https://www.youtube.com/watch?v=upbr_i9Xooc"
+                  title="Choose Your Nominee"
+                />
 
                         {/* Video Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
