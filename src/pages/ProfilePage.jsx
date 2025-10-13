@@ -3499,7 +3499,7 @@ const ProfileSettings = () => {
             {/* Subscription actions */}
             <div className="space-y-3 mt-4">
               {/* Show subscription management button if appropriate */}
-              {(user.features?.smartNotifications?.active ||
+              {/* {(user.features?.smartNotifications?.active ||
                 user.features?.nominee?.active) && (
                 <button
                   onClick={() => navigate("/upgrade")}
@@ -3508,7 +3508,7 @@ const ProfileSettings = () => {
                   <span>Manage Subscriptions</span>
                   <CreditCard className="text-gray-300" size={18} />
                 </button>
-              )}
+              )} */}
 
               {/* Always show order history button - MOVED UP when no active subscriptions */}
               <button

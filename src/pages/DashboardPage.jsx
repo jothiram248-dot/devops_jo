@@ -1564,7 +1564,7 @@ const FeatureCard = ({
   );
 };
 
-// ✅ Drop-in JSX replacement — polished, professional look
+
 
 const EmergencyContactModal = ({ isOpen, onClose, onSave }) => {
   const [contacts, setContacts] = React.useState([{ name: "", phone: "", email: "" }]);

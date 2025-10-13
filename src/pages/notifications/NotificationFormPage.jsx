@@ -5,6 +5,39 @@ import { ArrowLeft, X, Mail, MessageSquare, Phone } from "lucide-react";
 import toast from "react-hot-toast";
 import { useCreateNotificationMutation } from "@/features/api/userNotificationApiSlice";
 import { FaWhatsapp } from "react-icons/fa";
+
+// --- Helpers for nicer errors & date inputs ---
+const toInputDate = (d = new Date()) => {
+  const dt = new Date(d);
+  dt.setHours(0, 0, 0, 0);
+  const yyyy = dt.getFullYear();
+  const mm = String(dt.getMonth() + 1).padStart(2, "0");
+  const dd = String(dt.getDate()).padStart(2, "0");
+  return `${yyyy}-${mm}-${dd}`;
+};
+
+const formatApiError = (err) => {
+  const title = err?.data?.message || "Please fix the following:";
+  const details = Array.isArray(err?.data?.details) ? err.data.details : [];
+
+  if (details.length) {
+    const items = details.map((d) => {
+      const label = d?.context?.label || (d?.path || []).join(".") || "Field";
+      // Clean up the backend message to be more human friendly
+      let msg = (d?.message || "Invalid value.")
+        .replace(/"([^"]+)"/g, "$1")
+        .replace(
+          /must be today.*?later\.?/i,
+          "must be today (until 11:59 PM) or a future date."
+        );
+      return `${label}: ${msg}`;
+    });
+    return { title, items };
+  }
+
+  return { title, items: [err?.data?.message || "Something went wrong. Please try again."] };
+};
+
 const NotificationFormPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
@@ -121,20 +154,30 @@ const NotificationFormPage = () => {
 
   const validateForm = () => {
     const errors = [];
-    // if (!startDate) errors.push("Start date is required.");
-    if (!endDate) errors.push("End date is required.");
-    // if (!notificationDays) errors.push("Notification days must be selected.");
-    // if (notificationDays === "custom" && !customDays) {
-    //   errors.push("Custom days value is required.");
-    // }
-    // if (selectedMethod.length === 0) {
-    //   errors.push("At least one notification method must be selected.");
-    // }
+  
+    if (!endDate) errors.push("Please select a date.");
+  
+    // Make sure the chosen date is today or later (end of day).
+    if (endDate) {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+  
+      const end = new Date(endDate);
+      // Treat date-only as "end of selected day" to match backend expectation
+      end.setHours(23, 59, 59, 999);
+  
+      if (end < today) {
+        errors.push('"Subscription End Date" must be today (until 11:59 PM) or a future date.');
+      }
+    }
+  
     if (isDynamicFieldRequired && !dynamicFieldValue) {
       errors.push(`${dynamicFieldLabels[displayName]} is required.`);
     }
+  
     return errors;
   };
+  
   useEffect(() => {
     // Show the "Renewal Frequency" field only if "Upcoming Renewals" is selected
     setShowRenewalFrequency(selectedRenewalType === "upcoming-renewals");
@@ -231,12 +274,30 @@ const NotificationFormPage = () => {
       });
       navigate(`/notifications/${type}`);
     } catch (error) {
-      toast.error("Failed to create notification. Please try again.", {
-        position: "top-right",
-        duration: 5000,
-        icon: "❌",
-      });
+      const { title, items } = formatApiError(error);
+    
+      toast.dismiss();
+      toast.custom((t) => (
+        <div className="pointer-events-auto max-w-[420px] w-full">
+          <div className="p-4 bg-gradient-to-br from-gray-800 to-gray-900 rounded-lg shadow-xl border border-accent-200">
+            <h4 className="text-lg font-bold text-red-500 mb-2">{title}</h4>
+            <ul className="list-disc pl-6 text-sm text-gray-300 space-y-1">
+              {items.map((msg, idx) => (
+                <li key={idx}>{msg}</li>
+              ))}
+            </ul>
+            <button
+              className="mt-4 px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
+              onClick={() => toast.dismiss(t.id)}
+            >
+              Dismiss
+            </button>
+          </div>
+        </div>
+      ), { position: "top-right", duration: 8000 });
+      
     }
+    
   };
   console.log(displayName, isOthers);
   const calculateReminder = () => {
@@ -469,6 +530,7 @@ const NotificationFormPage = () => {
                 onChange={(e) => setEndDate(e.target.value)}
                 className="input-primary"
                 style={{ colorScheme: "dark" }}
+                min={toInputDate()}
               />
             </div>
 
