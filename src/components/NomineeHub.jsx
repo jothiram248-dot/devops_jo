@@ -16,7 +16,7 @@ const nomineeTypes = [
     title: "Banking Details",
     icon: CreditCard,
     image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg`,
-    description: "Assign nominees for your banking credentials and accounts.",
+    description: "Assign nominees for your banking details and accounts.",
   },
   {
     id: "investment",
