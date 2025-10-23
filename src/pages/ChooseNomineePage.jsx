@@ -151,7 +151,7 @@ import {
   useScroll,
   useTransform,
 } from "framer-motion";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { Check, ChevronDown, Package, Phone } from "lucide-react";
 
@@ -1242,16 +1242,46 @@ const ChooseNomineePage = () => {
       : "Get Started";
 
   // One handler used by hero button AND cards
-  const goToNomineeOrScroll = useCallback(() => {
-    if (paidActive || trialActive) {
-      navigate("/dashboard", { state: { id: "nominee" } });
-      return;
-    }
-    const target =
-      document.getElementById("gotostartforfree") ||
-      document.getElementById("cyn"); // fallback if you kept 'cyn'
-    if (target) target.scrollIntoView({ behavior: "smooth" });
-  }, [paidActive, trialActive, navigate]);
+  // const goToNomineeOrScroll = useCallback(() => {
+  //   if (paidActive || trialActive) {
+  //     navigate("/dashboard", { state: { id: "nominee" } });
+  //     return;
+  //   }
+  //   const target =
+  //     document.getElementById("gotostartforfree") ||
+  //     document.getElementById("cyn"); // fallback if you kept 'cyn'
+  //   if (target) target.scrollIntoView({ behavior: "smooth" });
+  // }, [paidActive, trialActive, navigate]);
+  const location = useLocation();
+  const scrollToSubscribe = () => {
+    const el = document.getElementById("gotostartforfree") 
+             || document.getElementById("cyn");
+    el?.scrollIntoView({ behavior: "smooth", block: "start" });
+  };
+
+  const goToNomineeOrScroll = useCallback(
+    (categoryId) => {
+      // 1) not authenticated
+      if (!isAuthenticated) {
+        navigate("/signin", { state: { from: window.location.pathname } });
+        return;
+      }
+  
+      // 2) no payment & no active trial → scroll
+      if (!paidActive && !trialActive) {
+        scrollToSubscribe();
+        return;
+      }
+  
+      // 3) paid or trial active → route
+      if (categoryId) {
+        navigate(`/nominees/${categoryId}`);
+      } else {
+        navigate("/dashboard", { state: { id: "nominee" } });
+      }
+    },
+    [isAuthenticated, paidActive, trialActive, navigate]
+  );
 
   // Auto-scroll on load if NOT active
   // useEffect(() => {
@@ -1264,11 +1294,11 @@ const ChooseNomineePage = () => {
   // }, [paidActive, trialActive]);
 
   useEffect(() => {
-       if (location.hash === "#gotostartforfree") {
-         const target = document.getElementById("gotostartforfree") || document.getElementById("cyn");
-         if (target) target.scrollIntoView({ behavior: "smooth" });
-       }
-     }, [location.hash]);
+    if (location.hash === "#gotostartforfree") {
+      scrollToSubscribe();
+    }
+  }, [location.hash]);
+  
 
   // start trial handler (featureKey=nominee)
   const startNomineeTrial = async () => {
@@ -1713,7 +1743,7 @@ const ChooseNomineePage = () => {
           NOMINEE CREDENTIAL TYPES (Fade Overlay)
       ───────────────────────────────────────── */}
       {/* <DelegateCredentials onCardClick={goToNomineeOrScroll} /> */}
-      <NomineeHub />
+      <NomineeHub onCardClick={goToNomineeOrScroll} />
 
       {/* ─────────────────────────────────────────
           ADVANCED NOMINEE FEATURES (Flipping Cards)

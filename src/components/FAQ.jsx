@@ -4,6 +4,7 @@ import { ChevronDown } from "lucide-react"; // removed Plus (unused)
 import { ArrowRight } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/authStore";
+import { useSelector } from "react-redux";
 
 const FAQItem = ({ question, answer }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -50,7 +51,8 @@ const FAQItem = ({ question, answer }) => {
 
 const FAQ = ({ faqs, title = "Frequently Asked Questions" }) => {
   const navigate = useNavigate();
-  const { isAuthenticated } = useAuthStore();
+  const isAuthenticated = useSelector((state) => state.auth.isAuthenticated);
+
 
   return (
     <section className="relative py-16 overflow-hidden">

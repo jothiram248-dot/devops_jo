@@ -36,13 +36,14 @@ import CredentialTypes from "../components/CredentialTypes";
 import SecurityFeatures from "../components/SecurityFeatures";
 import Footer from "../components/Footer";
 import VideoPlayer from "../components/VideoPlayer";
-import NotificationGrid from "./NotificationGrid";
+import NotificationGrid from "../components/NotificationGrid";
 import RazorpayPayment from "@/utils/RazorpayPayment";
 import toast from "react-hot-toast";
 import {
   useActivateSmartNotificationsTrialMutation,
   useMeQuery,
 } from "@/features/api/userApiSlice";
+import NotificationHub from "../components/NotificationGrid";
 
 export const notificationFaqs = [
   {
@@ -472,7 +473,7 @@ const SmartNotificationsPage = () => {
               {/* Professional Two-Column Layout */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mt-4">
                 {/* Left Column: Text Content */}
-              <motion.div
+                <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.2 }}
@@ -485,7 +486,8 @@ const SmartNotificationsPage = () => {
                     <span className="highlight-text">
                       important notifications
                     </span>{" "}
-                    for automatic payments—whether subscriptions, credit cards, or other recurring charges{" "}
+                    for automatic payments—whether subscriptions, credit cards,
+                    or other recurring charges{" "}
                     <span className="highlight-text">
                       linked to your payment method
                     </span>
@@ -555,8 +557,6 @@ const SmartNotificationsPage = () => {
                   </div>
                 </motion.div>
               </div>
-
-            
             </div>
           </div>
         </div>
@@ -827,11 +827,33 @@ const SmartNotificationsPage = () => {
       </section>
 
       {/* Notification Types Section */}
-      <NotificationGrid onCardClick={handleCardClick} />
+      {/* <NotificationGrid  /> */}
 
+      {/* Notification Types Section */}
+      <NotificationHub
+        onCardClick={(categoryId) => {
+          // not signed in → send to sign-in
+          if (!isAuthenticated) {
+            navigate("/signin", { state: { from: window.location.pathname } });
+            return;
+          }
+
+          // signed in, but no payment & no active trial → scroll to subscription
+          if (!paidActive && !trialActive) {
+            document
+              .getElementById("sm")
+              ?.scrollIntoView({ behavior: "smooth" });
+            return;
+          }
+
+          // paid or trial active → go to the category page (or your dashboard tab)
+          navigate(`/notifications/${categoryId}`);
+          // or: navigate("/dashboard", { state: { id: "smartNotifications" } });
+        }}
+      />
 
       {/*  Features Section - Premium Style */}
-{/* 
+      {/* 
 <section className="relative py-20 overflow-hidden">
   <div className="absolute inset-0 -z-10">
     <div className="absolute inset-0 bg-gradient-to-b from-gray-950 to-black"></div>
@@ -1236,7 +1258,6 @@ const SmartNotificationsPage = () => {
 </section>
 */}
 
-
       <section className="py-20 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-b from-dark-900 via-dark-800 to-dark-900">
           {/* Radial gradient overlays */}
@@ -1428,7 +1449,8 @@ const SmartNotificationsPage = () => {
                   <div className="absolute -inset-1 bg-blue-500/40 rounded-lg blur-md"></div>
 
                   {/* Start 30-day Trial (only when eligible and not already paid/trial) */}
-                  {(!isAuthenticated || (trialEligible && !paidActive && !trialActive)) && (
+                  {(!isAuthenticated ||
+                    (trialEligible && !paidActive && !trialActive)) && (
                     <button
                       onClick={startTrial}
                       disabled={activatingTrial}

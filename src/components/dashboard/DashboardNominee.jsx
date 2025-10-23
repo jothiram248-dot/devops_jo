@@ -97,7 +97,7 @@ import {
 } from "lucide-react";
 
 const BankingCredentialsImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg`;
-const InvestmentCredentialsImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credentials.jpg`;
+const InvestmentCredentialsImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credneitals.jpg`;
 const EntertainmentImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Entertainment.jpg`;
 const SocialMediaImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg`;
 const GamingImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/gaming_credentials.jpg`;
