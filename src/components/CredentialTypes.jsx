@@ -229,7 +229,7 @@ const CredentialTypes = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full blur-sm opacity-70"></div>
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
+            <h2 className="text-4xl md:text-5xl p-1 font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
               Securely Manage All Your Credentials
             </h2>
 

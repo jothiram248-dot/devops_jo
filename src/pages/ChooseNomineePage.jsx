@@ -1254,14 +1254,21 @@ const ChooseNomineePage = () => {
   }, [paidActive, trialActive, navigate]);
 
   // Auto-scroll on load if NOT active
+  // useEffect(() => {
+  //   if (!paidActive && !trialActive) {
+  //     const target =
+  //       document.getElementById("gotostartforfree") ||
+  //       document.getElementById("cyn");
+  //     if (target) target.scrollIntoView({ behavior: "smooth" });
+  //   }
+  // }, [paidActive, trialActive]);
+
   useEffect(() => {
-    if (!paidActive && !trialActive) {
-      const target =
-        document.getElementById("gotostartforfree") ||
-        document.getElementById("cyn");
-      if (target) target.scrollIntoView({ behavior: "smooth" });
-    }
-  }, [paidActive, trialActive]);
+       if (location.hash === "#gotostartforfree") {
+         const target = document.getElementById("gotostartforfree") || document.getElementById("cyn");
+         if (target) target.scrollIntoView({ behavior: "smooth" });
+       }
+     }, [location.hash]);
 
   // start trial handler (featureKey=nominee)
   const startNomineeTrial = async () => {
