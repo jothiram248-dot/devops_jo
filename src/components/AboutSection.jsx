@@ -373,7 +373,8 @@ const AboutSection = () => {
           <CardCarousel />
 
           {/* Feature Cards with original styling but reduced bottom space */}
-          <motion.div
+          
+        {/* <motion.div
             variants={containerVariants}
             initial="hidden"
             animate={inView ? "visible" : "hidden"}
@@ -470,7 +471,6 @@ const AboutSection = () => {
                   variants={itemVariants}
                   className={`group relative overflow-hidden rounded-xl border ${borderColor} shadow-xl ${hoverShadow} transition-all duration-500 h-full`}
                 >
-                  {/* Background Image with Custom Gradient Overlay */}
                   <div className="absolute inset-0 z-0">
                     <img
                       src={image}
@@ -485,32 +485,26 @@ const AboutSection = () => {
                     ></div>
                   </div>
 
-                  {/* Top-left corner glow */}
                   <div
                     className={`absolute -top-6 -left-6 w-12 h-12 bg-gradient-to-br ${cornerGlow} blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700`}
                   ></div>
 
-                  {/* Top-right corner accent */}
                   <div className="absolute top-0 right-0 w-16 h-16 overflow-hidden">
                     <div
                       className={`absolute top-0 right-0 w-4 h-4 bg-gradient-to-br ${iconGradient} rotate-45 transform origin-top-right shadow-lg`}
                     ></div>
                   </div>
 
-                  {/* Bottom-right corner glow */}
                   <div
                     className={`absolute -bottom-6 -right-6 w-12 h-12 bg-gradient-to-tl ${cornerGlow} blur-lg opacity-0 group-hover:opacity-100 transition-opacity duration-700`}
                   ></div>
 
-                  {/* metallic accent in bottom-left */}
                   <div className="absolute bottom-0 left-0 w-16 h-16 overflow-hidden pointer-events-none">
                     <div className="absolute bottom-0 left-0 w-6 h-6 bg-gradient-to-tr from-white/20 to-transparent rotate-45 transform origin-bottom-left"></div>
                   </div>
 
-                  {/* Add subtle inner glow effect */}
                   <div className="absolute inset-0 rounded-xl bg-gradient-to-tr from-white/[0.03] to-transparent opacity-50"></div>
 
-                  {/* floating sparkle elements */}
                   <div
                     className={`absolute top-1/3 right-1/3 w-6 h-6 rounded-full bg-${color}-500/20 blur-md opacity-0 group-hover:opacity-70 transition-all duration-1000 animate-pulse`}
                   ></div>
@@ -519,9 +513,7 @@ const AboutSection = () => {
                     style={{ animationDelay: "0.5s" }}
                   ></div>
 
-                  {/* Content Container */}
                   <div className="relative z-10 h-full flex flex-col p-8 pb-4">
-                    {/* Header with elegant icon */}
                     <div className="flex items-center space-x-4 mb-6">
                       <div
                         className={`w-14 h-14 flex items-center justify-center rounded-full bg-gradient-to-br ${iconGradient} shadow-lg group-hover:shadow-lg transition-all duration-300`}
@@ -533,10 +525,8 @@ const AboutSection = () => {
                       </h4>
                     </div>
 
-                    {/* Description with typography */}
                     <p className="text-gray-300 mb-6">{description}</p>
 
-                    {/* List Section */}
                     <div className="flex-grow">
                       <ul className="space-y-4">
                         {items.map((item, idx) => (
@@ -555,7 +545,6 @@ const AboutSection = () => {
                       </ul>
                     </div>
 
-                    {/* accent border */}
                     <div
                       className={`absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r ${iconGradient} transform translate-y-0 opacity-50 group-hover:opacity-100 transition-all duration-300`}
                     ></div>
@@ -563,7 +552,8 @@ const AboutSection = () => {
                 </motion.div>
               )
             )}
-          </motion.div>
+          </motion.div> */}
+          
         </div>
       </section>
     </>

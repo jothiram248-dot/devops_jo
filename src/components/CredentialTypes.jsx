@@ -12,47 +12,53 @@ import { useNavigate } from "react-router-dom";
 
 const credentialTypes = [
   {
+    id: "banking",
     title: "Banking Credentials",
     icon: CreditCard,
     image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg`,
     description:
-      "Securely Manage your Banking User Id/Password and other Credentials",
+      "Store and manage your online banking details.",
   },
   {
+    id: "investment",
     title: "Investment Credentials",
     icon: TrendingUp,
     image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credneitals.jpg`,
-    description: "Keep your Investment Platform access Secure",
+    description: "Store and manage your investment platform details.",
   },
   {
+    id: "entertainmentPlatform",
     title: "Entertainment Platform Credentials",
     icon: Tv,
     image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Entertainment.jpg`,
-    description: "Store your Streaming and Entertainment Login details",
+    description: "Store and manage your streaming and entertainment platform login details.",
   },
   {
+    id: "socialMedia",
     title: "Social Media Credentials",
     icon: Share2,
     image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg`,
-    description: "Manage your Social Media account access",
+    description: "Store and manage your social media account details.",
   },
   {
+    id: "gamingPlatform",
     title: "Gaming Platform Credentials",
     icon: Gamepad2,
     image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/gaming_credentials.jpg`,
-    description: "Keep your Gaming Accounts secure",
+    description: "Store and manage your online gaming platform details.",
   },
   {
+    id: "others",
     title: "Others",
     icon: FolderLock,
     image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/others.jpg`,
     description:
-      "Store and Manage Credentials for any other Platforms and Portals",
+      "Store and manage credentials for other online platforms and portals.",
   },
 ];
 
 // card component
-const PremiumCredentialCard = ({ feature, index, onClick  }) => {
+const PremiumCredentialCard = ({ feature, index, onClick }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.03, y: -5 }}
@@ -141,10 +147,11 @@ const CredentialTypes = () => {
   const [isInView, setIsInView] = useState(false);
   const navigate = useNavigate();
 
-  const goToDashboardCredentials = () => {
-    navigate("/dashboard", { state: { id: "credentials" } });
+  // Updated function to navigate to specific credential category
+  const goToCredentialCategory = (categoryId) => {
+    navigate(`/credentials/${categoryId}`);
   };
-  
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       ([entry]) => {
@@ -220,16 +227,12 @@ const CredentialTypes = () => {
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full blur-sm opacity-70"></div>
             </div>
 
-            <h2 className="text-5xl md:text-6xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
-              Store All Your Credentials
+            <h2 className="text-4xl md:text-5xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
+              Securely Manage All Your Credentials
             </h2>
 
             <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light">
-              Keep all your important login details safely secured with our{" "}
-              <span className="text-accent-100 font-medium">
-                advanced credential management
-              </span>{" "}
-              designed for complete digital protection.
+              Securely store and manage all your important login details with advanced credential management for complete digital protection.
             </p>
           </motion.div>
 
@@ -237,7 +240,7 @@ const CredentialTypes = () => {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
             {credentialTypes.map((feature, index) => (
               <motion.div
-                key={feature.title}
+                key={feature.id}
                 initial={{ opacity: 0, y: 50 }}
                 animate={
                   isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
@@ -249,11 +252,11 @@ const CredentialTypes = () => {
                 }}
                 className="h-full"
               >
-                 <PremiumCredentialCard
-              feature={feature}
-              index={index}
-              onClick={goToDashboardCredentials}
-            />
+                <PremiumCredentialCard
+                  feature={feature}
+                  index={index}
+                  onClick={() => goToCredentialCategory(feature.id)}
+                />
               </motion.div>
             ))}
           </div>

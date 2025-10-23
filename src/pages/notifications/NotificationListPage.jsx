@@ -178,7 +178,7 @@ const NotificationListPage = () => {
           {/* Back to Dashboard */}
           <button
             onClick={() =>
-              navigate("/dashboard", { state: { id: "notifications" } })
+              navigate("/dashboard", { state: { id: "smartNotifications" } })
             }
             className="flex items-center text-accent-100 hover:text-accent-200 transition-colors mb-8"
           >

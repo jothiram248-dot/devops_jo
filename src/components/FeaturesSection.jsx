@@ -6,7 +6,7 @@ import { Shield, Bell, Users } from "lucide-react";
 
 const features = [
   {
-    title: "Manage Your Credentials",
+    title: "Manage Credentials",
     description:
       "Securely store and manage all your digital credentials in one place.",
     icon: Shield,
@@ -23,7 +23,7 @@ const features = [
     path: "/smart-notifications",
   },
   {
-    title: "Choose Your Nominee",
+    title: "Choose Nominee",
     description: "Select and manage trusted nominees for your digital legacy.",
     icon: Users,
     image:

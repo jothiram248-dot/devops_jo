@@ -230,19 +230,19 @@ const NomineeFormPage = () => {
   const getTitle = () => {
     switch (type) {
       case "banking":
-        return "Banking Credentials";
+        return "Banking Details";
       case "investment":
-        return "Investment Credentials";
+        return "Investment Details";
       case "emergencyContacts":
         return "Emergency Contacts";
       case "socialMedia":
-        return "Social Media Credentials";
+        return "Social Media Details";
       case "subscriptions":
-        return "Subscription Services Credentials";
+        return "Subscription Services Details";
       case "gamingPlatform":
-        return "Gaming Platform Credentials";
+        return "Gaming Platform Details";
       case "others":
-        return "Credentials";
+        return "Details";
       default:
         return "Add New Nominees";
     }
@@ -371,7 +371,7 @@ const NomineeFormPage = () => {
           <div className="glow-box p-8">
             {currentStep === 1 && (
               <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent">
-                Add New {getTitle()}
+                Add Your {getTitle()}
               </h2>
             )}
             {/* <div

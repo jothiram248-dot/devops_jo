@@ -1,57 +1,71 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { CreditCard, BarChart2, Tv, Gift, Repeat } from "lucide-react";
+import {
+  CreditCard,
+  TrendingUp,
+  Share2,
+  Phone,
+  Package,
+  FolderLock,
+} from "lucide-react";
 import { useNavigate } from "react-router-dom";
 
-const notificationTypes = [
+const nomineeTypes = [
+  {
+    id: "banking",
+    title: "Banking Credentials",
+    icon: CreditCard,
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Banking_credentials.jpg`,
+    description: "Assign nominees for your banking credentials and accounts.",
+  },
+  {
+    id: "investment",
+    title: "Investment Credentials",
+    icon: TrendingUp,
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Investment_credentials.jpg`,
+    description: "Assign nominees for your investment platform details.",
+  },
   {
     id: "socialMedia",
-    title: "Social Media Subscriptions",
-    icon: CreditCard,
-    image: "/assets/Images/smart_notification/social_Media_Subscription.jpg",
-    description: "Get notified before your social media auto-renewal.",
+    title: "Social Media",
+    icon: Share2,
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg`,
+    description: "Assign nominees for your social media accounts.",
   },
   {
-    id: "businessTools",
-    title: "Business Tools Subscriptions",
-    icon: BarChart2,
-    image: "/assets/Images/smart_notification/Business_Tool.jpg",
-    description: "Get notified before your business tools auto-renewal.",
+    id: "emergencyContacts",
+    title: "Emergency Contacts & Instructions",
+    icon: Phone,
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Entertainment.jpg`,
+    description: "Store emergency contacts and special instructions for your nominees.",
   },
   {
-    id: "entertainmentPlatform",
-    title: "Entertainment Platform Subscriptions",
-    icon: Tv,
-    image: "/assets/Images/smart_notification/Entertainment.jpg",
-    description:
-      "Get notified before your streaming and entertainment platforms auto-renewal.",
+    id: "subscriptions",
+    title: "Subscription Services",
+    icon: Package,
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/SocialMedia.jpg`,
+    description: "Assign nominees for your subscription services.",
   },
   {
-    id: "onlineGiftVoucher",
-    title: "Online Gift Voucher",
-    icon: Gift,
-    image: "/assets/Images/smart_notification/gift_voucher.jpg",
-    description: "Get notified before your gift vouchers expire.",
-  },
-  {
-    id: "otherAutoPay",
-    title: "Other Payments and Billing Cycle",
-    icon: Repeat,
-    image: "/assets/Images/smart_notification/Auto_payment.jpg",
-    description: "Get notified before any auto-payment deduction or billing cycle.",
+    id: "others",
+    title: "Others",
+    icon: FolderLock,
+    image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/others.jpg`,
+    description: "Assign nominees for other important digital assets.",
   },
 ];
 
-const PremiumNotificationCard = ({ feature, index, onClick }) => {
+// Premium Nominee Card component
+const PremiumNomineeCard = ({ feature, index, onClick }) => {
   return (
     <motion.div
       whileHover={{ scale: 1.03, y: -5 }}
       whileTap={{ scale: 0.98 }}
+      className="relative h-full rounded-2xl overflow-hidden shadow-xl group will-change-transform cursor-pointer"
       onClick={onClick}
       role="button"
       tabIndex={0}
       onKeyDown={(e) => (e.key === "Enter" || e.key === " ") && onClick?.()}
-      className="relative h-full rounded-2xl overflow-hidden shadow-xl group will-change-transform flex flex-col cursor-pointer"
     >
       {/* Image container */}
       <div className="relative h-64 overflow-hidden rounded-t-2xl">
@@ -74,8 +88,8 @@ const PremiumNotificationCard = ({ feature, index, onClick }) => {
         {/* Top border accent with glow */}
         <div className="absolute top-0 inset-x-0 h-1 bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
 
-        {/* Subtle gradient overlay */}
-        <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-black via-black/80 to-transparent">
+        {/* Bottom glass panel */}
+        <div className="absolute bottom-0 inset-x-0 h-48 bg-gradient-to-t from-black/95 via-black/90 to-transparent backdrop-blur-sm">
           {/* Animated gradient shimmer */}
           <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 overflow-hidden">
             <div className="absolute top-0 -inset-x-full h-full w-1/2 z-5 block transform -skew-x-12 bg-gradient-to-r from-transparent via-white/10 to-transparent group-hover:animate-shimmer"></div>
@@ -92,7 +106,7 @@ const PremiumNotificationCard = ({ feature, index, onClick }) => {
             <div className="h-0.5 w-full bg-accent-100/50 rounded-full"></div>
           </div>
 
-          {/* Premium icon */}
+          {/* Icon */}
           <div className="relative">
             {/* Animated ring */}
             <div className="absolute -inset-1 rounded-full border border-accent-100/30 opacity-0 group-hover:opacity-100 transition-opacity duration-500 group-hover:animate-ping-slow"></div>
@@ -127,16 +141,16 @@ const PremiumNotificationCard = ({ feature, index, onClick }) => {
   );
 };
 
-const NotificationHub = ({ onCardClick }) => {
+const NomineeHub = ({ onCardClick }) => {
   const [isInView, setIsInView] = useState(false);
   const navigate = useNavigate();
 
-  // Updated function to navigate to specific notification category
-  const goToNotificationCategory = (categoryId) => {
+  // Navigate to specific nominee category
+  const goToNomineeCategory = (categoryId) => {
     if (onCardClick) {
       onCardClick();
     } else {
-      navigate(`/notifications/${categoryId}`);
+      navigate(`/nominees/${categoryId}`);
     }
   };
 
@@ -148,7 +162,7 @@ const NotificationHub = ({ onCardClick }) => {
       { threshold: 0.1 }
     );
 
-    const section = document.getElementById("notification-hub-section");
+    const section = document.getElementById("nominee-hub-section");
     if (section) {
       observer.observe(section);
     }
@@ -162,16 +176,16 @@ const NotificationHub = ({ onCardClick }) => {
 
   return (
     <>
-      {/* Premium border effect */}
+      {/* Border effect */}
       <div className="relative w-full h-px">
         <div className="absolute inset-0 bg-gradient-to-r from-transparent via-accent-100 to-transparent"></div>
       </div>
 
       <section
-        id="notification-hub-section"
+        id="nominee-hub-section"
         className="relative py-20 overflow-hidden"
       >
-        {/* Premium background */}
+        {/* Background */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/95 via-white to-gray-50/95 z-0"></div>
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/90 via-white/95 to-gray-100/90 z-0"></div>
 
@@ -210,24 +224,24 @@ const NotificationHub = ({ onCardClick }) => {
             transition={{ duration: 0.8 }}
             className="text-center mb-20 relative z-10"
           >
-            {/* Premium accent line */}
+            {/* Accent line */}
             <div className="relative w-24 h-px mx-auto mb-8">
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full"></div>
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full blur-sm opacity-70"></div>
             </div>
 
             <h2 className="text-4xl md:text-5xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
-              Your Centralized Notifications Hub
+              Protect Your Digital Legacy
             </h2>
 
             <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light">
-              Stay in control of your subscription renewals and payment cycles with our advanced notification system.
+              Assign trusted nominees for your digital assets and ensure your loved ones can access important information when needed.
             </p>
           </motion.div>
 
-          {/* First row - 3 cards */}
-          <div className="grid md:grid-cols-3 gap-8 relative z-10 mb-8">
-            {notificationTypes.slice(0, 3).map((feature, index) => (
+          {/* Card grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 relative z-10">
+            {nomineeTypes.map((feature, index) => (
               <motion.div
                 key={feature.id}
                 initial={{ opacity: 0, y: 50 }}
@@ -241,35 +255,10 @@ const NotificationHub = ({ onCardClick }) => {
                 }}
                 className="h-full"
               >
-                <PremiumNotificationCard
+                <PremiumNomineeCard
                   feature={feature}
                   index={index}
-                  onClick={() => goToNotificationCategory(feature.id)}
-                />
-              </motion.div>
-            ))}
-          </div>
-
-          {/* Second row - 2 cards centered */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 relative z-10 max-w-4xl mx-auto">
-            {notificationTypes.slice(3, 5).map((feature, index) => (
-              <motion.div
-                key={feature.id}
-                initial={{ opacity: 0, y: 50 }}
-                animate={
-                  isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }
-                }
-                transition={{
-                  duration: 0.5,
-                  delay: (index + 3) * 0.1,
-                  ease: "easeOut",
-                }}
-                className="h-full"
-              >
-                <PremiumNotificationCard
-                  feature={feature}
-                  index={index + 3}
-                  onClick={() => goToNotificationCategory(feature.id)}
+                  onClick={() => goToNomineeCategory(feature.id)}
                 />
               </motion.div>
             ))}
@@ -368,4 +357,4 @@ const NotificationHub = ({ onCardClick }) => {
   );
 };
 
-export default NotificationHub;
+export default NomineeHub;

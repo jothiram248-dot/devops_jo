@@ -620,6 +620,8 @@ import FeatureProtectedRoute from "./utils/FeatureProtectedRoute";
 import OrderDetailPage from "./pages/OrderDetailPage";
 import OrderHistory from "./pages/OrderHistory";
 import RefundPolicy from "./pages/RefundPolicy";
+import { useAutoLogout } from "./hooks/useAutoLogout";
+import CountdownModal from "./components/CountdownModal";
 
 // import OrderHistory from "./pages/OrderHistory";
 // import OrderDetailPage from "./pages/OrderDetailPage";
@@ -697,7 +699,7 @@ function App() {
     const matcher = match(path, { decode: decodeURIComponent });
     return matcher(location.pathname);
   });
-
+  const { showCountdown, secondsLeft, resetTimer } = useAutoLogout();
   return (
     <div className="min-h-screen bg-dark-100">
       <div className="relative">
@@ -924,6 +926,12 @@ function App() {
 
       {/* Help Assistant is always present but components like VoiceBot and ChatBot are lazy loaded */}
       <HelpAssistant />
+
+      <CountdownModal
+        isOpen={showCountdown}
+        secondsLeft={secondsLeft}
+        onStayLoggedIn={resetTimer}
+      />
 
       <Toaster position="top-right" />
     </div>

@@ -77,7 +77,7 @@ const LandingPage = () => {
         {/* Features section */}
         <div id="features" className="w-full">
           <FeaturesSection />
-          <KeyFeaturesSection />
+          {/* <KeyFeaturesSection /> */}
           <SecuritySection />
         </div>
 

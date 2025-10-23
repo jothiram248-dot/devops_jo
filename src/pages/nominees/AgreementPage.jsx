@@ -3,9 +3,11 @@ import { useParams, useLocation, useNavigate } from "react-router-dom";
 import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
 import CryptoJS from "crypto-js";
+import { useGetKycDataQuery } from "@/features/api/userNomineeApiSlice";
 
 const AgreementPage = () => {
   const { type } = useParams();
+  const { data: kycData } = useGetKycDataQuery();
   const location = useLocation();
   const navigate = useNavigate();
   const agreementRef = useRef(null);
@@ -142,6 +144,8 @@ const AgreementPage = () => {
     referenceId,
   } = agreementData;
 
+  const displayUserName = kycData?.aadhaar?.name || userName;
+
   return (
     <div className="min-h-screen bg-gray-100 py-10 px-4">
       <div
@@ -217,7 +221,7 @@ const AgreementPage = () => {
               </h2>
               <div className="text-sm text-gray-700 leading-6">
                 <p className="mb-3 text-justify">
-                  I, <strong>{userName}</strong>, hereby declare that I am of
+                  I, <strong>{displayUserName}</strong>, hereby declare that I am of
                   sound mind and legal capacity to execute this Will Agreement.
                   I voluntarily appoint <strong>{nomineeName}</strong> as my
                   nominee, granting them the authority to manage, control, and

@@ -493,7 +493,9 @@ const CredentialDetailsCard = ({
   const [activeEditingId, setActiveEditingId] = useState(null); // Track which card is being edited
   const [confirmDeleteId, setConfirmDeleteId] = useState(null);
   const { type } = useParams();
-  const { data, isLoading, isError, refetch } = useGetCredQuery(credential);
+  const { data, isLoading, isError, refetch } = useGetCredQuery(credential,  {
+    refetchOnMountOrArgChange: true,
+  });
   // const isOthers = JSON.parse(localStorage.getItem("isOthers"));
   const initialDisplayName = localStorage.getItem("initialDisplayName");
   const [updateCred, { isLoading: isUpdating }] = useUpdateCredMutation();

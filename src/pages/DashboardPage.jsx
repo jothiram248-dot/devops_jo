@@ -259,15 +259,35 @@ const LastLoginStat = ({ lastLogin, isLoading }) => {
     </div>
   );
 };
+const formatFeatureName = (featureName) => {
+  const featureDisplayNames = {
+    smartNotifications: "Smart Notifications",
+    nominee: "Choose Nominee",
+    credentials: "Credentials",
+  };
+
+  return featureDisplayNames[featureName] || featureName;
+};
 
 const ActiveServicesStat = ({ features, isLoading }) => {
   const [index, setIndex] = useState(0);
+
+  // Helper function to convert feature keys to proper display names
+  const formatFeatureName = (featureName) => {
+    const featureDisplayNames = {
+      smartNotifications: "Smart Notifications",
+      nominee: "Choose Nominee",
+      credentials: "Credentials",
+    };
+
+    return featureDisplayNames[featureName] || featureName;
+  };
 
   useEffect(() => {
     if (features.length > 1) {
       const interval = setInterval(() => {
         setIndex((prevIndex) => (prevIndex + 1) % features.length);
-      }, 4000); // Rotate every 4 seconds if multiple features exist
+      }, 4000);
       return () => clearInterval(interval);
     }
   }, [features]);
@@ -280,16 +300,16 @@ const ActiveServicesStat = ({ features, isLoading }) => {
       className="relative p-6 rounded-xl bg-dark-200 shadow-md hover:shadow-xl transition-all duration-300 h-[140px] flex items-center space-x-4 border border-dark-300 backdrop-blur-xl"
     >
       {/* Static Icon Container */}
-      <div className="p-4 rounded-xl bg-gradient-to-r from-green-500 to-teal-500 shadow-lg">
+      <div className="p-4 rounded-xl bg-gradient-to-r from-green-500 to-teal-500 shadow-lg flex-shrink-0">
         <Activity className="w-7 h-7 text-white" />
       </div>
 
       {/* Static Text Content */}
-      <div className="flex-1">
-        <h4 className="text-sm font-semibold text-gray-400">Active Service</h4>
+      <div className="flex-1 min-w-0">
+        <h4 className="text-sm font-semibold text-gray-400 mb-2">Active Service</h4>
 
         {/* Sliding Active Service Value */}
-        <div className="relative h-10 overflow-hidden">
+        <div className="relative h-14 overflow-hidden">
           <AnimatePresence mode="wait">
             <motion.p
               key={features.length > 0 ? features[index] : "No Active Services"}
@@ -297,11 +317,10 @@ const ActiveServicesStat = ({ features, isLoading }) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6, ease: "easeInOut" }}
-              className="absolute inset-0 text-2xl font-extrabold text-white mt-1"
+              className="text-lg sm:text-xl lg:text-2xl font-extrabold text-white leading-snug"
             >
               {features.length > 0
-                ? features[index].charAt(0).toUpperCase() +
-                  features[index].slice(1).toLowerCase()
+                ? formatFeatureName(features[index])
                 : "NO ACTIVE SERVICES"}
             </motion.p>
           </AnimatePresence>

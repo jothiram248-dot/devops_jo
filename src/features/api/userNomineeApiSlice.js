@@ -121,7 +121,12 @@ export const nomineeApiSlice = apiSlice.injectEndpoints({
       invalidatesTags: [{ type: "User", id: "ME" }], // Invalidate `me` query
     }),
 
-    
+    getKycData: builder.query({
+      query: () => ({
+        url: `${NOMINEE_URL}/kyc/data`,
+      }),
+      providesTags: [{ type: "Nominee", id: "KYC_DATA" }],
+    }),
   }),
 });
 
@@ -137,5 +142,6 @@ export const {
 
   useAadhaarInitiateMutation,
   useAadhaarVerifyMutation,
+  useGetKycDataQuery,
   useAddEmergencyContactMutation,
 } = nomineeApiSlice;

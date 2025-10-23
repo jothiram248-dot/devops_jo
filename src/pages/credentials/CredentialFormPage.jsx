@@ -103,15 +103,22 @@ const CredentialFormPage = () => {
           ? { otherPlatformName: data.customPlatformName }
           : {}),
 
+          // otherPlatform: isOthers,
+          // otherAccountType: type === "banking" && selectedOption === "Others",
+      
+
         userId: data.userId,
         password: data.password,
         additionalInfo: data.additionalInfo || "",
+
+
       },
     };
 
     try {
       await createCred(payload).unwrap();
       toast.success("Credential added successfully!");
+      await new Promise(resolve => setTimeout(resolve, 200));
       navigate(`/credentials/${type}`);
     } catch (error) {
       if (error?.data?.message === "Validation error" && error?.data?.details) {
@@ -130,17 +137,17 @@ const CredentialFormPage = () => {
   const getTitle = () => {
     switch (type) {
       case "banking":
-        return "Banking Credentials";
+        return "Banking Details";
       case "investment":
-        return "Investment Credentials";
+        return "Investment Details";
       case "entertainmentPlatform":
         return "Entertainment Platform";
       case "socialMedia":
-        return "Social Media Account";
+        return "Social Media Details";
       case "gamingPlatform":
-        return "Gaming Platform";
+        return "Gaming Platform Details";
       case "others":
-        return "Other Credentials";
+        return "Other Details";
       default:
         return "Add New Credentials";
     }
@@ -181,7 +188,7 @@ const CredentialFormPage = () => {
 
           <div className="glow-box p-8">
             <h2 className="text-3xl font-bold mb-8 bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent">
-              Add New {getTitle()}
+              Add Your {getTitle()}
             </h2>
 
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
@@ -380,16 +387,20 @@ const CredentialFormPage = () => {
 
               {/* Additional Information */}
               <div>
-                <label className="block text-sm font-medium text-gray-300 mb-1">
-                  Additional Information
-                </label>
-                <textarea
-                  {...register("additionalInfo")}
-                  rows={6}
-                  className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
-                  placeholder={getAdditionalInfoPlaceholder()}
-                />
-              </div>
+  <label className="block text-sm font-medium text-gray-300 mb-1">
+    Additional Information
+  </label>
+  <textarea
+    {...register("additionalInfo")}
+    rows={6}
+    className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100 placeholder:text-gray-500 placeholder:opacity-60"
+    style={{ 
+      fontSize: '16px',
+      lineHeight: '1.5'
+    }}
+    placeholder={getAdditionalInfoPlaceholder()}
+  />
+</div>
 
               {/* Meta Information */}
               {/* <div>

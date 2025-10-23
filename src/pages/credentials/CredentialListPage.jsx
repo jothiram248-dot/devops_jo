@@ -777,8 +777,8 @@ const CredentialListPage = () => {
     gamingPlatform: [
       "Dream 11",
       "Mobile Premier League (MPL)",
-      "Rummy Circle",
-      "Online Poker",
+      "Zupee",
+      "Battlegrounds Mobile India (BGMI)",
       "Others",
     ],
     socialMedia: ["Facebook", "Instagram", "Twitter", "LinkedIn", "Others"],
@@ -1008,9 +1008,21 @@ const CredentialListPage = () => {
                         const displayName = formatCamelCase(
                           selectedCredential.displayName
                         );
-
+                        
+                        // Check if this credential is from "Others" category
+                        const isOtherPlatform = 
+                          (type === "banking" && !["State Bank of India (SBI)", "AXIS", "HDFC", "ICICI"].includes(selectedCredential.displayName)) ||
+                          (type === "investment" && !["Demat", "Mutual Funds", "Insurance", "Crypto"].includes(selectedCredential.displayName)) ||
+                          (type === "entertainmentPlatform" && !["Netflix", "Amazon Prime"].includes(selectedCredential.displayName)) ||
+                          (type === "gamingPlatform" && !["Dream 11", "Mobile Premier League (MPL)", "Rummy Circle", "Online Poker"].includes(selectedCredential.displayName)) ||
+                          (type === "socialMedia" && !["Facebook", "Instagram", "Twitter", "LinkedIn"].includes(selectedCredential.displayName)) ||
+                          (type === "others");
+                      
                         navigate(`/credentials/${type}/add`, {
-                          state: { displayName },
+                          state: { 
+                            displayName,
+                            isOthers: isOtherPlatform 
+                          },
                         });
                       }}
                       // disabled={!selectedDropdownValue && !customField}

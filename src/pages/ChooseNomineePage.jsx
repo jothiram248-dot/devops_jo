@@ -184,6 +184,7 @@ import {
   useMeQuery,
   useActivateSmartNotificationsTrialMutation,
 } from "@/features/api/userApiSlice";
+import NomineeHub from "@/components/NomineeHub";
 
 // 3) FAQ Data
 const faqs = [
@@ -814,8 +815,8 @@ const DelegateCredentials = ({ onCardClick }) => {
   // Example data - replace with your actual nomineeCredentialTypes data
   const nomineeCredentialTypes = [
     {
-      id: 1,
-      title: "Banking Credentials",
+      id: 'banking',
+      title: "Banking Details",
       icon: (props) => (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -837,12 +838,12 @@ const DelegateCredentials = ({ onCardClick }) => {
         import.meta.env.VITE_DO_BUCKET_URL
       }/assets/Images/Banking_credentials.jpg`,
       description:
-        "Securely delegate your banking user ID/password and other credentials to trusted nominees.",
+        "Assign nominees for your banking details.",
       color: "from-accent-100 to-accent-200",
     },
     {
-      id: 2,
-      title: "Investment Credentials",
+      id: "investment",
+      title: "Investment Details",
       icon: (props) => (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -864,12 +865,12 @@ const DelegateCredentials = ({ onCardClick }) => {
         import.meta.env.VITE_DO_BUCKET_URL
       }/assets/Images/Investment_credneitals.jpg`,
       description:
-        "Ensure your investment platforms remain accessible to your nominees when needed.",
+        "Assign nominees for your investment platform details.",
       color: "from-purple-500 to-indigo-500",
     },
     {
       id: 3,
-      title: "Entertainment Platform Credentials",
+      title: "Entertainment Platform Details",
       icon: (props) => (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -892,12 +893,12 @@ const DelegateCredentials = ({ onCardClick }) => {
         import.meta.env.VITE_DO_BUCKET_URL
       }/assets/Images/Entertainment.jpg`,
       description:
-        "Safely share your streaming and entertainment login details with family members.",
+        "Assign nominees for your streaming and entertainment logins.",
       color: "from-blue-500 to-cyan-400",
     },
     {
-      id: 4,
-      title: "Social Media Credentials",
+      id: "socialMedia",
+      title: "Social Media Details",
       icon: (props) => (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -922,12 +923,12 @@ const DelegateCredentials = ({ onCardClick }) => {
         import.meta.env.VITE_DO_BUCKET_URL
       }/assets/Images/SocialMedia.jpg`,
       description:
-        "Grant access to your social media accounts to trusted individuals when needed.",
+        "Assign nominees for your social media accounts.",
       color: "from-pink-500 to-rose-400",
     },
     {
       id: 5,
-      title: "Gaming Platform Credentials",
+      title: "Gaming Platform Details",
       icon: (props) => (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -952,12 +953,12 @@ const DelegateCredentials = ({ onCardClick }) => {
         import.meta.env.VITE_DO_BUCKET_URL
       }/assets/Images/gaming_credentials.jpg`,
       description:
-        "Ensure your gaming accounts remain secure and accessible to your nominees.",
+        "Assign nominees for gaming accounts.",
       color: "from-green-500 to-emerald-400",
     },
     {
-      id: 6,
-      title: "Others",
+      id: "others",
+      title: "Other Details",
       icon: (props) => (
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -978,7 +979,7 @@ const DelegateCredentials = ({ onCardClick }) => {
       ),
       image: `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/others.jpg`,
       description:
-        "Delegate credentials for any other platforms and portals to your trusted nominees.",
+        "Assign nominees for all your online platforms and portals.",
       color: "from-amber-500 to-orange-400",
     },
   ];
@@ -1059,16 +1060,16 @@ const DelegateCredentials = ({ onCardClick }) => {
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full blur-sm opacity-70"></div>
             </div>
 
-            <h2 className="text-5xl md:text-6xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
-              Delegate These Credentials
+            <h2 className="text-4xl md:text-5xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
+            Designate Nominees for Your Digital Assets
             </h2>
 
             <p className="text-xl text-gray-700 max-w-2xl mx-auto leading-relaxed font-light">
-              Securely pass on crucial credentials to those you trust with our{" "}
+              Securely nominate your loved ones for your digital assets with our{" "}
               <span className="text-accent-100 font-medium">
                 advanced nominee system
-              </span>{" "}
-              designed for complete peace of mind.
+              </span>
+              —providing you peace of mind.
             </p>
           </motion.div>
 
@@ -1363,7 +1364,7 @@ const ChooseNomineePage = () => {
           className="absolute inset-0 w-full h-full"
         >
           {/* Cinematic Background Video with Custom Masking */}
-          <video
+          {/* <video
             autoPlay
             muted
             loop
@@ -1377,7 +1378,7 @@ const ChooseNomineePage = () => {
               }/assets/Images/managecredentials.mp4`}
               type="video/mp4"
             />
-          </video>
+          </video> */}
 
           {/* Dynamic Multi-Layer Gradient Overlays with Custom Blend Modes */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#050816]/90 via-[#050816]/60 to-[#050816]/90 mix-blend-overlay"></div>
@@ -1425,9 +1426,9 @@ const ChooseNomineePage = () => {
               {/* Enterprise-Grade Header Section */}
               <div className="text-center w-full mb-8">
                 <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight enterprise-heading">
-                  Choose Your{" "}
+                  Choose {" "}
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-                    Nominee
+                    Nominees
                   </span>
                 </h1>
 
@@ -1453,15 +1454,15 @@ const ChooseNomineePage = () => {
                 >
                   {/* Text Content */}
                   <p className="text-lg md:text-2xl text-gray-100 leading-relaxed dynamic-text">
-                    Securely pass on{" "}
-                    <span className="highlight-text">crucial credentials</span>
-                    —banking, investments, social media, and more—to those you
-                    trust. Safeguard your{" "}
-                    <span className="highlight-text">digital legacy</span> while
-                    maintaining full control over what and how your nominees can
-                    access, ensuring{" "}
-                    <span className="highlight-text">peace of mind</span> for
-                    you and your loved ones.
+                    Securely assign{" "}
+                    <span className="highlight-text">nominees for your digital assets</span>
+                    {" "}— including banking, investments, social media, and more — to the people you trust. Safeguard your{" "}
+                    <span className="highlight-text">digital legacy</span>{" "}
+                    while maintaining{" "}
+                    <span className="highlight-text">full control</span>{" "}
+                    over what your nominees can access and how they can access it, ensuring{" "}
+                    <span className="highlight-text">peace of mind</span>{" "}
+                    for you and your loved ones.
                   </p>
 
                   {/* CTA Button */}
@@ -1472,14 +1473,13 @@ const ChooseNomineePage = () => {
                         boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)",
                       }}
                       whileTap={{ scale: 0.98 }}
-                      onClick={goToNomineeOrScroll} // ⬅️ use the new handler
+                      onClick={goToNomineeOrScroll}
                       className="px-8 py-3 md:px-10 md:py-4 text-base md:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
                     >
                       <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
                       <span className="relative z-10 flex items-center font-bold">
                         {heroCtaLabel}{" "}
-                        <span className="ml-2 arrow-icon">→</span>{" "}
-                        {/* ⬅️ dynamic text */}
+                        <span className="ml-2 arrow-icon">→</span>
                       </span>
                     </motion.button>
                   </div>
@@ -1700,12 +1700,13 @@ const ChooseNomineePage = () => {
       {/* ─────────────────────────────────────────
           NOMINEE CREDENTIAL TYPES (Fade Overlay)
       ───────────────────────────────────────── */}
-      <DelegateCredentials onCardClick={goToNomineeOrScroll} />
+      {/* <DelegateCredentials onCardClick={goToNomineeOrScroll} /> */}
+      <NomineeHub />
 
       {/* ─────────────────────────────────────────
           ADVANCED NOMINEE FEATURES (Flipping Cards)
       ───────────────────────────────────────── */}
-      <UncompromisingSecurity />
+      {/* <UncompromisingSecurity /> */}
 
       {/* ─────────────────────────────────────────
           CTA SECTION (Pricing Card)

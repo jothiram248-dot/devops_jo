@@ -505,6 +505,29 @@ const SignUpPage = () => {
     },
   ];
 
+  // Custom error message mappings
+const customErrorMessages = {
+  username: {
+    "must only contain alpha-numeric characters": "Username must contain alpha-numeric characters and cannot be an email ID.",
+    "must only contain alphanumeric characters": "Username must contain alpha-numeric characters and cannot be an email ID.",
+  },
+  // Add more custom mappings as needed
+};
+
+const mapCustomErrorMessage = (field, message) => {
+  const fieldMappings = customErrorMessages[field.toLowerCase()];
+  if (!fieldMappings) return message;
+  
+  // Check if the message matches any of our custom mappings
+  for (const [key, customMsg] of Object.entries(fieldMappings)) {
+    if (message.toLowerCase().includes(key.toLowerCase())) {
+      return customMsg;
+    }
+  }
+  
+  return message;
+};
+
 // --- Error helpers (replace your existing versions) ---
 const normalizeErrorMessage = (err) => {
   if (!err) return null;
@@ -564,6 +587,8 @@ const extractValidationDetails = (err) => {
       // Remove leading words like "must", punctuation duplication, etc.
       msg = msg.replace(/^[:\-–]\s*/, "");
     }
+
+    msg = mapCustomErrorMessage(field, msg);
 
     // Examples:
     // field: "username", msg: "must only contain alpha-numeric characters"

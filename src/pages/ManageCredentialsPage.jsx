@@ -79,7 +79,7 @@ const ManageCredentialsPage = () => {
           className="absolute inset-0 w-full h-full"
         >
           {/* Cinematic Background Video with Custom Masking */}
-          <video
+          {/* <video
             autoPlay
             muted
             loop
@@ -93,7 +93,7 @@ const ManageCredentialsPage = () => {
               }/assets/Images/managecredentials.mp4`}
               type="video/mp4"
             />
-          </video>
+          </video> */}
 
           {/* Dynamic Multi-Layer Gradient Overlays with Custom Blend Modes */}
           <div className="absolute inset-0 bg-gradient-to-b from-[#050816]/90 via-[#050816]/60 to-[#050816]/90 mix-blend-overlay"></div>
@@ -141,7 +141,7 @@ const ManageCredentialsPage = () => {
               {/* Enterprise-Grade Header Section */}
               <div className="text-center w-full mb-8">
                 <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight enterprise-heading">
-                  Manage Your{" "}
+                  Manage {" "}
                   <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
                     Credentials
                   </span>
@@ -229,7 +229,7 @@ const ManageCredentialsPage = () => {
                       >
                         <VideoPlayer
                           videoUrl="https://www.youtube.com/watch?v=ziQqSngFjxY"
-                          title="Manage Your Credentials"
+                          title="Manage Credentials"
                         />
 
                         {/* Video Overlay */}
@@ -909,7 +909,7 @@ const ManageCredentialsPage = () => {
       <CredentialTypes />
 
       {/* Security Features Section */}
-      <SecurityFeatures />
+      {/* <SecurityFeatures /> */}
 
       {/* Subscription Section */}
       <section className="py-20 relative overflow-hidden">

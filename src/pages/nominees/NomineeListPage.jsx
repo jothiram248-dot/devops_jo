@@ -972,12 +972,14 @@ const CredentialDetailsCard = ({
                 <div className="flex items-center justify-between border-b border-gray-700 pb-2">
                   <div>
                     <p className="text-sm font-medium text-gray-400">
-                      Platform
+                      {type === "banking" ? "Account Type" : "Platform"}
                     </p>
                     <p className="text-lg font-bold text-accent-100">
                       {/* {resource.data.platformName} */}
-                      {type === "investment"
-                        ? resource.data.accountType
+                      {type === "investment" || type === "banking"
+                        ? resource.data.accountType === "Others"
+                          ? resource.data.otherAccountType
+                          : resource.data.accountType
                         : resource.data.platformName}
                     </p>
                   </div>
@@ -2048,7 +2050,7 @@ const NomineeListPage = () => {
 
                 <div className="bg-dark-200 p-6 rounded-lg shadow-md text-center">
                   <h2 className="text-xl md:text-2xl lg:text-3xl font-bold text-white mb-6 capitalize">
-                    {formatCamelCase(type)} Credentials
+                    {formatCamelCase(type)} Details
                   </h2>
 
                   {dropdownOptions[type] ? (
