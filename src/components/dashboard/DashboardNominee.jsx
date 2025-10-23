@@ -107,7 +107,7 @@ const OthersImg = `${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/others.jp
 const credentialTypes = [
   {
     id: "banking",
-    title: "Banking Credentials",
+    title: "Banking Details",
     icon: CreditCard,
     color: "from-orange-400 to-orange-600",
     image: BankingCredentialsImg,
@@ -115,7 +115,7 @@ const credentialTypes = [
   },
   {
     id: "investment",
-    title: "Investment Credentials",
+    title: "Investment Details",
     icon: TrendingUp,
     color: "from-green-400 to-green-600",
     image: InvestmentCredentialsImg,
@@ -123,7 +123,7 @@ const credentialTypes = [
   },
   {
     id: "socialMedia",
-    title: "Social Media",
+    title: "Social Media Details",
     icon: Share2,
     color: "from-purple-400 to-purple-600",
     image: SocialMediaImg,
@@ -139,7 +139,7 @@ const credentialTypes = [
   },
   {
     id: "subscriptions",
-    title: "Subscription Sevices",
+    title: "Subscription Sevice Details",
     icon: Package,
     color: "from-purple-400 to-purple-600",
     image: SocialMediaImg,
@@ -155,7 +155,7 @@ const credentialTypes = [
   // },
   {
     id: "others",
-    title: "Others",
+    title: "Other Details",
     icon: FolderLock,
     color: "from-gray-400 to-gray-600",
     image: OthersImg,
