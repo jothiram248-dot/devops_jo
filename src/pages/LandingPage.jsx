@@ -91,7 +91,7 @@ const LandingPage = () => {
         {/* FAQ and CTA */}
         <div className="w-full">
           <FAQ faqs={homeFaqs} />
-          <CallToAction />
+          {/* <CallToAction /> */}
         </div>
 
         {/* Footer */}

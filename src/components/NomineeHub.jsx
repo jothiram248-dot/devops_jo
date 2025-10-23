@@ -123,7 +123,7 @@ const PremiumNomineeCard = ({ feature, index, onClick }) => {
         <div className="mt-auto">
           {/* Title with consistent height */}
           <div className="mb-3 min-h-[3.5rem] flex flex-col justify-end">
-            <h3 className="text-2xl font-bold text-white group-hover:text-accent-100 transition-colors duration-300">
+            <h3 className="text-2xl font-bold text-white group-hover:text-accent-100 transition-colors duration-300 truncate text-[clamp(1.05rem,1.1vw+0.95rem,1.35rem)]">
               {feature.title}
             </h3>
 
@@ -132,7 +132,7 @@ const PremiumNomineeCard = ({ feature, index, onClick }) => {
           </div>
 
           {/* Description */}
-          <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-light">
+          <p className="text-[0.95rem] text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-light">
             {feature.description}
           </p>
         </div>
@@ -230,7 +230,7 @@ const NomineeHub = ({ onCardClick }) => {
               <div className="absolute inset-0 bg-gradient-to-r from-accent-100 to-accent-200 rounded-full blur-sm opacity-70"></div>
             </div>
 
-            <h2 className="text-4xl md:text-5xl font-black mb-8 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
+            <h2 className="text-4xl md:text-5xl font-black mb-8 pb-1 bg-clip-text text-transparent bg-gradient-to-r from-accent-100 via-purple-600 to-accent-200 tracking-tight">
               Protect Your Digital Legacy
             </h2>
 

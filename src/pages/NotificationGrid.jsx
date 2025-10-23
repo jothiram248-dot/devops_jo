@@ -109,7 +109,7 @@ const PremiumNotificationCard = ({ feature, index, onClick }) => {
         <div className="mt-auto">
           {/* Title with consistent height */}
           <div className="mb-3 min-h-[3.5rem] flex flex-col justify-end">
-            <h3 className="text-2xl font-bold text-white group-hover:text-accent-100 transition-colors duration-300">
+            <h3 className="text-2xl font-bold text-white group-hover:text-accent-100 transition-colors duration-300 truncate text-[clamp(1.05rem,1.1vw+0.95rem,1.35rem)]">
               {feature.title}
             </h3>
 
@@ -118,7 +118,7 @@ const PremiumNotificationCard = ({ feature, index, onClick }) => {
           </div>
 
           {/* Description */}
-          <p className="text-sm text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-light">
+          <p className="text-[0.95rem] text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-light">
             {feature.description}
           </p>
         </div>
