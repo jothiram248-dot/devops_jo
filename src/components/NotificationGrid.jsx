@@ -107,18 +107,30 @@ const PremiumNotificationCard = ({ feature, index, onClick }) => {
 
         {/* Content area with fixed spacing */}
         <div className="mt-auto">
-          {/* Title with consistent height */}
-          <div className="mb-3 min-h-[3.5rem] flex flex-col justify-end">
-            <h3 className="text-2xl font-bold text-white group-hover:text-accent-100 transition-colors duration-300 truncate text-[clamp(1.05rem,1.1vw+0.95rem,1.35rem)]">
+          <div className="mb-3">
+            <h3
+              className="text-2xl font-bold text-white group-hover:text-accent-100 transition-colors duration-300 text-[clamp(1.05rem,1.1vw+0.95rem,1.35rem)] leading-tight overflow-hidden min-h-[3.5rem] flex items-end"
+              style={{
+                display: "-webkit-box",
+                WebkitLineClamp: 2,
+                WebkitBoxOrient: "vertical",
+              }}
+              title={feature.title}
+            >
               {feature.title}
             </h3>
-
-            {/* Animated underline */}
             <div className="h-0.5 w-0 bg-gradient-to-r from-accent-100 to-accent-200 mt-2 rounded-full group-hover:w-24 transition-all duration-500 ease-out"></div>
           </div>
 
-          {/* Description */}
-          <p className="text-[0.95rem] text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-light">
+          <p
+            className="text-[0.95rem] text-gray-400 group-hover:text-gray-300 transition-colors duration-300 font-light overflow-hidden min-h-[3rem]"
+            style={{
+              display: "-webkit-box",
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: "vertical",
+            }}
+            title={feature.description}
+          >
             {feature.description}
           </p>
         </div>

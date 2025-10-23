@@ -84,7 +84,7 @@ const LandingPage = () => {
         {/* About section */}
         <div id="about" className="w-full">
           <MissionVisionSection />
-          <AboutSection />
+          {/* <AboutSection /> */}
           <TestimonialsSection />
         </div>
 

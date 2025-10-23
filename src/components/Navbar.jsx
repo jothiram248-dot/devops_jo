@@ -238,13 +238,13 @@ const Navbar = () => {
               </div>
             )}
           </div>
-          <button
+          {/* <button
             // onClick={() => scrollToSection("about")}
             onClick={() => navigate("/about")}
             className="text-white hover:text-accent-100 transition-colors"
           >
             About Us
-          </button>
+          </button> */}
 
           <Link
             to="/contact"
