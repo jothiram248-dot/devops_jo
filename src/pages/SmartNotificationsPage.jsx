@@ -1427,8 +1427,8 @@ const SmartNotificationsPage = () => {
                 <div className="relative space-y-3">
                   <div className="absolute -inset-1 bg-blue-500/40 rounded-lg blur-md"></div>
 
-                  {/* Start 15-day Trial (only when eligible and not already paid/trial) */}
-                  {trialEligible && !paidActive && !trialActive && (
+                  {/* Start 30-day Trial (only when eligible and not already paid/trial) */}
+                  {(!isAuthenticated || (trialEligible && !paidActive && !trialActive)) && (
                     <button
                       onClick={startTrial}
                       disabled={activatingTrial}

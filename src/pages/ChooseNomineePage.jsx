@@ -1265,6 +1265,11 @@ const ChooseNomineePage = () => {
 
   // start trial handler (featureKey=nominee)
   const startNomineeTrial = async () => {
+    if (!isAuthenticated) {
+      toast.error("Please sign in to start your free trial");
+      navigate("/signin");
+      return;
+    }
     try {
       const res = await activateTrial({ featureKey: "nominee" }).unwrap();
       toast.success(res?.message || "Trial activated!");
@@ -1875,7 +1880,7 @@ const ChooseNomineePage = () => {
                   <div className="absolute -inset-1 bg-accent-100/40 rounded-lg blur-md opacity-75"></div>
 
                   {/* Start 30-day trial CTA (only when eligible and not already paid/trial) */}
-                  {trialEligible && !paidActive && !trialActive && (
+                  {(!isAuthenticated || (trialEligible && !paidActive && !trialActive)) && (
                     <button
                       onClick={startNomineeTrial}
                       disabled={activatingTrial}
