@@ -487,12 +487,12 @@ const Navbar = () => {
             >
               Features
             </button>
-            <button
+            {/* <button
               onClick={() => scrollToSection("about")}
               className="text-white hover:text-accent-100 transition-colors w-full text-left"
             >
               About Us
-            </button>
+            </button> */}
             {isAuthenticated && (
               <Link
                 to="/dashboard"
