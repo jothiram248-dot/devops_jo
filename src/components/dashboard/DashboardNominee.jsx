@@ -111,7 +111,7 @@ const credentialTypes = [
     icon: CreditCard,
     color: "from-orange-400 to-orange-600",
     image: BankingCredentialsImg,
-    description: "Manage your banking credentials",
+    description: "Manage your banking details",
   },
   {
     id: "investment",
@@ -127,7 +127,7 @@ const credentialTypes = [
     icon: Share2,
     color: "from-purple-400 to-purple-600",
     image: SocialMediaImg,
-    description: "Social media account credentials",
+    description: "Social media account details",
   },
   {
     id: "emergencyContacts",
@@ -143,7 +143,7 @@ const credentialTypes = [
     icon: Package,
     color: "from-purple-400 to-purple-600",
     image: SocialMediaImg,
-    description: "Subscription services credentials",
+    description: "Subscription services details",
   },
   // {
   //   id: "gamingPlatform",
@@ -159,7 +159,7 @@ const credentialTypes = [
     icon: FolderLock,
     color: "from-gray-400 to-gray-600",
     image: OthersImg,
-    description: "Other platform credentials",
+    description: "Other platform details",
   },
 ];
 
