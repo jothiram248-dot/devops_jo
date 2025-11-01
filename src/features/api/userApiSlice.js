@@ -200,6 +200,14 @@ export const usersApiSlice = apiSlice.injectEndpoints({
       // refresh user & metrics so UI updates everywhere
       invalidatesTags: [{ type: "User", id: "ME" }, "Metrics"],
     }),
+
+    helpAssist: builder.mutation({
+      query: (body) => ({
+        url: `${USERS_URL}/help-assist`,
+        method: "POST",
+        body, // { subject: string, message: string }
+      }),
+    }),
     
     
   }),
@@ -224,5 +232,6 @@ export const {
   useDeleteAccountMutation,
   useLogoutUserMutation,
   useActivateSmartNotificationsTrialMutation,
+  useHelpAssistMutation
 } = usersApiSlice;
 usersApiSlice;

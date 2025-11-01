@@ -1,26 +1,19 @@
 import React, { useEffect, useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import { useParams, useNavigate, useLocation } from "react-router-dom";
 import {
   Eye,
   EyeOff,
   Save,
   ArrowLeft,
+  SubscriptIcon,
   ArrowRight,
-  Users,
-  X,
-  Search,
-  Check,
-  Sparkles,
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import CryptoJS from "crypto-js";
 import { toast } from "react-hot-toast";
 import { useCreateCredMutation } from "@/features/api/userCredApiSlice";
-import {
-  useCreateNomineeMutation,
-  useGetMasterNomineeListQuery,
-} from "@/features/api/userNomineeApiSlice";
+import { useCreateNomineeMutation } from "@/features/api/userNomineeApiSlice";
 import { useMeQuery } from "@/features/api/userApiSlice";
 
 const NomineeFormPage = () => {
@@ -32,7 +25,7 @@ const NomineeFormPage = () => {
   const location = useLocation();
   const locationState = location.state || {};
   const initialDisplayName = locationState.displayName || "";
-  const isOthers = locationState.isOthers || false;
+  const isOthers = locationState.isOthers || false; // Extract `isOthers` properly
 
   const [showCustomField, setShowCustomField] = useState(false);
   const [selectedOption, setSelectedOption] = useState("");
@@ -41,33 +34,71 @@ const NomineeFormPage = () => {
   const { data } = useMeQuery();
   const username = data?.me?.username;
 
-  // Master Nominee List state
-  const { data: masterNomineeData, isLoading: isMasterListLoading } =
-    useGetMasterNomineeListQuery();
-  const [showNomineeModal, setShowNomineeModal] = useState(false);
-  const [searchQuery, setSearchQuery] = useState("");
-  const [selectedNominee, setSelectedNominee] = useState(null);
-
   const {
     register,
     handleSubmit,
     watch,
-    setValue,
     formState: { errors },
   } = useForm();
+  console.log(initialDisplayName, isOthers);
+  // const onSubmit = async (data) => {
+  //   const payload = {
+  //     category: type,
+  //     data: {
+  //       ...(isBankingForm
+  //         ? { bankName: isOthers ? "Others" : initialDisplayName }
+  //         : { platformName: isOthers ? "Others" : initialDisplayName }),
+
+  //       ...(isOthers && {
+  //         ...(isBankingForm
+  //           ? { otherBankName: initialDisplayName }
+  //           : { otherPlatformName: initialDisplayName }),
+  //       }),
+
+  //       ...(type === "others"
+  //         ? { accountType: data.customAccountType }
+  //         : !(type === "entertainmentPlatform")
+  //         ? { accountType: selectedOption }
+  //         : { subscriptionType: selectedOption }),
+  //       userId: data.userId,
+  //       password: data.password,
+  //       additionalInfo: data.additionalInfo || "",
+  //       // ...(data.metaIFSC || data.metaAccountType
+  //       //   ? {
+  //       //       meta: {
+  //       //         ifsc: data.metaIFSC || "",
+  //       //         accountType: data.metaAccountType || "",
+  //       //       },
+  //       //     }
+  //       //   : {}),
+  //     },
+  //   };
+
+  //   try {
+  //     await createCred(payload).unwrap();
+  //     toast.success("Nominee added successfully!");
+  //     navigate(`/Nominees/${type}`);
+  //   } catch (error) {
+  //     toast.error("Failed to add Nominee. Please try again.");
+  //   }
+  // };
 
   // State to control sections
+  const [showNomineeSection, setShowNomineeSection] = useState(false);
   const [agreementChecked, setAgreementChecked] = useState(false);
-  const [currentStep, setCurrentStep] = useState(1);
-  const [isFormComplete, setIsFormComplete] = useState(false);
+  const [currentStep, setCurrentStep] = useState(1); // Step control
+  const [isFormComplete, setIsFormComplete] = useState(false); // Form completeness
+  const [dynamicFieldValue, setDynamicFieldValue] = useState("");
 
   // Handler for Next and Save Buttons
   const handleNext = () => setCurrentStep(2);
   const handleBack = () => setCurrentStep(1);
+  const handleAgreementCheck = (e) => setAgreementChecked(e.target.checked);
 
   // Watch all form fields
   const watchedFields = watch();
 
+  // Monitor form completeness
   // Monitor form completeness
   useEffect(() => {
     let requiredFields;
@@ -108,30 +139,7 @@ const NomineeFormPage = () => {
     "E-Books & Audiobooks": "E-Books/Audiobooks Platform Name",
   };
 
-  // Filter nominees based on search
-  const filteredNominees = masterNomineeData?.masterList?.filter((item) => {
-    const searchLower = searchQuery.toLowerCase();
-    return (
-      item.nominee.name?.toLowerCase().includes(searchLower) ||
-      item.nominee.email?.toLowerCase().includes(searchLower) ||
-      item.nominee.phone?.includes(searchQuery)
-    );
-  });
-
-  // Handle selecting nominee from master list
-  const handleSelectNominee = (nominee) => {
-    setValue("nomineeName", nominee.name || "");
-    setValue("nomineePhone", nominee.phone || "");
-    setValue("nomineeEmail", nominee.email || "");
-    setValue("nomineeAdditionalInfo", nominee.additionalInfo || "");
-    setSelectedNominee(nominee);
-    setShowNomineeModal(false);
-    setSearchQuery("");
-    toast.success(`Auto-filled with ${nominee.name}'s details!`, {
-      icon: "✨",
-      duration: 2000,
-    });
-  };
+  const isDynamicFieldRequired = dynamicFieldLabels[initialDisplayName];
 
   const onSubmit = async (data) => {
     const payload = {
@@ -140,8 +148,8 @@ const NomineeFormPage = () => {
         ...(type === "emergencyContacts"
           ? {
               platformName: isOthers ? "Others" : initialDisplayName,
-              ...(isOthers && { otherPlatformName: initialDisplayName }),
-              name: data.name,
+              ...(isOthers && { otherPlatformName: initialDisplayName }), // Add otherPlatformName if needed
+              name: data.name, // Only name is required
               role: data.role,
               phone: data.phone,
               email: data.email,
@@ -200,7 +208,7 @@ const NomineeFormPage = () => {
             }),
       },
     };
-
+    // console.log("Payload:", payload);
     try {
       await createNominee(payload).unwrap();
       toast.success("Nominee added successfully!");
@@ -271,6 +279,8 @@ const NomineeFormPage = () => {
       ];
     } else {
       requiredFields = [
+        // watchedFields.userId,
+
         watchedFields.displayName,
         watchedFields.nomineeName,
         watchedFields.nomineePhone,
@@ -289,7 +299,7 @@ const NomineeFormPage = () => {
 
     const platformNameData =
       type === "investment"
-        ? watch("platformName")?.trim() || initialDisplayName
+        ? watch("platformName")?.trim() || initialDisplayName // Use typed value first
         : type === "others" &&
           ([
             "E-Commerce Accounts",
@@ -316,24 +326,28 @@ const NomineeFormPage = () => {
       referenceId: `AG-${Date.now()}`,
     };
 
+    console.log("Agreement Data:", agreementData);
+
     const secretKey = import.meta.env.VITE_AES_SECRET_KEY;
     const encryptedData = CryptoJS.AES.encrypt(
       JSON.stringify(agreementData),
       secretKey
     ).toString();
 
+    // Open Agreement in a New Tab
     const agreementWindow = window.open(
       `/nominees/${type}/agreement?agree=${encodeURIComponent(encryptedData)}`,
       "_blank"
     );
 
+    // Send a validation message to the new tab
     if (agreementWindow) {
       setTimeout(() => {
         agreementWindow.postMessage(
           { validSession: true },
           window.location.origin
         );
-      }, 500);
+      }, 500); // Delay to ensure the new tab is fully loaded
     }
   };
 
@@ -360,13 +374,18 @@ const NomineeFormPage = () => {
                 Add Your {getTitle()}
               </h2>
             )}
-
+            {/* <div
+              className={`transition-transform duration-500 ${
+                showNomineeSection ? "-translate-x-full" : ""
+              }`}
+            > */}
             <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-              {/* Step 1: Platform/Account Details */}
+              {/* Display Name */}
+
               {currentStep === 1 &&
                 (type === "emergencyContacts" ? (
                   <>
-                    {/* Emergency Contact Fields */}
+                    {/* Platform Name */}
                     <div>
                       <div className="relative">
                         <input
@@ -390,6 +409,7 @@ const NomineeFormPage = () => {
                       </div>
                     </div>
 
+                    {/* Role */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Profession/Designation
@@ -409,6 +429,7 @@ const NomineeFormPage = () => {
                       )}
                     </div>
 
+                    {/* Name */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Name
@@ -428,6 +449,7 @@ const NomineeFormPage = () => {
                       )}
                     </div>
 
+                    {/* Phone */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Phone
@@ -436,7 +458,7 @@ const NomineeFormPage = () => {
                         {...register("phone", {
                           required: "Phone number is required",
                           pattern: {
-                            value: /^[0-9]{10}$/,
+                            value: /^[0-9]{10}$/, // Ensures exactly 10 digits
                             message: "Phone number must be exactly 10 digits",
                           },
                         })}
@@ -445,6 +467,7 @@ const NomineeFormPage = () => {
                         placeholder="Enter Phone Number"
                         maxLength={10}
                         onInput={(e) => {
+                          // Ensure the value contains only numbers
                           e.target.value = e.target.value.replace(
                             /[^0-9]/g,
                             ""
@@ -458,6 +481,7 @@ const NomineeFormPage = () => {
                       )}
                     </div>
 
+                    {/* Email */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Email
@@ -477,6 +501,7 @@ const NomineeFormPage = () => {
                       )}
                     </div>
 
+                    {/* Additional Info */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">
                         Additional Info
@@ -500,7 +525,6 @@ const NomineeFormPage = () => {
                   </>
                 ) : (
                   <>
-                    {/* Regular Platform Fields */}
                     <div>
                       {type !== "investment" && (
                         <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -539,6 +563,7 @@ const NomineeFormPage = () => {
                     </div>
 
                     <div>
+                      {/* Conditional label rendering */}
                       {type === "banking" && (
                         <label className="block text-sm font-medium text-gray-300 mb-1">
                           {type === "banking"
@@ -548,6 +573,7 @@ const NomineeFormPage = () => {
                       )}
 
                       <div className="space-y-4">
+                        {/* Investment: Show normal input field */}
                         {type === "investment" ? (
                           <input
                             {...register("platformName", {
@@ -558,13 +584,14 @@ const NomineeFormPage = () => {
                             placeholder="Enter Your Platform Name"
                           />
                         ) : (
+                          // Dropdown for banking and others only
                           type === "banking" && (
                             <select
                               className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
                               value={selectedOption}
                               onChange={(e) => {
                                 setSelectedOption(e.target.value);
-                                setShowCustomField(e.target.value === "Others");
+                                setShowCustomField(e.target.value === "Others"); // Show custom field if "Others" is selected
                               }}
                             >
                               <option value="">Select an option</option>
@@ -587,6 +614,7 @@ const NomineeFormPage = () => {
                           )
                         )}
 
+                        {/* Custom Input Field for "Others" */}
                         {showCustomField && (
                           <input
                             {...register("customAccountType", {
@@ -609,12 +637,16 @@ const NomineeFormPage = () => {
                           .map((item) => item.toLowerCase())
                           .includes(initialDisplayName.toLowerCase())) && (
                         <div>
+                          {/* <label className="block text-sm font-medium text-gray-300 mb-1">
+        Enter Your Platform Name
+      </label> */}
                           <input
                             {...register("customPlatformName", {
                               required: "Platform name is required",
                             })}
                             type="text"
                             className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
+                            // placeholder={`Enter ${dynamicFieldLabels[initialDisplayName]}`}
                             placeholder={`Enter Your Platform Name`}
                           />
                           {errors.customPlatformName && (
@@ -625,13 +657,13 @@ const NomineeFormPage = () => {
                         </div>
                       )}
 
+                      {/* Error Message */}
                       {errors.accountType && (
                         <p className="mt-1 text-sm text-red-400">
                           {errors.accountType.message}
                         </p>
                       )}
                     </div>
-
                     {!(type === "banking" || type === "investment") && (
                       <div>
                         <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -662,6 +694,7 @@ const NomineeFormPage = () => {
                       </div>
                     )}
 
+                    {/* Password */}
                     {!(type === "banking" || type === "investment") && (
                       <div className="relative">
                         <label className="block text-sm font-medium text-gray-300 mb-1">
@@ -694,9 +727,14 @@ const NomineeFormPage = () => {
                       </div>
                     )}
 
+                    {/* Additional Information */}
                     <div>
                       <label className="block text-sm font-medium text-gray-300 mb-1">
+                        {/* {isBankingForm
+                      ? "Other Information" */}
+                        {/* :  */}
                         Additional Information
+                        {/* } */}
                       </label>
                       <textarea
                         {...register("additionalInfo")}
@@ -717,29 +755,19 @@ const NomineeFormPage = () => {
                   </>
                 ))}
 
-              {/* Step 2: Nominee Details */}
+              {/* Nominee Details Section */}
+              {/* <div
+                    className={`transition-transform duration-500 ${
+                      showNomineeSection ? "" : "translate-x-full"
+                    }`}
+                  >
+                    <form className="space-y-6"> */}
+
               {currentStep === 2 && (
                 <>
-                  <h2 className="text-3xl font-bold mb-6 bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent">
+                  <h2 className="text-3xl font-bold mb-4 bg-gradient-to-r from-accent-100 to-accent-200 bg-clip-text text-transparent">
                     Add Nominee Details
                   </h2>
-
-                  {/* Quick Fill Button */}
-                  {masterNomineeData?.masterList?.length > 0 && (
-                    <motion.button
-                      type="button"
-                      onClick={() => setShowNomineeModal(true)}
-                      whileHover={{ scale: 1.02 }}
-                      whileTap={{ scale: 0.98 }}
-                      className="w-full mb-6 py-3 px-4 rounded-lg bg-gradient-to-r from-purple-500 to-purple-600 hover:from-purple-600 hover:to-purple-700 text-white font-semibold transition-all flex items-center justify-center gap-2 shadow-lg shadow-purple-500/30"
-                    >
-                      <Sparkles className="w-5 h-5" />
-                      Quick Fill from Saved Nominees
-                      <span className="ml-2 bg-white/20 px-2 py-0.5 rounded-full text-xs">
-                        {masterNomineeData.masterList.length}
-                      </span>
-                    </motion.button>
-                  )}
 
                   {/* Nominee Fields */}
                   <div>
@@ -751,11 +779,10 @@ const NomineeFormPage = () => {
                         required: "Nominee Name is required",
                       })}
                       type="text"
-                      className="w-full px-4 py-3 rounded-lg bg-dark-300 border border-gray-600 text-white focus:outline-none focus:border-accent-100"
+                      className="w-full px-4 py-3 rounded-lg bg-dark-300 border border-gray-600 text-white"
                       placeholder="Enter Nominee's Name"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-1">
                       Phone
@@ -764,18 +791,19 @@ const NomineeFormPage = () => {
                       {...register("nomineePhone", {
                         required: "Nominee Phone is required",
                         pattern: {
-                          value: /^[0-9]{10}$/,
+                          value: /^[0-9]{10}$/, // Ensures exactly 10 digits
                           message: "Nominee phone must be exactly 10 digits",
                         },
                       })}
                       type="tel"
-                      className="w-full px-4 py-3 rounded-lg bg-dark-300 border border-gray-600 text-white focus:outline-none focus:border-accent-100"
+                      className="w-full px-4 py-3 rounded-lg bg-dark-300 border border-gray-600 text-white"
                       placeholder="Enter Nominee's Phone"
                       maxLength={10}
                       onInput={(e) => {
+                        // Restrict input to only numbers and enforce 10 digits
                         e.target.value = e.target.value
                           .replace(/[^0-9]/g, "")
-                          .slice(0, 10);
+                          .slice(0, 10); // Remove non-numeric and limit to 10 digits
                       }}
                     />
                     {errors.nomineePhone && (
@@ -794,11 +822,10 @@ const NomineeFormPage = () => {
                         required: "Nominee Email is required",
                       })}
                       type="email"
-                      className="w-full px-4 py-3 rounded-lg bg-dark-300 border border-gray-600 text-white focus:outline-none focus:border-accent-100"
+                      className="w-full px-4 py-3 rounded-lg bg-dark-300 border border-gray-600 text-white"
                       placeholder="Enter Nominee's Email"
                     />
                   </div>
-
                   <div>
                     <label className="block text-sm font-medium text-gray-300 mb-1">
                       Additional Info
@@ -806,7 +833,7 @@ const NomineeFormPage = () => {
                     <textarea
                       {...register("nomineeAdditionalInfo")}
                       rows={4}
-                      className="w-full px-4 py-3 rounded-lg bg-dark-300 border border-gray-600 text-white focus:outline-none focus:border-accent-100"
+                      className="w-full px-4 py-3 rounded-lg bg-dark-300 border border-gray-600 text-white"
                       placeholder="Enter Additional Info for Nominee"
                     />
                   </div>
@@ -844,6 +871,7 @@ const NomineeFormPage = () => {
               <div className="flex justify-between items-center mt-6">
                 {currentStep === 2 && (
                   <>
+                    {/* Back Button */}
                     <button
                       type="button"
                       onClick={handleBack}
@@ -853,6 +881,7 @@ const NomineeFormPage = () => {
                       Back
                     </button>
 
+                    {/* Save Button */}
                     <button
                       type="submit"
                       disabled={!isFormComplete}
@@ -868,139 +897,26 @@ const NomineeFormPage = () => {
                   </>
                 )}
               </div>
+
+              {/* </form>
+                </div> */}
+
+              {/* <motion.button
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  type="submit"
+                  disabled={isLoading}
+                  className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-accent-100 to-accent-200 text-dark-100 font-semibold hover:opacity-90 transition-opacity flex items-center justify-center"
+                >
+                  {isLoading ? "Saving..." : <Save className="w-5 h-5 mr-2" />}
+                  {isLoading ? "" : "Save Nominees"}
+                </motion.button> */}
             </form>
+            {/* </div> */}
           </div>
         </motion.div>
       </div>
 
-      {/* Nominee Selection Modal */}
-      <AnimatePresence>
-        {showNomineeModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-            onClick={() => setShowNomineeModal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-dark-200 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden border border-dark-300"
-            >
-              {/* Modal Header */}
-              <div className="p-6 border-b border-dark-300 bg-gradient-to-r from-dark-200 to-dark-300">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                      <Users className="w-6 h-6 text-accent-100" />
-                      Select a Nominee
-                    </h3>
-                    <p className="text-sm text-gray-400 mt-1">
-                      Choose from your previously saved nominees
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setShowNomineeModal(false)}
-                    className="p-2 rounded-lg hover:bg-dark-100 transition-colors"
-                  >
-                    <X className="w-6 h-6 text-gray-400 hover:text-white" />
-                  </button>
-                </div>
-
-                {/* Search Bar */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by name, email, or phone..."
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-dark-100 border border-dark-300 text-white placeholder-gray-500 focus:outline-none focus:border-accent-100"
-                  />
-                </div>
-              </div>
-
-              {/* Modal Body */}
-              <div className="p-6 overflow-y-auto max-h-[calc(80vh-200px)] custom-scrollbar">
-                {isMasterListLoading ? (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-100 mb-4"></div>
-                    <p className="text-gray-400">Loading nominees...</p>
-                  </div>
-                ) : filteredNominees && filteredNominees.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredNominees.map((item, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        onClick={() => handleSelectNominee(item.nominee)}
-                        className="relative p-4 rounded-xl bg-gradient-to-br from-dark-300 to-dark-100 border border-dark-300 hover:border-accent-100 cursor-pointer group transition-all hover:shadow-lg hover:shadow-accent-100/20"
-                      >
-                        {/* Badge */}
-                        <div className="absolute top-3 right-3 bg-accent-100/20 border border-accent-100 text-accent-100 px-2 py-1 rounded-full text-xs font-bold">
-                          {item.occurrences}x
-                        </div>
-
-                        {/* Content */}
-                        <div className="space-y-3 pr-12">
-                          <div className="flex items-start gap-2">
-                            <div className="mt-1 w-10 h-10 rounded-full bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center text-dark-100 font-bold text-lg flex-shrink-0">
-                              {item.nominee.name?.charAt(0) || "?"}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-white font-bold text-lg group-hover:text-accent-100 transition-colors truncate">
-                                {item.nominee.name || "N/A"}
-                              </p>
-                              <p className="text-sm text-gray-400 truncate">
-                                {item.nominee.email || "N/A"}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-sm text-gray-400">
-                            <div className="w-2 h-2 rounded-full bg-accent-100"></div>
-                            <span>{item.nominee.phone || "N/A"}</span>
-                          </div>
-
-                          {item.nominee.additionalInfo && (
-                            <p className="text-xs text-gray-500 line-clamp-2">
-                              {item.nominee.additionalInfo}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Hover Effect */}
-                        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-accent-100/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                      </motion.div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-dark-300 mb-4">
-                      <Search className="w-10 h-10 text-gray-600" />
-                    </div>
-                    <p className="text-gray-400 font-medium text-lg mb-2">
-                      {searchQuery ? "No nominees found" : "No saved nominees"}
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      {searchQuery
-                        ? "Try a different search term"
-                        : "Your saved nominees will appear here"}
-                    </p>
-                  </div>
-                )}
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
-
-      {/* Incomplete Form Prompt */}
       {isPromptOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-60 backdrop-blur-sm">
           <div className="bg-white rounded-xl shadow-xl p-6 max-w-sm w-full border border-gray-300 transform transition-transform scale-100 hover:scale-105">
@@ -1040,24 +956,6 @@ const NomineeFormPage = () => {
           </div>
         </div>
       )}
-
-      {/* Custom Scrollbar Styles */}
-      <style jsx>{`
-        .custom-scrollbar::-webkit-scrollbar {
-          width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-          background: #1a1a1a;
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-          background: linear-gradient(to bottom, #00d4ff, #0099cc);
-          border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-          background: linear-gradient(to bottom, #00e5ff, #00b8e6);
-        }
-      `}</style>
     </div>
   );
 };

@@ -1202,7 +1202,7 @@ const AadhaarModal = ({ showAadhaarModal, setShowAadhaarModal, onVerificationSuc
 
 const DashboardPage = () => {
   const [activeFeature, setActiveFeature] = useState(null);
-  const [showSettings, setShowSettings] = useState(false);
+  // const [showSettings, setShowSettings] = useState(false);
   const [showAadhaarModal, setShowAadhaarModal] = useState(false);
   const [aadhaarNumber, setAadhaarNumber] = useState("");
   const [showConsentForm, setShowConsentForm] = useState(false);
@@ -1686,14 +1686,14 @@ const smartIsTrialActive =
               </p>
             </div>
 
-            <motion.button
+            {/* <motion.button
               whileHover={{ scale: 1.1 }}
               whileTap={{ scale: 0.95 }}
               onClick={() => setShowSettings(true)}
               className="p-3 rounded-lg bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-600 shadow-md hover:shadow-xl transition-all"
             >
               <Settings className="w-6 h-6 text-white" />
-            </motion.button>
+            </motion.button> */}
           </div>
           <style>{glowEffect}</style>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-12">
@@ -1768,10 +1768,10 @@ const smartIsTrialActive =
       </div>
 
       {/* Settings Modal */}
-      <SettingsModal
+      {/* <SettingsModal
         isOpen={showSettings}
         onClose={() => setShowSettings(false)}
-      />
+      /> */}
 
       {/* Aadhaar Modal */}
       <AadhaarModal

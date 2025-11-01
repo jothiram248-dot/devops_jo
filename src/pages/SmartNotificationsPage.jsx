@@ -380,9 +380,12 @@ const SmartNotificationsPage = () => {
     <div className="min-h-screen bg-dark-100">
       {/* Hero Section */}
       <section
-        ref={videoRef}
-        className="relative min-h-screen overflow-visible flex flex-col justify-start py-8 md:py-16"
-      >
+      ref={videoRef}
+      className="relative overflow-hidden"
+      id="smart-notifications-hero"
+    >
+      {/* Full viewport container */}
+      <div className="hero-viewport">
         {/* Immersive Background Base Layer */}
         <div className="absolute inset-0 bg-[#050816]"></div>
 
@@ -398,7 +401,7 @@ const SmartNotificationsPage = () => {
             loop
             playsInline
             id="bg-video"
-            className="absolute inset-0 w-full h-auto object-cover opacity-60"
+            className="absolute inset-0 w-full h-full object-cover opacity-60"
           >
             <source
               src={`${
@@ -440,391 +443,472 @@ const SmartNotificationsPage = () => {
             ))}
           </div>
 
-          {/* Holographic Orbital Elements with Depth Effect */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150vw] h-[150vw] border border-blue-400/10 rounded-full animate-spin-very-slow blur-sm"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[120vw] h-[120vw] border border-cyan-400/8 rounded-full animate-spin-moderate"></div>
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[100vw] h-[100vw] border border-purple-500/10 rounded-full animate-spin-slow-reverse holographic-edge"></div>
         </div>
 
-        {/* Content Container with Fixed Positioning */}
-        <div className="relative z-10 container mx-auto px-4 md:px-6 pt-10 sm:pt-16 md:pt-20">
-          <div className="w-full max-w-7xl mx-auto relative">
-            {/* Main Content Area - Starting at Top of Screen */}
-            <div className="flex flex-col items-center">
-              {/* Enterprise-Grade Header Section */}
-              <div className="text-center w-full mb-8">
-                <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold text-white mb-6 leading-tight enterprise-heading">
-                  Smart{" "}
-                  <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
-                    Notifications
+        {/* Content Container - Centered with top spacing for navbar */}
+        <div className="relative z-10 container mx-auto px-4 sm:px-6 lg:px-8 h-full flex flex-col justify-center pt-16 md:pt-20 lg:pt-24">
+          <div className="w-full max-w-7xl mx-auto">
+            {/* Compact Header Section */}
+            <div className="text-center w-full mb-6 lg:mb-8">
+              <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold text-white mb-3 leading-tight enterprise-heading">
+                Smart{" "}
+                <span className="bg-clip-text text-transparent bg-gradient-to-r from-blue-400 to-purple-500">
+                  Notifications
+                </span>
+              </h1>
+
+              <h2 className="text-lg sm:text-xl md:text-2xl lg:text-3xl font-semibold text-gray-200 mb-3">
+                with{" "}
+                <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
+                  SacredSecret
+                </span>
+              </h2>
+
+              <div className="w-16 h-0.5 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto rounded-full"></div>
+            </div>
+
+            {/* Professional Two-Column Compact Layout */}
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
+              {/* Left Column: Text Content */}
+              <motion.div
+                initial={{ opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.2 }}
+                className="relative p-4 lg:p-6 flex flex-col justify-center z-10"
+                whileHover={{ scale: 1.01, transition: { duration: 0.3 } }}
+              >
+                {/* Text Content - Increased size */}
+                <p className="text-base md:text-lg lg:text-xl xl:text-2xl text-gray-100 leading-relaxed dynamic-text">
+                  Receive{" "}
+                  <span className="highlight-text">
+                    important notifications
+                  </span>{" "}
+                  for automatic payments—whether subscriptions, credit cards,
+                  or other recurring charges{" "}
+                  <span className="highlight-text">
+                    linked to your payment method
                   </span>
-                </h1>
+                  . Stay informed and{" "}
+                  <span className="highlight-text">
+                    manage your auto-renewals
+                  </span>{" "}
+                  and unused subscriptions.
+                </p>
 
-                <h2 className="text-2xl sm:text-3xl md:text-4xl font-semibold text-gray-200 mb-8">
-                  with{" "}
-                  <span className="font-bold bg-clip-text text-transparent bg-gradient-to-r from-cyan-300 to-blue-500">
-                    SacredSecret
-                  </span>
-                </h2>
-
-                <div className="w-24 h-1 bg-gradient-to-r from-blue-500 to-purple-500 mx-auto mb-8 rounded-full"></div>
-              </div>
-
-              {/* Professional Two-Column Layout */}
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8 md:gap-12 items-center mt-4">
-                {/* Left Column: Text Content */}
-                <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
-                  className="relative p-8 md:p-10 flex flex-col justify-center z-10"
-                  whileHover={{ scale: 1.01, transition: { duration: 0.3 } }}
-                >
-                  {/* Text Content */}
-                  <p className="text-lg md:text-2xl text-gray-100 leading-relaxed dynamic-text">
-                    Receive{" "}
-                    <span className="highlight-text">
-                      important notifications
-                    </span>{" "}
-                    for automatic payments—whether subscriptions, credit cards,
-                    or other recurring charges{" "}
-                    <span className="highlight-text">
-                      linked to your payment method
+                {/* CTA Button - Compact */}
+                <div className="mt-4 lg:mt-5 flex justify-start">
+                  <motion.button
+                    whileHover={{
+                      scale: 1.03,
+                      boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)",
+                    }}
+                    whileTap={{ scale: 0.98 }}
+                    onClick={handleHeroCta}
+                    className="px-6 py-2.5 lg:px-8 lg:py-3 text-sm md:text-base font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
+                  >
+                    <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
+                    <span className="relative z-10 flex items-center font-bold">
+                      {ctaLabel} <span className="ml-2 arrow-icon">→</span>
                     </span>
-                    . Stay informed and{" "}
-                    <span className="highlight-text">
-                      manage your auto-renewals
-                    </span>{" "}
-                    and unused subscriptions.
-                  </p>
+                  </motion.button>
+                </div>
+              </motion.div>
 
-                  {/* CTA Button */}
-                  <div className="mt-6 md:mt-8 flex justify-start">
-                    <motion.button
-                      whileHover={{
-                        scale: 1.03,
-                        boxShadow: "0 0 20px rgba(176, 132, 199, 0.3)",
-                      }}
-                      whileTap={{ scale: 0.98 }}
-                      onClick={handleHeroCta}
-                      className="px-8 py-3 md:px-10 md:py-4 text-base md:text-lg font-semibold rounded-full bg-gradient-to-r from-indigo-100 via-cyan-100 to-purple-100 text-gray-800 transition-all shadow-lg border border-white/30 relative overflow-hidden group neo-button"
+              {/* Right Column: Video with Player - Compact */}
+              <motion.div
+                initial={{ opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="relative flex justify-center items-center"
+              >
+                {/* Video/Image Container - Compact */}
+                <div className="w-full max-w-2xl mx-auto">
+                  {/* Video with Styling */}
+                  <div className="relative rounded-xl overflow-hidden shadow-2xl group border border-white/20 video-frame">
+                    {/* Corner Accents - Smaller */}
+                    <div className="absolute top-0 left-0 w-10 h-10 border-t-2 border-l-2 border-blue-400/70 rounded-tl-xl z-20"></div>
+                    <div className="absolute bottom-0 right-0 w-10 h-10 border-b-2 border-r-2 border-purple-500/70 rounded-br-xl z-20"></div>
+
+                    {/* Image/Video Player */}
+                    <div
+                      className="relative z-10"
+                      style={{ aspectRatio: "16/9" }}
                     >
-                      <div className="absolute inset-0 bg-gradient-to-r from-indigo-200/0 via-white/60 to-indigo-200/0 -translate-x-full group-hover:translate-x-full transition-transform duration-700"></div>
-                      <span className="relative z-10 flex items-center font-bold">
-                        {ctaLabel} <span className="ml-2 arrow-icon">→</span>
-                      </span>
-                    </motion.button>
-                  </div>
-                </motion.div>
+                      <VideoPlayer
+                        videoUrl="https://www.youtube.com/watch?v=I-720U4Iur0"
+                        title="Smart Notifications"
+                      />
 
-                {/* Right Column: Image with Video Player */}
-                <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.4 }}
-                  className="relative flex justify-center items-start"
-                >
-                  {/* Video/Image Container */}
-                  <div className="w-full max-w-xl mx-auto">
-                    {/* Video with Original Styling */}
-                    <div className="relative rounded-2xl overflow-hidden shadow-xl group border border-white/20 video-frame">
-                      {/* Corner Accents */}
-                      <div className="absolute top-0 left-0 w-16 h-16 border-t border-l border-blue-400/70 rounded-tl-2xl z-20"></div>
-                      <div className="absolute bottom-0 right-0 w-16 h-16 border-b border-r border-purple-500/70 rounded-br-2xl z-20"></div>
-
-                      {/* Image/Video Player */}
-                      <div
-                        className="relative z-10"
-                        style={{ aspectRatio: "16/9" }}
-                      >
-                        {/* <img
-                          src={`${import.meta.env.VITE_DO_BUCKET_URL}/assets/Images/Smart_notifications_thumblin.jpg`}
-                          alt="Smart Notifications"
-                          className="w-full h-full object-cover"
-                        /> */}
-                        <VideoPlayer
-                          videoUrl="https://www.youtube.com/watch?v=I-720U4Iur0"
-                          title="Smart Notifications"
-                        />
-
-                        {/* Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
-                          {/* Scan Lines */}
-                          <div className="absolute inset-0 scan-lines-subtle"></div>
-                        </div>
+                      {/* Overlay */}
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/30 to-black/10 pointer-events-none z-10">
+                        {/* Scan Lines */}
+                        <div className="absolute inset-0 scan-lines-subtle"></div>
                       </div>
                     </div>
                   </div>
-                </motion.div>
-              </div>
+                </div>
+              </motion.div>
             </div>
           </div>
         </div>
+      </div>
 
-        {/* CSS Styles */}
-        <style jsx>{`
-          /* Neo-Morphic Glass Effect with Depth */
-          .neo-glass {
-            position: relative;
-            background: rgba(8, 8, 30, 0.25);
-            backdrop-filter: blur(10px);
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.08);
-            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25),
-              0 5px 15px rgba(0, 0, 0, 0.1),
-              inset 0 1px 1px rgba(255, 255, 255, 0.1);
-            overflow: hidden;
-            transition: all 0.5s ease;
-          }
+      {/* CSS Styles */}
+      <style jsx>{`
+        .hero-viewport {
+          position: relative;
+          height: 100svh;
+          height: 100dvh;
+          min-height: 100vh;
+          display: flex;
+          align-items: center;
+        }
 
-          .neo-glass:before {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-              120deg,
-              transparent,
-              rgba(56, 189, 248, 0.08),
-              transparent
-            );
-            transform: translateX(-100%);
-            animation: neo-shine 8s infinite;
-            z-index: -1;
-          }
+        /* Neo-Morphic Glass Effect with Depth */
+        .neo-glass {
+          position: relative;
+          background: rgba(8, 8, 30, 0.25);
+          backdrop-filter: blur(10px);
+          border-radius: 20px;
+          border: 1px solid rgba(255, 255, 255, 0.08);
+          box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25),
+            0 5px 15px rgba(0, 0, 0, 0.1),
+            inset 0 1px 1px rgba(255, 255, 255, 0.1);
+          overflow: hidden;
+          transition: all 0.5s ease;
+        }
 
-          /* 3D Typography Effects */
-          /* Enterprise-grade heading style */
-          .enterprise-heading {
-            letter-spacing: -0.02em;
-            line-height: 1.1;
-            font-weight: 800;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
-          }
+        .neo-glass:before {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            120deg,
+            transparent,
+            rgba(56, 189, 248, 0.08),
+            transparent
+          );
+          transform: translateX(-100%);
+          animation: neo-shine 8s infinite;
+          z-index: -1;
+        }
 
-          /* Video container styling */
-          .video-container {
-            position: relative;
-            overflow: hidden;
-            border-radius: 0.75rem;
-            width: 100%;
-            aspect-ratio: 16/9;
-            background-color: rgba(17, 24, 39, 0.7);
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2),
-              0 10px 10px -5px rgba(0, 0, 0, 0.1);
-          }
+        /* Enterprise-grade heading style */
+        .enterprise-heading {
+          letter-spacing: -0.02em;
+          line-height: 1.1;
+          font-weight: 800;
+          text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
 
-          .text-gradient-animated {
-            background: linear-gradient(
+        /* Video container styling */
+        .video-container {
+          position: relative;
+          overflow: hidden;
+          border-radius: 0.75rem;
+          width: 100%;
+          aspect-ratio: 16/9;
+          background-color: rgba(17, 24, 39, 0.7);
+          box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2),
+            0 10px 10px -5px rgba(0, 0, 0, 0.1);
+        }
+
+        .text-gradient-animated {
+          background: linear-gradient(
+            to right,
+            #38bdf8,
+            #818cf8,
+            #c084fc,
+            #38bdf8
+          );
+          background-size: 200% auto;
+          background-clip: text;
+          -webkit-background-clip: text;
+          color: transparent;
+          animation: gradient-text 6s linear infinite;
+        }
+
+        /* Futuristic Button Styling */
+        .neo-button {
+          transition: all 0.4s ease;
+        }
+
+        .neo-button:hover .arrow-icon {
+          transform: translateX(5px);
+          transition: transform 0.3s ease;
+        }
+
+        .neo-button:before {
+          content: "";
+          position: absolute;
+          inset: -2px;
+          border-radius: 999px;
+          padding: 2px;
+          background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
+          -webkit-mask: linear-gradient(#fff 0 0) content-box,
+            linear-gradient(#fff 0 0);
+          -webkit-mask-composite: xor;
+          mask-composite: exclude;
+          opacity: 0;
+          transition: opacity 0.4s ease;
+        }
+
+        .neo-button:hover:before {
+          opacity: 1;
+        }
+
+        /* Premium Text Highlighting */
+        .dynamic-text {
+          letter-spacing: 0.01em;
+        }
+
+        .highlight-text {
+          position: relative;
+          color: #38bdf8;
+          font-weight: 600;
+        }
+
+        .highlight-text:after {
+          content: "";
+          position: absolute;
+          bottom: 0;
+          left: 0;
+          width: 100%;
+          height: 30%;
+          background: linear-gradient(90deg, #38bdf8, #818cf8);
+          opacity: 0.15;
+          border-radius: 4px;
+          z-index: -1;
+        }
+
+        /* Holographic Card Effects */
+        .video-frame {
+          transition: transform 0.3s ease-out;
+          position: relative;
+          background: rgba(8, 8, 30, 0.4);
+          box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .video-frame:after {
+          content: "";
+          position: absolute;
+          inset: 0;
+          background: linear-gradient(
+            120deg,
+            rgba(255, 255, 255, 0) 0%,
+            rgba(255, 255, 255, 0.03) 25%,
+            rgba(255, 255, 255, 0.05) 50%,
+            rgba(255, 255, 255, 0.03) 75%,
+            rgba(255, 255, 255, 0) 100%
+          );
+          opacity: 0.3;
+        }
+
+        /* Premium Scan Lines Effect */
+        .scan-lines-subtle {
+          background-image: repeating-linear-gradient(
+            0deg,
+            rgba(56, 189, 248, 0.04),
+            rgba(56, 189, 248, 0.04) 1px,
+            transparent 1px,
+            transparent 2px
+          );
+          background-size: 100% 4px;
+          animation: scan-animation-premium 10s linear infinite;
+        }
+
+        /* Neon Glow Effects */
+        .neon-glow {
+          box-shadow: 0 0 5px rgba(56, 189, 248, 0.7),
+            0 0 10px rgba(56, 189, 248, 0.5);
+        }
+
+        .glow-pulse {
+          animation: glow-pulsate 3s infinite alternate;
+        }
+
+        .holographic-edge {
+          border-image: linear-gradient(
               to right,
               #38bdf8,
               #818cf8,
               #c084fc,
               #38bdf8
-            );
-            background-size: 200% auto;
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            animation: gradient-text 6s linear infinite;
-          }
+            )
+            1;
+          border-image-slice: 1;
+        }
 
-          /* Futuristic Button Styling */
-          .neo-button {
-            transition: all 0.4s ease;
-          }
+        /* Data Spark Animation */
+        .data-spark {
+          position: absolute;
+          width: 4px;
+          height: 4px;
+          background: white;
+          border-radius: 50%;
+          box-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8;
+          animation: spark-travel 3s infinite linear;
+        }
 
-          .neo-button:hover .arrow-icon {
-            transform: translateX(5px);
-            transition: transform 0.3s ease;
-          }
+        /* Particle System colors */
+        .particle-blue {
+          background: #38bdf8;
+          box-shadow: 0 0 10px #38bdf8;
+        }
 
-          .neo-button:before {
-            content: "";
-            position: absolute;
-            inset: -2px;
-            border-radius: 999px;
-            padding: 2px;
-            background: linear-gradient(90deg, #38bdf8, #818cf8, #c084fc);
-            -webkit-mask: linear-gradient(#fff 0 0) content-box,
-              linear-gradient(#fff 0 0);
-            -webkit-mask-composite: xor;
-            mask-composite: exclude;
-            opacity: 0;
-            transition: opacity 0.4s ease;
-          }
+        .particle-cyan {
+          background: #22d3ee;
+          box-shadow: 0 0 10px #22d3ee;
+        }
 
-          .neo-button:hover:before {
+        .particle-purple {
+          background: #a855f7;
+          box-shadow: 0 0 10px #a855f7;
+        }
+
+        /* Letter Spacing Utilities */
+        .letter-spacing-wide {
+          letter-spacing: 0.05em;
+        }
+
+        /* Enhanced Animations */
+        @keyframes neo-shine {
+          0% {
+            transform: translateX(-100%);
+          }
+          20%,
+          100% {
+            transform: translateX(100%);
+          }
+        }
+
+        @keyframes gradient-text {
+          0% {
+            background-position: 0% 50%;
+          }
+          100% {
+            background-position: 200% 50%;
+          }
+        }
+
+        @keyframes scan-animation-premium {
+          0% {
+            background-position: 0 0;
+          }
+          100% {
+            background-position: 0 100%;
+          }
+        }
+
+        @keyframes glow-pulsate {
+          0% {
+            box-shadow: 0 0 5px rgba(56, 189, 248, 0.5);
+          }
+          100% {
+            box-shadow: 0 0 20px rgba(56, 189, 248, 0.8),
+              0 0 30px rgba(139, 92, 246, 0.5);
+          }
+        }
+
+        @keyframes pulse-slow {
+          0%,
+          100% {
             opacity: 1;
           }
-
-          /* Premium Text Highlighting */
-          .dynamic-text {
-            letter-spacing: 0.01em;
+          50% {
+            opacity: 0.7;
           }
+        }
 
-          .highlight-text {
-            position: relative;
-            color: #38bdf8;
-            font-weight: 600;
+        @keyframes spin {
+          from {
+            transform: translate(-50%, -50%) rotate(0deg);
           }
-
-          .highlight-text:after {
-            content: "";
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 30%;
-            background: linear-gradient(90deg, #38bdf8, #818cf8);
-            opacity: 0.15;
-            border-radius: 4px;
-            z-index: -1;
+          to {
+            transform: translate(-50%, -50%) rotate(360deg);
           }
+        }
 
-          /* Holographic Card Effects */
-          .video-frame {
-            transition: transform 0.3s ease-out;
-            position: relative;
-            background: rgba(8, 8, 30, 0.4);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        @keyframes float-particle-3d {
+          0% {
+            transform: translate(0, 0) translateZ(var(--z, 0));
+            opacity: 0;
           }
-
-          .video-frame:after {
-            content: "";
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(
-              120deg,
-              rgba(255, 255, 255, 0) 0%,
-              rgba(255, 255, 255, 0.03) 25%,
-              rgba(255, 255, 255, 0.05) 50%,
-              rgba(255, 255, 255, 0.03) 75%,
-              rgba(255, 255, 255, 0) 100%
-            );
-            opacity: 0.3;
+          10% {
+            opacity: 0.7;
           }
-
-          /* Professional animation speeds */
-          .animate-pulse-slow {
-            animation: pulse-slow 5s ease-in-out infinite;
+          90% {
+            opacity: 0.7;
           }
-
-          /* Premium Scan Lines Effect */
-          .scan-lines-subtle {
-            background-image: repeating-linear-gradient(
-              0deg,
-              rgba(56, 189, 248, 0.04),
-              rgba(56, 189, 248, 0.04) 1px,
-              transparent 1px,
-              transparent 2px
-            );
-            background-size: 100% 4px;
-            animation: scan-animation-premium 10s linear infinite;
-          }
-
-          /* Neon Glow Effects */
-          .neon-glow {
-            box-shadow: 0 0 5px rgba(56, 189, 248, 0.7),
-              0 0 10px rgba(56, 189, 248, 0.5);
-          }
-
-          .glow-pulse {
-            animation: glow-pulsate 3s infinite alternate;
-          }
-
-          .holographic-edge {
-            border-image: linear-gradient(
-                to right,
-                #38bdf8,
-                #818cf8,
-                #c084fc,
-                #38bdf8
+          100% {
+            transform: translate(
+                calc(var(--x, 50) * 1px),
+                calc(var(--y, -500) * 1px)
               )
-              1;
-            border-image-slice: 1;
+              translateZ(var(--z, 0));
+            opacity: 0;
           }
+        }
 
-          /* Advanced Spin Animations */
-          .animate-spin-very-slow {
-            animation: spin 120s linear infinite;
+        @keyframes spark-travel {
+          0% {
+            left: 0;
+            opacity: 0;
           }
+          20% {
+            opacity: 1;
+          }
+          80% {
+            opacity: 1;
+          }
+          100% {
+            left: 100%;
+            opacity: 0;
+          }
+        }
 
-          .animate-spin-moderate {
-            animation: spin 60s linear infinite;
+        @keyframes data-stream-pulse {
+          0%,
+          100% {
+            opacity: 0.1;
+            filter: blur(0px);
           }
+          50% {
+            opacity: 0.3;
+            filter: blur(1px);
+          }
+        }
 
-          .animate-spin-slow-reverse {
-            animation: spin 80s linear infinite reverse;
-          }
+        /* Professional animation speeds */
+        .animate-pulse-slow {
+          animation: pulse-slow 5s ease-in-out infinite;
+        }
 
-          .animate-pulse-slow {
-            animation: pulse-slow 8s ease-in-out infinite;
-          }
+        /* Advanced Spin Animations */
+        .animate-spin-very-slow {
+          animation: spin 120s linear infinite;
+        }
 
-          /* Enhanced Animations */
-          @keyframes neo-shine {
-            0% {
-              transform: translateX(-100%);
-            }
-            20%,
-            100% {
-              transform: translateX(100%);
-            }
-          }
+        .animate-spin-moderate {
+          animation: spin 60s linear infinite;
+        }
 
-          @keyframes gradient-text {
-            0% {
-              background-position: 0% 50%;
-            }
-            100% {
-              background-position: 200% 50%;
-            }
-          }
+        .animate-spin-slow-reverse {
+          animation: spin 80s linear infinite reverse;
+        }
 
-          @keyframes scan-animation-premium {
-            0% {
-              background-position: 0 0;
-            }
-            100% {
-              background-position: 0 100%;
-            }
-          }
+        .animate-pulse-slow {
+          animation: pulse-slow 8s ease-in-out infinite;
+        }
 
-          @keyframes glow-pulsate {
-            0% {
-              box-shadow: 0 0 5px rgba(56, 189, 248, 0.5);
-            }
-            100% {
-              box-shadow: 0 0 20px rgba(56, 189, 248, 0.8),
-                0 0 30px rgba(139, 92, 246, 0.5);
-            }
+        /* Responsive */
+        @media (max-width: 768px) {
+          .enterprise-heading {
+            font-size: clamp(1.75rem, 6vw, 3rem);
           }
-
-          @keyframes pulse-slow {
-            0%,
-            100% {
-              opacity: 1;
-            }
-            50% {
-              opacity: 0.7;
-            }
-          }
-
-          @keyframes spin {
-            from {
-              transform: translate(-50%, -50%) rotate(0deg);
-            }
-            to {
-              transform: translate(-50%, -50%) rotate(360deg);
-            }
-          }
-
-          /* Letter Spacing Utilities */
-          .letter-spacing-wide {
-            letter-spacing: 0.05em;
-          }
-        `}</style>
-      </section>
+        }
+      `}</style>
+    </section>
 
       {/* Notification Types Section */}
       {/* <NotificationGrid  /> */}

@@ -169,10 +169,21 @@
 
 // export default Footer;
 
-
 import React from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Mail, MapPin, Phone, ArrowUp } from "lucide-react";
+import { Mail, MapPin, Phone, ArrowUp, Linkedin, Instagram } from "lucide-react";
+
+// Custom X (Twitter) Icon Component
+const XIcon = ({ className }) => (
+  <svg
+    viewBox="0 0 24 24"
+    className={className}
+    fill="currentColor"
+    xmlns="http://www.w3.org/2000/svg"
+  >
+    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+  </svg>
+);
 
 const Footer = () => {
   const navigate = useNavigate();
@@ -204,7 +215,6 @@ const Footer = () => {
   const quickLinks = [
     { name: "Home", path: "/" },
     { name: "Features", path: "/features" },
-    // { name: "About Us", path: "/about" },
     { name: "Contact", path: "/contact" },
   ];
 
@@ -213,6 +223,24 @@ const Footer = () => {
     { name: "Refund Policy", path: "/refund-policy" },
     { name: "Terms of Service", path: "/terms-of-service" },
     { name: "FAQ", path: "/faq" },
+  ];
+
+  const socialLinks = [
+    { 
+      name: "LinkedIn", 
+      icon: Linkedin, 
+      url: "https://www.linkedin.com/company/your-company" // Replace with your LinkedIn URL
+    },
+    { 
+      name: "Instagram", 
+      icon: Instagram, 
+      url: "https://www.instagram.com/your-company" // Replace with your Instagram URL
+    },
+    { 
+      name: "X", 
+      icon: XIcon, 
+      url: "https://x.com/your-company" // Replace with your X/Twitter URL
+    },
   ];
 
   return (
@@ -306,13 +334,30 @@ const Footer = () => {
         {/* Bottom Section */}
         <div className="relative">
           <div className="absolute left-0 right-0 h-px bg-gradient-to-r from-transparent via-gray-700 to-transparent"></div>
-          <div className="pt-8 flex flex-col md:flex-row justify-between items-center">
-            <p className="text-gray-400 text-sm">
+          <div className="pt-8 flex flex-col lg:flex-row justify-between items-center gap-6">
+            {/* Copyright */}
+            <p className="text-gray-400 text-sm order-1 lg:order-1">
               © {new Date().getFullYear()} SacredSecret. All rights reserved.
             </p>
 
+            {/* Social Media Links - Middle */}
+            <div className="flex items-center gap-4 order-2 lg:order-2">
+              {socialLinks.map((social, index) => (
+                <a
+                  key={index}
+                  href={social.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.name}
+                  className="w-10 h-10 rounded-full bg-gradient-to-br from-dark-100 to-dark-50/90 flex items-center justify-center hover:from-accent-100/20 hover:to-accent-200/20 transition-all duration-300 group border border-gray-700/50 hover:border-accent-100/50"
+                >
+                  <social.icon className="w-5 h-5 text-gray-400 group-hover:text-accent-100 transition-colors" />
+                </a>
+              ))}
+            </div>
+
             {/* Bottom Links */}
-            <div className="flex space-x-6 mt-4 md:mt-0">
+            <div className="flex flex-wrap justify-center gap-4 lg:gap-6 order-3 lg:order-3">
               {bottomLinks.map((item, index) => (
                 <button
                   key={index}

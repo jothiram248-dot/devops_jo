@@ -2,6 +2,9 @@ import React, { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
 import { Target, Eye, Sparkles, ChevronRight } from "lucide-react";
+import picture1 from "/assets/Images/Picture1.png";
+import picture2 from "/assets/Images/Picture2.png";
+
 
 const content = [
   {
@@ -9,8 +12,7 @@ const content = [
     description:
       "Empowering individuals to designate trusted nominees for secure digital asset access, ensuring privacy and protection at the highest level.",
     icon: Target,
-    image:
-      "https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200",
+    image: picture1,
     reverse: false,
   },
   {
@@ -18,8 +20,7 @@ const content = [
     description:
       "Revolutionizing the inheritance process through a decentralized, secure, and transparent platform that puts you in control of your digital legacy.",
     icon: Eye,
-    image:
-      "https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=1200",
+    image: picture2,
     reverse: true,
   },
 ];

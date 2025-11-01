@@ -3,18 +3,26 @@ import { motion } from 'framer-motion';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 import { useForm } from 'react-hook-form';
 import { toast } from 'react-hot-toast';
+import { useSubmitContactFormMutation } from '@/features/api/contactUsApiSlice';
 
 const ContactPage = () => {
   const { register, handleSubmit, reset, formState: { errors } } = useForm();
+  const [submitContactForm, { isLoading }] = useSubmitContactFormMutation();
 
   const onSubmit = async (data) => {
     try {
-      // In a real app, this would send the data to your backend
-      console.log('Contact form data:', data);
-      toast.success('Message sent successfully!');
+      await submitContactForm({
+        name: data.name,
+        email: data.email,
+        phone: data.phone || "", // Optional field
+        message: data.message,
+      }).unwrap();
+      
+      toast.success('Message sent successfully! We\'ll get back to you soon.');
       reset();
     } catch (error) {
-      toast.error('Failed to send message');
+      console.error('Contact form error:', error);
+      toast.error(error?.data?.message || 'Failed to send message. Please try again.');
     }
   };
 
@@ -71,12 +79,13 @@ const ContactPage = () => {
               <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Name
+                    Name <span className="text-red-400">*</span>
                   </label>
                   <input
                     {...register("name", { required: "Name is required" })}
                     className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
                     placeholder="Your name"
+                    disabled={isLoading}
                   />
                   {errors.name && (
                     <p className="mt-1 text-sm text-red-400">{errors.name.message}</p>
@@ -85,7 +94,7 @@ const ContactPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Email
+                    Email <span className="text-red-400">*</span>
                   </label>
                   <input
                     {...register("email", {
@@ -95,8 +104,10 @@ const ContactPage = () => {
                         message: "Invalid email address"
                       }
                     })}
+                    type="email"
                     className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
                     placeholder="Your email"
+                    disabled={isLoading}
                   />
                   {errors.email && (
                     <p className="mt-1 text-sm text-red-400">{errors.email.message}</p>
@@ -105,27 +116,39 @@ const ContactPage = () => {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Subject
+                    Phone <span className="text-gray-500 text-xs">(Optional)</span>
                   </label>
                   <input
-                    {...register("subject", { required: "Subject is required" })}
+                    {...register("phone", {
+                      pattern: {
+                        value: /^[0-9]{10}$/,
+                        message: "Phone must be 10 digits"
+                      }
+                    })}
+                    type="tel"
+                    maxLength={10}
                     className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
-                    placeholder="Message subject"
+                    placeholder="Your phone number"
+                    disabled={isLoading}
+                    onInput={(e) => {
+                      e.target.value = e.target.value.replace(/[^0-9]/g, '');
+                    }}
                   />
-                  {errors.subject && (
-                    <p className="mt-1 text-sm text-red-400">{errors.subject.message}</p>
+                  {errors.phone && (
+                    <p className="mt-1 text-sm text-red-400">{errors.phone.message}</p>
                   )}
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-gray-300 mb-1">
-                    Message
+                    Message <span className="text-red-400">*</span>
                   </label>
                   <textarea
                     {...register("message", { required: "Message is required" })}
                     rows={4}
                     className="w-full px-4 py-3 rounded-lg bg-dark-200 border border-dark-300 text-white focus:outline-none focus:border-accent-100"
                     placeholder="Your message"
+                    disabled={isLoading}
                   />
                   {errors.message && (
                     <p className="mt-1 text-sm text-red-400">{errors.message.message}</p>
@@ -134,10 +157,24 @@ const ContactPage = () => {
 
                 <button
                   type="submit"
-                  className="w-full py-3 px-4 rounded-lg bg-gradient-to-r from-accent-100 to-accent-200 text-dark-100 font-semibold hover:opacity-90 transition-opacity flex items-center justify-center"
+                  disabled={isLoading}
+                  className={`w-full py-3 px-4 rounded-lg font-semibold transition-all flex items-center justify-center ${
+                    isLoading
+                      ? 'bg-dark-300 text-gray-500 cursor-not-allowed'
+                      : 'bg-gradient-to-r from-accent-100 to-accent-200 text-dark-100 hover:opacity-90'
+                  }`}
                 >
-                  <Send className="w-5 h-5 mr-2" />
-                  Send Message
+                  {isLoading ? (
+                    <>
+                      <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-dark-100 mr-2" />
+                      Sending...
+                    </>
+                  ) : (
+                    <>
+                      <Send className="w-5 h-5 mr-2" />
+                      Send Message
+                    </>
+                  )}
                 </button>
               </form>
             </div>

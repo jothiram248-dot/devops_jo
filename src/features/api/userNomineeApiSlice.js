@@ -1,4 +1,4 @@
-import { processNomineesResponse } from "@/utils/decryption";
+import { decryptNomineeFields, processNomineesResponse } from "@/utils/decryption";
 import { NOMINEE_URL } from "../../constants";
 import { apiSlice } from "./apiSlice";
 
@@ -127,6 +127,25 @@ export const nomineeApiSlice = apiSlice.injectEndpoints({
       }),
       providesTags: [{ type: "Nominee", id: "KYC_DATA" }],
     }),
+
+    getMasterNomineeList: builder.query({
+      query: () => ({
+        url: `${NOMINEE_URL}/master/list`,
+      }),
+      // Transform the response to decrypt sensitive data in masterList
+      transformResponse: (response) => {
+        if (response?.masterList) {
+          return {
+            masterList: response.masterList.map(item => ({
+              ...item,
+              nominee: decryptNomineeFields(item.nominee)
+            }))
+          };
+        }
+        return response;
+      },
+      providesTags: [{ type: "Nominee", id: "MASTER_LIST" }],
+    }),
   }),
 });
 
@@ -144,4 +163,5 @@ export const {
   useAadhaarVerifyMutation,
   useGetKycDataQuery,
   useAddEmergencyContactMutation,
+  useGetMasterNomineeListQuery
 } = nomineeApiSlice;
