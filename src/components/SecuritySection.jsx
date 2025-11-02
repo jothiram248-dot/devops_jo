@@ -876,7 +876,7 @@ const SecuritySection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: index * 0.1 }}
-              className="relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] backdrop-blur-xl cursor-pointer group bg-gradient-to-br from-white/95 to-gray-50/95 border border-gray-200"
+              className="relative overflow-hidden rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:scale-[1.02] backdrop-blur-xl  group bg-gradient-to-br from-white/95 to-gray-50/95 border border-gray-200"
             >
               {/* Background Pattern */}
               <div
@@ -993,7 +993,7 @@ const SecuritySection = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={inView ? { opacity: 1, y: 0 } : {}}
               transition={{ duration: 0.6, delay: (index + 3) * 0.1 }}
-              className="relative h-full overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.03] group cursor-pointer bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-xl border border-gray-200"
+              className="relative h-full overflow-hidden rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 transform hover:scale-[1.03] group bg-gradient-to-br from-white/95 to-gray-50/95 backdrop-blur-xl border border-gray-200"
             >
               {/* Top Border */}
               <div

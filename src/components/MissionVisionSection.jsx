@@ -1,10 +1,9 @@
 import React, { useEffect } from "react";
 import { motion, useAnimation } from "framer-motion";
 import { useInView } from "react-intersection-observer";
-import { Target, Eye, Sparkles, ChevronRight } from "lucide-react";
+import { Target, Eye, ArrowRight } from "lucide-react";
 import picture1 from "/assets/Images/Picture1.png";
 import picture2 from "/assets/Images/Picture2.png";
-
 
 const content = [
   {
@@ -14,6 +13,8 @@ const content = [
     icon: Target,
     image: picture1,
     reverse: false,
+    gradient: "from-blue-600 via-indigo-600 to-blue-600",
+    accentColor: "indigo",
   },
   {
     title: "Our Vision",
@@ -22,6 +23,8 @@ const content = [
     icon: Eye,
     image: picture2,
     reverse: true,
+    gradient: "from-indigo-600 via-purple-600 to-indigo-600",
+    accentColor: "purple",
   },
 ];
 
@@ -38,87 +41,42 @@ const MissionVisionSection = () => {
     }
   }, [controls, inView]);
 
-  // floating particles with varied sizes and opacities
-  const floatingParticles = Array(20)
-    .fill()
-    .map((_, i) => ({
-      id: i,
-      size: Math.random() * 4 + 1,
-      x: Math.random() * 100,
-      y: Math.random() * 100,
-      duration: Math.random() * 18 + 15,
-      delay: Math.random() * 7,
-      opacity: Math.random() * 0.3 + 0.1,
-    }));
-
   return (
     <>
+      {/* Top border with gradient glow */}
       <div className="relative w-full h-1">
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-blue-400 to-transparent animate-pulse"></div>
-        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400 to-transparent opacity-30 blur-sm"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-indigo-400 to-transparent animate-pulse"></div>
+        <div className="absolute inset-0 bg-gradient-to-r from-transparent via-purple-300 to-transparent opacity-30 blur-sm"></div>
       </div>
 
       <section
         ref={ref}
-        className="relative py-24 overflow-hidden"
+        className="relative py-12 overflow-hidden"
         id="mission-vision"
       >
-        {/* Light Theme Background with Gradient - matching SecuritySection light style */}
+        {/* Light background with more pronounced gradients */}
         <div className="absolute inset-0 bg-gradient-to-b from-gray-50/90 via-white/95 to-gray-100/90 z-0"></div>
 
-        {/* Ambient gradient overlays - lighter colors */}
-        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-blue-200/30 to-transparent opacity-60 z-0"></div>
-        <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-tr from-indigo-200/30 to-transparent opacity-50 z-0"></div>
+        {/* More vibrant ambient gradient overlays */}
+        <div className="absolute top-0 right-0 w-full h-full bg-gradient-to-br from-indigo-200/30 to-transparent opacity-60 z-0"></div>
+        <div className="absolute bottom-0 left-0 w-full h-full bg-gradient-to-tr from-purple-200/30 to-transparent opacity-50 z-0"></div>
 
-        {/* Floating gradient spheres - lighter colors */}
-        <div className="absolute top-40 right-20 w-64 h-64 bg-blue-300 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-indigo-300 rounded-full filter blur-3xl opacity-30"></div>
-        <div className="absolute top-10 left-1/4 w-32 h-32 bg-sky-300 rounded-full filter blur-3xl opacity-30"></div>
+        {/* Floating gradient spheres */}
+        <div className="absolute top-40 right-20 w-80 h-80 bg-indigo-300 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute bottom-20 left-10 w-96 h-96 bg-purple-300 rounded-full filter blur-3xl opacity-30"></div>
+        <div className="absolute top-10 left-1/4 w-64 h-64 bg-blue-300 rounded-full filter blur-3xl opacity-30"></div>
 
-        {/* Mesh gradient overlay - lighter */}
-        <div className="absolute inset-0 opacity-40 z-0 bg-[radial-gradient(circle_at_top_right,_rgba(59,130,246,0.3),_transparent_70%),radial-gradient(circle_at_bottom_left,_rgba(99,102,241,0.3),_transparent_70%)]"></div>
+        {/* Mesh gradient overlay */}
+        <div className="absolute inset-0 opacity-40 z-0 bg-[radial-gradient(circle_at_top_right,_rgba(129,140,248,0.3),_transparent_70%),radial-gradient(circle_at_bottom_left,_rgba(167,139,250,0.3),_transparent_70%)]"></div>
 
-        {/* Additional light gradients */}
-        <div className="absolute top-1/4 right-1/6 w-80 h-80 bg-indigo-200/40 rounded-full filter blur-3xl"></div>
-        <div className="absolute bottom-1/4 left-1/6 w-96 h-96 bg-purple-200/40 rounded-full filter blur-3xl"></div>
+        {/* Additional diagonal gradient for more depth */}
+        <div className="absolute inset-0 bg-gradient-to-tr from-blue-100/20 via-transparent to-purple-100/20 z-0"></div>
 
-        {/* Enhanced floating particles - lighter */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {[...Array(20)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1.5 h-1.5 rounded-full bg-blue-400/30 animate-float"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animationDelay: `${Math.random() * 5}s`,
-                animationDuration: `${15 + Math.random() * 15}s`,
-              }}
-            />
-          ))}
-        </div>
-        {/* animated particles */}
-        <div className="absolute inset-0 overflow-hidden pointer-events-none">
-          {floatingParticles.map((particle) => (
-            <div
-              key={particle.id}
-              className="absolute rounded-full bg-indigo-400"
-              style={{
-                width: `${particle.size}px`,
-                height: `${particle.size}px`,
-                left: `${particle.x}%`,
-                top: `${particle.y}%`,
-                opacity: particle.opacity * 0.5,
-                boxShadow: "0 0 8px rgba(79, 70, 229, 0.3)",
-                animation: `float ${particle.duration}s infinite linear`,
-                animationDelay: `${particle.delay}s`,
-              }}
-            />
-          ))}
-        </div>
+        {/* Subtle pattern overlay */}
+        <div className="absolute inset-0 opacity-5 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHZpZXdCb3g9IjAgMCA2MCA2MCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj48ZyBmaWxsPSJub25lIiBmaWxsLXJ1bGU9ImV2ZW5vZGQiPjxnIGZpbGw9IiMwMDAiIGZpbGwtb3BhY2l0eT0iLjAyIj48cGF0aCBkPSJNMzYgMzRjMC0yLjIxIDEuNzktNCA0LTRzNCAxLjc5IDQgNC0xLjc5IDQtNCA0LTQtMS43OS00LTRtMC0xN2MwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNG0tMTcgMGMwLTIuMjEgMS43OS00IDQtNHM0IDEuNzkgNCA0LTEuNzkgNC00IDQtNC0xLjc5LTQtNG0wIDE3YzAtMi4yMSAxLjc5LTQgNC00czQgMS43OSA0IDQtMS43OSA0LTQgNC00LTEuNzktNC00Ii8+PC9nPjwvZz48L3N2Zz4=')] z-0"></div>
 
         <div className="container mx-auto px-6 relative z-10">
-          {/* Section Title with better spacing */}
+          {/* Section Header */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             animate={controls}
@@ -126,253 +84,176 @@ const MissionVisionSection = () => {
               visible: {
                 opacity: 1,
                 y: 0,
-                transition: { duration: 0.9, ease: [0.22, 1, 0.36, 1] },
+                transition: { duration: 1 },
               },
             }}
-            className="text-center mb-16"
+            className="text-center mb-8 relative z-10"
           >
-            <div className="relative">
-              <h2 className="text-4xl md:text-5xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-600 to-indigo-600 mb-4">
-                Our Mission & Vision
-              </h2>
+            {/* Accent line with glow */}
+            <div className="relative w-20 h-1 mx-auto mb-6">
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full"></div>
+              <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-purple-400 rounded-full blur-sm opacity-70"></div>
             </div>
 
-            {/* Animated underline consistent with other components */}
-            <motion.div
-              initial={{ width: 0 }}
-              animate={inView ? { width: "10rem" } : {}}
-              transition={{ duration: 1.2, delay: 0.5 }}
-              className="h-1 bg-gradient-to-r from-blue-500 to-indigo-500 mx-auto"
-            ></motion.div>
+            <h2 className="text-3xl md:text-4xl font-black mb-3 bg-clip-text text-transparent bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-600 tracking-tight">
+              Our Mission & Vision
+            </h2>
+
+            <p className="text-base text-gray-700 max-w-3xl mx-auto leading-relaxed font-light">
+              Discover what drives us forward and the future we're building for{" "}
+              <span className="text-indigo-600 font-medium">
+                secure digital inheritance
+              </span>
+            </p>
           </motion.div>
 
-          {/* Content Sections with better spacing */}
-          {content.map((item, index) => (
-            <motion.div
-              key={index}
-              initial={{ opacity: 0, y: 60 }}
-              animate={controls}
-              variants={{
-                visible: {
-                  opacity: 1,
-                  y: 0,
-                  transition: {
-                    duration: 1,
-                    delay: index * 0.3,
-                    ease: [0.22, 1, 0.36, 1],
+          {/* Content Cards - Alternating Layout */}
+          <div className="space-y-8 max-w-7xl mx-auto">
+            {content.map((item, index) => (
+              <motion.div
+                key={index}
+                initial={{ opacity: 0, y: 50 }}
+                animate={controls}
+                variants={{
+                  visible: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.8,
+                      delay: index * 0.2,
+                      ease: [0.16, 1, 0.3, 1],
+                    },
                   },
-                },
-              }}
-              className={`flex flex-col ${
-                item.reverse ? "lg:flex-row-reverse" : "lg:flex-row"
-              } items-center gap-12 mb-24 last:mb-0`}
-            >
-              {/* Image Column */}
-              <motion.div
-                whileHover={{ scale: 1.02 }}
-                transition={{ duration: 0.4, ease: "easeOut" }}
-                className="w-full lg:w-1/2 relative group"
+                }}
+                className={`flex flex-col ${
+                  item.reverse ? "lg:flex-row-reverse" : "lg:flex-row"
+                } items-center gap-5 lg:gap-6`}
               >
-                <div className="relative rounded-3xl overflow-hidden shadow-2xl transform perspective-1000">
-                  {/* Refined 3D tilt effect container */}
-                  <div className="relative aspect-[4/3] rounded-3xl overflow-hidden group-hover:shadow-3xl transition-all duration-700">
-                    {/* Main image */}
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-700"
-                    />
+                {/* Rounded Rectangle Image Section */}
+                <motion.div
+                  className="w-full lg:w-[22%]"
+                  whileHover={{ scale: 1.03, y: -5 }}
+                  transition={{ duration: 0.4, ease: "easeOut" }}
+                >
+                  <div className="relative group">
+                    {/* Outer Glow */}
+                    <div className={`absolute -inset-2 bg-gradient-to-r ${item.gradient} rounded-3xl opacity-20 blur-2xl group-hover:opacity-40 transition-all duration-700`}></div>
 
-                    {/* Sophisticated gradient overlays */}
-                    <div className="absolute inset-0 bg-gradient-to-br from-indigo-900/70 via-purple-900/60 to-transparent opacity-60 mix-blend-multiply group-hover:opacity-70 transition-opacity duration-700"></div>
-                    <div className="absolute inset-0 bg-gradient-to-tl from-blue-900/50 via-transparent to-indigo-900/40 mix-blend-overlay"></div>
+                    {/* Main Image Container */}
+                    <div className="relative rounded-2xl overflow-hidden shadow-2xl border-3 border-white">
+                      <div className="aspect-[4/3] relative">
+                        <img
+                          src={item.image}
+                          alt={item.title}
+                          className="w-full h-full object-cover transform group-hover:scale-110 transition-transform duration-700"
+                        />
 
-                    {/* Enhanced shimmer effect */}
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
-                      <div className="absolute -inset-full bg-gradient-to-r from-transparent via-white/20 to-transparent skew-x-12 animate-shimmer"></div>
+                        {/* Gradient Overlay */}
+                        <div className={`absolute inset-0 bg-gradient-to-br ${item.gradient} opacity-60 mix-blend-multiply`}></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent"></div>
+
+                        {/* Shimmer Effect */}
+                        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700">
+                          <motion.div
+                            className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent skew-x-12"
+                            animate={{
+                              x: ["-100%", "200%"],
+                            }}
+                            transition={{
+                              duration: 1.5,
+                              ease: "easeInOut",
+                            }}
+                          />
+                        </div>
+
+                        {/* Floating Icon Badge */}
+                        <motion.div
+                          initial={{ scale: 0, rotate: -180 }}
+                          animate={inView ? { scale: 1, rotate: 0 } : {}}
+                          transition={{
+                            type: "spring",
+                            stiffness: 200,
+                            damping: 15,
+                            delay: index * 0.2 + 0.4,
+                          }}
+                          className="absolute top-3 right-3 z-10"
+                        >
+                          <div className="relative">
+                            <div className={`absolute inset-0 bg-${item.accentColor}-500/20 blur-md rounded-full opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
+                            <div className={`relative bg-white/10 backdrop-blur-md text-white rounded-full p-2.5 shadow-lg border border-white/20 group-hover:bg-gradient-to-br group-hover:from-${item.accentColor}-600 group-hover:to-purple-600 transition-all duration-300`}>
+                              <item.icon className="w-5 h-5" />
+                            </div>
+                          </div>
+                        </motion.div>
+
+                        {/* Number Badge */}
+                        <div className="absolute bottom-3 left-3">
+                          <div className="flex items-center gap-3">
+                            <div className="text-4xl font-black text-white/90 leading-none drop-shadow-2xl">
+                              0{index + 1}
+                            </div>
+                          </div>
+                        </div>
+
+                        {/* Decorative corner accents */}
+                        <div className="absolute top-0 left-0 w-12 h-12 border-t-2 border-l-2 border-white/30"></div>
+                        <div className="absolute bottom-0 right-0 w-12 h-12 border-b-2 border-r-2 border-white/30"></div>
+                      </div>
                     </div>
-
-                    {/* Refined floating icon with sophisticated effects */}
-                    <motion.div
-                      initial={{ scale: 0, rotate: -180 }}
-                      animate={
-                        inView ? { scale: 1, rotate: 0 } : { scale: 0 }
-                      }
-                      transition={{
-                        type: "spring",
-                        stiffness: 200,
-                        damping: 15,
-                        delay: index * 0.3 + 0.5,
-                      }}
-                      className="absolute top-8 right-8 z-20"
-                    >
-                      {/* Layered glow effects */}
-                      <div className="relative">
-                        <div className="absolute inset-0 bg-white/30 blur-2xl rounded-full scale-150 animate-pulse"></div>
-                        <div className="absolute inset-0 bg-indigo-400/40 blur-xl rounded-full scale-125"></div>
-
-                        {/* Icon container with refined styling */}
-                        <div className="relative bg-gradient-to-br from-white/95 via-white/90 to-white/85 p-4 rounded-2xl shadow-2xl backdrop-blur-md border border-white/50 group-hover:scale-110 transition-transform duration-300">
-                          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 to-blue-500/10 rounded-2xl"></div>
-                          <item.icon className="w-8 h-8 text-indigo-600 relative z-10 drop-shadow-md" />
-                        </div>
-                      </div>
-                    </motion.div>
-
-                    {/* Corner accent lines with animation */}
-                    <div className="absolute top-0 left-0 w-20 h-20 border-t-4 border-l-4 border-white/40 rounded-tl-2xl group-hover:w-24 group-hover:h-24 transition-all duration-500"></div>
-                    <div className="absolute bottom-0 right-0 w-20 h-20 border-b-4 border-r-4 border-white/40 rounded-br-2xl group-hover:w-24 group-hover:h-24 transition-all duration-500"></div>
-
-                    {/* Refined decorative elements */}
-                    <div className="absolute -top-2 -left-2 w-16 h-16 bg-gradient-to-br from-indigo-500/30 to-transparent rounded-full blur-xl"></div>
-                    <div className="absolute -bottom-2 -right-2 w-20 h-20 bg-gradient-to-tl from-blue-500/30 to-transparent rounded-full blur-xl"></div>
                   </div>
+                </motion.div>
 
-                  {/* External accent ring */}
-                  <div className="absolute -inset-1 bg-gradient-to-r from-indigo-500/20 via-blue-500/20 to-purple-500/20 rounded-3xl -z-10 blur-md group-hover:blur-lg transition-all duration-500"></div>
-                </div>
-              </motion.div>
+                {/* Content Section */}
+                <motion.div
+                  className="w-full lg:w-[72%]"
+                  whileHover={{
+                    scale: 1.02,
+                    y: -3,
+                  }}
+                  transition={{ duration: 0.3 }}
+                >
+                  <div className="relative rounded-2xl overflow-hidden shadow-xl hover:shadow-2xl transition-all duration-300 bg-gradient-to-br from-black/90 to-gray-900/90 backdrop-blur-xl border border-gray-800">
+                    {/* Glass Effect */}
+                    <div className={`absolute inset-0 bg-gradient-to-tr from-${item.accentColor}-500/10 to-purple-500/10 opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
 
-              {/* Text Column with DARK card */}
-              <motion.div
-                className="w-full lg:w-1/2"
-                whileHover={{ x: item.reverse ? 8 : -8 }}
-                transition={{ type: "spring", stiffness: 300 }}
-              >
-                {/* DARK CARD - swapped from light to dark */}
-                <motion.div className="relative p-10 rounded-3xl overflow-hidden shadow-2xl group cursor-pointer bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-xl border border-gray-800">
-                  {/* Dark background pattern */}
-                  <div className="absolute inset-0 bg-[url('/assets/pattern/mission-bg.png')] bg-cover bg-center opacity-10"></div>
-                  
-                  {/* Dark gradient overlays */}
-                  <div className="absolute inset-0 bg-gradient-to-bl from-blue-500/10 via-transparent to-indigo-500/10 mix-blend-soft-light"></div>
-                  <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-indigo-500/15 to-blue-500/10"></div>
-                  <div className="absolute inset-0 bg-gradient-to-t from-blue-500/10 via-transparent to-purple-500/5 mix-blend-overlay"></div>
+                    {/* Top Accent */}
+                    <div className={`absolute top-0 left-0 right-0 h-1 bg-gradient-to-r ${item.gradient} opacity-0 group-hover:opacity-100 transition-opacity duration-300`}></div>
 
-                  {/* subtle pattern with better texture */}
-                  <div className="absolute inset-0 opacity-[0.03] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSI0OCIgaGVpZ2h0PSI0OCI+PGcgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmIiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1vcGFjaXR5PSIwLjA4Ij48cGF0aCBkPSJNMTIgMTNhMTUgMTUgMCAwIDEgMjQgME0xMiAzNWExNSAxNSAwIDAgMCAyNCAwIi8+PC9nPjwvc3ZnPg==')]"></div>
-
-                  {/* Top-Left Glowing Corner - adjusted for dark theme */}
-                  {/* <div className="absolute top-0 left-0 w-28 h-28">
-                    <div className="absolute top-0 left-0 w-28 h-28 bg-indigo-500/20 rounded-br-full blur-lg animate-pulse"></div>
-                    <div
-                      className="absolute top-0 left-0 w-20 h-20 bg-blue-500/30 rounded-br-full blur-md animate-pulse"
-                      style={{ animationDuration: "3s" }}
-                    ></div>
-                    <div className="absolute top-0 left-0 w-16 h-16 bg-indigo-400/40 rounded-br-full blur-sm"></div>
-                    <div className="absolute top-4 left-4 w-6 h-6 bg-white/40 rounded-full blur-sm"></div>
-                  </div> */}
-
-                  {/* Top-Right Glowing Corner */}
-                  {/* <div className="absolute top-0 right-0 w-28 h-28">
-                    <div
-                      className="absolute top-0 right-0 w-28 h-28 bg-purple-500/20 rounded-bl-full blur-lg animate-pulse"
-                      style={{ animationDuration: "4s" }}
-                    ></div>
-                    <div
-                      className="absolute top-0 right-0 w-20 h-20 bg-indigo-500/30 rounded-bl-full blur-md animate-pulse"
-                      style={{ animationDuration: "3.5s" }}
-                    ></div>
-                    <div className="absolute top-0 right-0 w-16 h-16 bg-purple-400/40 rounded-bl-full blur-sm"></div>
-                    <div className="absolute top-4 right-4 w-6 h-6 bg-white/40 rounded-full blur-sm"></div>
-                  </div> */}
-
-                  {/* Bottom-Left Glowing Corner */}
-                  {/* <div className="absolute bottom-0 left-0 w-28 h-28">
-                    <div
-                      className="absolute bottom-0 left-0 w-28 h-28 bg-blue-500/20 rounded-tr-full blur-lg animate-pulse"
-                      style={{ animationDuration: "3.8s" }}
-                    ></div>
-                    <div
-                      className="absolute bottom-0 left-0 w-20 h-20 bg-sky-500/30 rounded-tr-full blur-md animate-pulse"
-                      style={{ animationDuration: "3.2s" }}
-                    ></div>
-                    <div className="absolute bottom-0 left-0 w-16 h-16 bg-blue-400/40 rounded-tr-full blur-sm"></div>
-                    <div className="absolute bottom-4 left-4 w-6 h-6 bg-white/40 rounded-full blur-sm"></div>
-                  </div> */}
-
-                  {/* Bottom-Right Glowing Corner */}
-                  {/* <div className="absolute bottom-0 right-0 w-28 h-28">
-                    <div
-                      className="absolute bottom-0 right-0 w-28 h-28 bg-violet-500/20 rounded-tl-full blur-lg animate-pulse"
-                      style={{ animationDuration: "4.2s" }}
-                    ></div>
-                    <div
-                      className="absolute bottom-0 right-0 w-20 h-20 bg-purple-500/30 rounded-tl-full blur-md animate-pulse"
-                      style={{ animationDuration: "3.7s" }}
-                    ></div>
-                    <div className="absolute bottom-0 right-0 w-16 h-16 bg-violet-400/40 rounded-tl-full blur-sm"></div>
-                    <div className="absolute bottom-4 right-4 w-6 h-6 bg-white/40 rounded-full blur-sm"></div>
-                  </div> */}
-
-                  {/* corner accent glow effect on hover */}
-                  <div className="absolute top-0 left-0 w-32 h-32 bg-indigo-500/0 rounded-br-full blur-xl transition-all duration-700 ease-in-out group-hover:bg-indigo-500/30"></div>
-                  <div className="absolute top-0 right-0 w-32 h-32 bg-purple-500/0 rounded-bl-full blur-xl transition-all duration-700 ease-in-out group-hover:bg-purple-500/30"></div>
-                  <div className="absolute bottom-0 left-0 w-32 h-32 bg-blue-500/0 rounded-tr-full blur-xl transition-all duration-700 ease-in-out group-hover:bg-blue-500/30"></div>
-                  <div className="absolute bottom-0 right-0 w-32 h-32 bg-violet-500/0 rounded-tl-full blur-xl transition-all duration-700 ease-in-out group-hover:bg-violet-500/30"></div>
-
-                  {/* soft glow effects */}
-                  <div className="absolute top-0 right-0 w-48 h-48 bg-indigo-500/10 rounded-full blur-3xl opacity-70"></div>
-                  <div className="absolute bottom-0 left-0 w-48 h-48 bg-blue-500/10 rounded-full blur-3xl opacity-70"></div>
-
-                  {/* floating light particles */}
-                  <div className="absolute w-2 h-2 rounded-full bg-indigo-400/20 top-1/4 right-1/4 blur-sm animate-pulse"></div>
-                  <div
-                    className="absolute w-1.5 h-1.5 rounded-full bg-blue-400/30 bottom-1/3 left-1/3 blur-sm animate-pulse"
-                    style={{ animationDelay: "1s" }}
-                  ></div>
-                  <div
-                    className="absolute w-1 h-1 rounded-full bg-purple-400/20 top-1/3 left-1/4 blur-sm animate-pulse"
-                    style={{ animationDelay: "2s" }}
-                  ></div>
-
-                  {/* Icon and Title Header with Icon */}
-                  <div className="relative z-20">
-                    <div className="flex items-center gap-6 mb-8">
-                      <div className="relative">
-                        {/* Refined Icon Container - adjusted for dark theme */}
-                        <div className="relative z-10 p-5 rounded-xl shadow-lg overflow-hidden">
-                          {/* Multiple gradient layers for depth */}
-                          <div className="absolute inset-0 bg-gradient-to-br from-indigo-600 to-blue-700"></div>
-                          <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/20 to-transparent mix-blend-overlay"></div>
-                          <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(255,255,255,0.1),transparent_70%)]"></div>
-
-                          {/* Icon with subtle shine effect */}
-                          <item.icon className="w-8 h-8 text-white relative z-10" />
-
-                          {/* Glossy highlight */}
-                          <div className="absolute -inset-full top-0 h-[200%] w-[200%] rotate-45 bg-white/10 translate-x-[-120%] translate-y-[-100%] group-hover:translate-x-[100%] group-hover:translate-y-[100%] transition-all duration-1000"></div>
-                        </div>
-
-                        {/* Improved subtle icon glow */}
-                        <div className="absolute inset-0 bg-indigo-500/30 blur-xl rounded-full"></div>
-                      </div>
-
-                      <div>
-                        {/* Title Styling - light text for dark background */}
-                        <h3 className="text-2xl font-bold text-white group-hover:text-blue-300 transition-colors duration-300 mb-2">
+                    {/* Content */}
+                    <div className="relative px-6 py-6 lg:px-8 lg:py-7 z-10">
+                      {/* Title with Gradient Effects */}
+                      <div className="relative mb-3">
+                        <h3 className={`text-xl lg:text-2xl font-bold text-white mb-2 group-hover:bg-clip-text group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:${item.gradient} transition-all duration-300`}>
                           {item.title}
                         </h3>
-                        <div className="h-1 w-16 bg-gradient-to-r from-indigo-500 to-blue-500 rounded-full group-hover:w-24 transition-all duration-500"></div>
+                        <div className={`absolute -bottom-1 left-0 w-10 h-0.5 bg-gradient-to-r ${item.gradient} rounded-full transform origin-left scale-0 group-hover:scale-100 transition-transform duration-300 delay-100`}></div>
                       </div>
+
+                      <p className="text-sm text-gray-300 font-light leading-relaxed">
+                        {item.description}
+                      </p>
                     </div>
                   </div>
-
-                  {/* Description with refined styling - light text for dark background */}
-                  <div className="relative z-20">
-                    <p className="text-lg text-gray-300 leading-relaxed pl-4 border-l-2 border-indigo-500/40 group-hover:border-indigo-500 transition-all duration-300">
-                      {item.description}
-                    </p>
-                  </div>
-
-                  {/* accent borders with gradient */}
-                  <div className="absolute bottom-0 left-0 right-0 h-1 bg-gradient-to-r from-indigo-500/40 via-blue-500/30 to-purple-500/20"></div>
-                  <div className="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500/40 via-indigo-500/50 to-purple-500/40"></div>
                 </motion.div>
               </motion.div>
-            </motion.div>
-          ))}
+            ))}
+          </div>
         </div>
+
+        {/* Custom Animation */}
+        <style jsx>{`
+          @keyframes spin-slow {
+            from {
+              transform: rotate(0deg);
+            }
+            to {
+              transform: rotate(360deg);
+            }
+          }
+          .animate-spin-slow {
+            animation: spin-slow 20s linear infinite;
+          }
+        `}</style>
       </section>
     </>
   );

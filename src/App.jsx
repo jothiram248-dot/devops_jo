@@ -622,6 +622,7 @@ import OrderHistory from "./pages/OrderHistory";
 import RefundPolicy from "./pages/RefundPolicy";
 import { useAutoLogout } from "./hooks/useAutoLogout";
 import CountdownModal from "./components/CountdownModal";
+import { useSelector } from "react-redux";
 
 // import OrderHistory from "./pages/OrderHistory";
 // import OrderDetailPage from "./pages/OrderDetailPage";
@@ -688,6 +689,8 @@ function App() {
   ];
   const voiceBotRef = useRef();
   const location = useLocation();
+  const isAuthenticated = useSelector((state) => state.auth?.isAuthenticated);
+
 
   const handleStartReading = () => {
     if (voiceBotRef.current?.startReading) {
@@ -924,8 +927,7 @@ function App() {
         </div>
       </div>
 
-      {/* Help Assistant is always present but components like VoiceBot and ChatBot are lazy loaded */}
-      <HelpAssistant />
+      {isAuthenticated && <HelpAssistant />}
 
       <CountdownModal
         isOpen={showCountdown}

@@ -12,6 +12,7 @@ import {
   Search,
   Check,
   Sparkles,
+  ChevronRight 
 } from "lucide-react";
 import { useForm } from "react-hook-form";
 import CryptoJS from "crypto-js";
@@ -875,130 +876,187 @@ const NomineeFormPage = () => {
 
       {/* Nominee Selection Modal */}
       <AnimatePresence>
-        {showNomineeModal && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm"
-            onClick={() => setShowNomineeModal(false)}
-          >
-            <motion.div
-              initial={{ scale: 0.95, opacity: 0 }}
-              animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.95, opacity: 0 }}
-              onClick={(e) => e.stopPropagation()}
-              className="bg-dark-200 rounded-2xl shadow-2xl max-w-3xl w-full max-h-[80vh] overflow-hidden border border-dark-300"
+  {showNomineeModal && (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="fixed inset-0 z-[999] flex items-center justify-center p-4 bg-black/65"
+      onClick={() => setShowNomineeModal(false)}
+    >
+      <motion.div
+        initial={{ y: 12, scale: 0.98, opacity: 0 }}
+        animate={{ y: 0, scale: 1, opacity: 1 }}
+        exit={{ y: 12, scale: 0.98, opacity: 0 }}
+        transition={{ type: "spring", stiffness: 380, damping: 34 }}
+        onClick={(e) => e.stopPropagation()}
+        className="
+          w-full max-w-3xl
+          rounded-2xl overflow-hidden
+          bg-dark-200/95 backdrop-blur-xl
+          ring-1 ring-white/10 shadow-2xl shadow-black/40
+        "
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="nominee-title"
+      >
+        {/* Header */}
+        <div className="px-6 py-5 border-b border-white/10">
+          <div className="flex items-center justify-between gap-4">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="h-10 w-10 rounded-xl bg-gradient-to-br from-accent-100 to-accent-200 ring-1 ring-white/20 flex items-center justify-center">
+                <Users className="w-5 h-5 text-dark-100" />
+              </div>
+              <div className="min-w-0">
+                <h3 id="nominee-title" className="text-xl font-semibold text-white">
+                  Select a Nominee
+                </h3>
+                <p className="text-xs text-gray-400">Choose from your saved nominees</p>
+              </div>
+            </div>
+            <button
+              onClick={() => setShowNomineeModal(false)}
+              aria-label="Close"
+              className="p-2 rounded-lg text-gray-400 hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-accent-100/50"
             >
-              {/* Modal Header */}
-              <div className="p-6 border-b border-dark-300 bg-gradient-to-r from-dark-200 to-dark-300">
-                <div className="flex items-center justify-between mb-4">
-                  <div>
-                    <h3 className="text-2xl font-bold text-white flex items-center gap-2">
-                      <Users className="w-6 h-6 text-accent-100" />
-                      Select a Nominee
-                    </h3>
-                    <p className="text-sm text-gray-400 mt-1">
-                      Choose from your previously saved nominees
-                    </p>
-                  </div>
-                  <button
-                    onClick={() => setShowNomineeModal(false)}
-                    className="p-2 rounded-lg hover:bg-dark-100 transition-colors"
-                  >
-                    <X className="w-6 h-6 text-gray-400 hover:text-white" />
-                  </button>
-                </div>
+              <X className="w-5 h-5" />
+            </button>
+          </div>
 
-                {/* Search Bar */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-5 h-5 text-gray-500" />
-                  <input
-                    type="text"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    placeholder="Search by name, email, or phone..."
-                    className="w-full pl-10 pr-4 py-3 rounded-lg bg-dark-100 border border-dark-300 text-white placeholder-gray-500 focus:outline-none focus:border-accent-100"
-                  />
-                </div>
-              </div>
+          {/* Search */}
+          <div className="mt-4 relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4.5 h-4.5 text-gray-500" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name, email, or phone"
+              className="
+                w-full pl-10 pr-3 py-2.5 rounded-lg
+                bg-dark-100 text-white placeholder-gray-500
+                border border-white/10 focus:outline-none
+                focus:ring-2 focus:ring-accent-100/50 focus:border-transparent
+              "
+            />
+          </div>
+        </div>
 
-              {/* Modal Body */}
-              <div className="p-6 overflow-y-auto max-h-[calc(80vh-200px)] custom-scrollbar">
-                {isMasterListLoading ? (
-                  <div className="flex flex-col items-center justify-center py-12">
-                    <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-accent-100 mb-4"></div>
-                    <p className="text-gray-400">Loading nominees...</p>
-                  </div>
-                ) : filteredNominees && filteredNominees.length > 0 ? (
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    {filteredNominees.map((item, index) => (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 10 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        transition={{ delay: index * 0.05 }}
-                        onClick={() => handleSelectNominee(item.nominee)}
-                        className="relative p-4 rounded-xl bg-gradient-to-br from-dark-300 to-dark-100 border border-dark-300 hover:border-accent-100 cursor-pointer group transition-all hover:shadow-lg hover:shadow-accent-100/20"
-                      >
-                        {/* Badge */}
-                        <div className="absolute top-3 right-3 bg-accent-100/20 border border-accent-100 text-accent-100 px-2 py-1 rounded-full text-xs font-bold">
-                          {item.occurrences}x
-                        </div>
-
-                        {/* Content */}
-                        <div className="space-y-3 pr-12">
-                          <div className="flex items-start gap-2">
-                            <div className="mt-1 w-10 h-10 rounded-full bg-gradient-to-br from-accent-100 to-accent-200 flex items-center justify-center text-dark-100 font-bold text-lg flex-shrink-0">
-                              {item.nominee.name?.charAt(0) || "?"}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <p className="text-white font-bold text-lg group-hover:text-accent-100 transition-colors truncate">
-                                {item.nominee.name || "N/A"}
-                              </p>
-                              <p className="text-sm text-gray-400 truncate">
-                                {item.nominee.email || "N/A"}
-                              </p>
-                            </div>
-                          </div>
-
-                          <div className="flex items-center gap-2 text-sm text-gray-400">
-                            <div className="w-2 h-2 rounded-full bg-accent-100"></div>
-                            <span>{item.nominee.phone || "N/A"}</span>
-                          </div>
-
-                          {item.nominee.additionalInfo && (
-                            <p className="text-xs text-gray-500 line-clamp-2">
-                              {item.nominee.additionalInfo}
-                            </p>
-                          )}
-                        </div>
-
-                        {/* Hover Effect */}
-                        <div className="absolute inset-0 rounded-xl bg-gradient-to-br from-accent-100/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none" />
-                      </motion.div>
-                    ))}
-                  </div>
-                ) : (
-                  <div className="text-center py-12">
-                    <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-dark-300 mb-4">
-                      <Search className="w-10 h-10 text-gray-600" />
+        {/* Body */}
+        <div
+          className="px-2 sm:px-4 py-2 overflow-y-auto custom-scrollbar"
+          style={{ maxHeight: "min(60vh, 520px)" }}
+        >
+          {isMasterListLoading ? (
+            /* Skeleton */
+            <ul className="divide-y divide-white/5">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <li key={i} className="px-2 sm:px-2">
+                  <div className="flex items-center gap-4 py-4">
+                    <div className="h-10 w-10 rounded-full bg-white/5 animate-pulse" />
+                    <div className="flex-1 space-y-2">
+                      <div className="h-3.5 w-40 bg-white/5 rounded animate-pulse" />
+                      <div className="h-3 w-64 bg-white/5 rounded animate-pulse" />
                     </div>
-                    <p className="text-gray-400 font-medium text-lg mb-2">
-                      {searchQuery ? "No nominees found" : "No saved nominees"}
-                    </p>
-                    <p className="text-gray-500 text-sm">
-                      {searchQuery
-                        ? "Try a different search term"
-                        : "Your saved nominees will appear here"}
-                    </p>
+                    <div className="h-5 w-10 bg-white/5 rounded-full animate-pulse" />
                   </div>
-                )}
+                </li>
+              ))}
+            </ul>
+          ) : filteredNominees && filteredNominees.length > 0 ? (
+            <ul className="divide-y divide-white/5">
+              {filteredNominees.map((item, index) => {
+                const n = item.nominee || {};
+                const initial = (n.name?.trim()?.[0] || "?").toUpperCase();
+
+                return (
+                  <li key={`${n.email || n.phone || index}`} className="px-1 sm:px-2">
+                    <button
+                      onClick={() => handleSelectNominee(item.nominee)}
+                      className="
+                        w-full text-left
+                        flex items-center gap-4 py-3.5
+                        rounded-xl hover:bg-white/[0.04]
+                        focus:outline-none focus:ring-2 focus:ring-accent-100/40
+                        transition-colors
+                      "
+                    >
+                      {/* Avatar */}
+                      <div className="relative h-10 w-10 flex-shrink-0">
+                        <div className="absolute inset-0 rounded-full bg-gradient-to-br from-accent-100 to-accent-200 ring-1 ring-white/15" />
+                        <div className="relative h-full w-full rounded-full flex items-center justify-center text-sm font-bold text-dark-100">
+                          {initial}
+                        </div>
+                      </div>
+
+                      {/* Main */}
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center gap-2">
+                          <p className="truncate text-[15px] font-medium text-white">
+                            {n.name || "Unknown"}
+                          </p>
+                          <span className="ml-auto inline-flex items-center gap-1 text-xs px-2 py-0.5 rounded-full border border-accent-100/30 text-accent-100">
+                            {item.occurrences}×
+                          </span>
+                        </div>
+                        <p className="text-xs text-gray-400 truncate">{n.email || "—"}</p>
+                        <p className="text-xs text-gray-500">{n.phone || "—"}</p>
+                        {n.additionalInfo ? (
+                          <p className="text-[11px] text-gray-500 mt-1 line-clamp-2">
+                            {n.additionalInfo}
+                          </p>
+                        ) : null}
+                      </div>
+
+                      <ChevronRight className="w-5 h-5 text-gray-500" />
+                    </button>
+                  </li>
+                );
+              })}
+            </ul>
+          ) : (
+            /* Empty state */
+            <div className="py-16 text-center">
+              <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-white/5">
+                <Search className="w-7 h-7 text-gray-500" />
               </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+              <p className="text-gray-300 font-medium">
+                {searchQuery ? "No nominees found" : "No saved nominees yet"}
+              </p>
+              <p className="text-gray-500 text-sm mt-1">
+                {searchQuery ? "Try different keywords" : "Add a nominee to see it here"}
+              </p>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="px-6 py-4 border-t border-white/10 flex items-center justify-between">
+          <button
+            onClick={() => setShowNomineeModal(false)}
+            className="px-4 py-2 rounded-lg text-gray-300 hover:text-white hover:bg-white/5 focus:outline-none focus:ring-2 focus:ring-accent-100/40"
+          >
+            Cancel
+          </button>
+          <div className="flex items-center gap-2">
+            {/* <button
+              onClick={() => {}}
+              className="
+                px-4 py-2 rounded-lg
+                bg-gradient-to-br from-accent-100 to-accent-200
+                text-dark-100 font-medium
+                hover:opacity-95 focus:outline-none focus:ring-2 focus:ring-accent-100/50
+                shadow-sm
+              "
+            >
+              Add New Nominee
+            </button> */}
+          </div>
+        </div>
+      </motion.div>
+    </motion.div>
+  )}
+</AnimatePresence>
+
 
       {/* Incomplete Form Prompt */}
       {isPromptOpen && (
